@@ -5,6 +5,4 @@ Licensed under the GNU GPL v3.0 license.
 Copyright Danny Hadley 2014
 ])
 
-AC_CONFIG_FILES([Makefile])
-AM_INIT_AUTOMAKE
 AC_OUTPUT
