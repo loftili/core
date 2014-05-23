@@ -10,4 +10,15 @@ INSTALL
 /install-sh
 /missing
 /stamp-h1
+/src/rasbeat
+rasbeat
+/src/.deps
 *.swp
+*.o
+config.guess
+config.log
+config.status
+config.sub
+libtool
+ltmain.sh
+.deps/
