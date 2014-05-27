@@ -13,7 +13,6 @@ AC_PROG_LIBTOOL
 AC_LANG([C++])
 
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
-LDFLAGS="$LIBMICROHTTPD_LIBS $LD_FLAGS"
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

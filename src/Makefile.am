@@ -1,3 +1,4 @@
 bin_PROGRAMS = rasbeat 
 rasbeat_SOURCES = \
-  main.cpp
+  main.cpp \
+	server.cpp
