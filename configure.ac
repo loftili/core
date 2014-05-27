@@ -10,9 +10,10 @@ Copyright Danny Hadley 2014
 AC_PROG_CXX
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
+AC_LANG([C++])
 
-AC_CHECK_HEADERS([microhttpd.h])
+AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
+LDFLAGS="$LIBMICROHTTPD_LIBS $LD_FLAGS"
 
-AC_CONFIG_SRCDIR([src/main.cpp])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
