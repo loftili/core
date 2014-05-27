@@ -2,6 +2,5 @@
 #include "../inc/server.h"
 
 int main(int argc, char ** argv) {
-  rasbeat::Server s;
-  return s.run();
+  return rasbeat::Server::run();
 }
