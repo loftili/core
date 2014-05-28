@@ -9,7 +9,6 @@ Server::~Server() {
 }
 
 int Server::run() {
-  std::cout << "WHOA!" << std::endl;
   MHD_Daemon* daemon = MHD_start_daemon(MHD_USE_DEBUG | MHD_USE_SELECT_INTERNALLY, 8888, NULL, NULL, &respond, NULL, MHD_OPTION_END);
 
   if(daemon != NULL)
@@ -49,7 +48,14 @@ int Server::respond(
   }
   
   response = make_response(strlen(page), (void*)page, MHD_NO, MHD_NO);
-  ret = queue_response(connection, MHD_HTTP_OK, response);
+
+  bool favicon = strcmp(url, "/favicon.ico") == 0;
+
+  if(favicon)
+    std::cout << "requesting favicon" << std::endl;
+
+  std::cout << std::endl << std::endl;
+  ret = queue_response(connection, (favicon ? MHD_HTTP_NOT_FOUND : MHD_HTTP_OK), response);
   destroy_response(response);
   return ret;
 }
