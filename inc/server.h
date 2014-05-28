@@ -2,6 +2,7 @@
 #define _RASBEAT_SERVER_H
 
 #include "rasbeat.h"
+#include "communication/request.h"
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
