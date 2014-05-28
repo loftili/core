@@ -34,17 +34,18 @@ int Server::respond(
     void** con_cls) {
 
   int ret;
-  static int dummy;
   const char* page = "<h1>HI!</h1>";
   MHD_Response* response;
-  Request* request;
+  Request* request = static_cast<Request*>(*con_cls);
 
-  if(&dummy != *con_cls) {
-    std::cout << "con_cls is nothing: " << url << std::endl;
-    *con_cls = &dummy;
+  if(request == NULL) {
+    request = new Request();
+    std::cout << "con_cls is nothing:: [" << request->first << "] " << url << std::endl;
+    *con_cls = request;
+    request->first = false;
     return MHD_YES;
   } else {
-    std::cout << "con_cls is something: " << url << std::endl;
+    std::cout << "con_cls is something: [" << request->first << "] " << url << std::endl;
   }
   
   response = make_response(strlen(page), (void*)page, MHD_NO, MHD_NO);
@@ -57,6 +58,7 @@ int Server::respond(
   std::cout << std::endl << std::endl;
   ret = queue_response(connection, (favicon ? MHD_HTTP_NOT_FOUND : MHD_HTTP_OK), response);
   destroy_response(response);
+  free(request);
   return ret;
 }
 

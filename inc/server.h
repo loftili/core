@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <microhttpd.h>
 
 #define make_response(a,b,c,d) MHD_create_response_from_data(a,b,c,d)
