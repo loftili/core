@@ -1,8 +1,8 @@
-AC_INIT([rasb], [1.0.0])
+AC_INIT([loftili], [1.0.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_COPYRIGHT([
-Rasbeat is an open source audio player built for the raspberry pi. 
+Loftili is an open source audio player built for the raspberry pi. 
 Licensed under the GNU GPL v3.0 license. 
 Copyright Danny Hadley 2014
 ])
@@ -19,5 +19,5 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/communication/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

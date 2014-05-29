@@ -10,10 +10,11 @@ INSTALL
 /install-sh
 /missing
 /stamp-h1
-/src/rasb
+/src/loftili
 /src/.deps
 *.swp
 *.o
+.vimlocal
 config.guess
 config.log
 config.status

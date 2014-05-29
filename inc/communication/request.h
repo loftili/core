@@ -1,10 +1,10 @@
-#ifndef _RASBEAT_REQUEST_H
-#define _RASBEAT_REQUEST_H
+#ifndef _LOFTILI_REQUEST_H
+#define _LOFTILI_REQUEST_H
 
 #include <iostream>
 using namespace std;
 
-namespace rasbeat {
+namespace loftili {
 
 struct Request {
 

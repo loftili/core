@@ -1,9 +1,9 @@
-#ifndef _RASBEAT_H
-#define _RASBEAT_H
+#ifndef _LOFTILI_H
+#define _LOFTILI_H
 
-#define RASB_DEFAULT_PORT 8888
-#define RASB_EMPTY_RESPONSE "<html><head></head><body></body></html>"
-#define RASB_EMPTY_RESPONSE_LEN strlen(RASB_EMPTY_RESPONSE)
+#define LOFTILI_DEFAULT_PORT 8888
+#define LOFTILI_EMPTY_RESPONSE "<html><head></head><body></body></html>"
+#define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 
 #include <iostream>
 #include <string.h>

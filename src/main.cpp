@@ -1,6 +1,6 @@
-#include "../inc/rasbeat.h"
-#include "../inc/server.h"
+#include "loftili.h"
+#include "server.h"
 
 int main(int argc, char ** argv) {
-  return rasbeat::Server::run();
+  return loftili::Server::run();
 }

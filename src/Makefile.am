@@ -1,9 +1,12 @@
-bin_PROGRAMS = rasb
-rasb_SOURCES = \
+bin_PROGRAMS = loftili
+loftili_CPPFLAGS = -I../inc
+loftili_SOURCES = \
   main.cpp \
 	server.cpp \
-	router.cpp \
+	dispatch/router.cpp \
+  dispatch/route_list.cpp \
+  dispatch/controller.cpp \
   communication/response.cpp \
-  communication/request.cpp
+  communication/request.cpp \
+  dispatch/controllers/root.cpp
 
-SUBDIRS = communication

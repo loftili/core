@@ -1,13 +1,13 @@
-#ifndef _RASBEAT_SERVER_H
-#define _RASBEAT_SERVER_H
+#ifndef _LOFTILI_SERVER_H
+#define _LOFTILI_SERVER_H
 
 #include <microhttpd.h>
-#include "rasbeat.h"
-#include "router.h"
+#include "loftili.h"
+#include "dispatch/router.h"
 #include "communication/request.h"
 #include "communication/response.h"
 
-namespace rasbeat {
+namespace loftili {
 
 class Server {
 
@@ -17,7 +17,7 @@ class Server {
     int process(struct ahc_info info);
 
   private:
-    int queueResponse(Response r, MHD_Connection* c);
+    int queueResponse(Response* r, MHD_Connection* c);
     Router router;
 
   public:
