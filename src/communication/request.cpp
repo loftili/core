@@ -2,7 +2,9 @@
 
 namespace rasbeat {
 
-Request::Request() : first(true) {
+Request::Request(std::string _url, std::string _method) {
+  url = _url;
+  method = _method;
 }
 
 Request::~Request() {
