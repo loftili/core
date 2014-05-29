@@ -4,6 +4,15 @@
 namespace rasbeat {
 
 class Response {
+
+  public:
+    Response();
+    ~Response();
+
+    int getLength();
+    void* getContent();
+    int getStatus();
+
 };
 
 }

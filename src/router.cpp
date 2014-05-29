@@ -8,7 +8,7 @@ Router::Router() {
 Router::~Router() {
 }
 
-Response Router::respond(Request* request) {
+Response Router::handle(Request* request) {
   Response r;
 
   return r;

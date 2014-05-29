@@ -8,11 +8,8 @@ namespace rasbeat {
 struct Request {
 
   public:
-    Request(std::string url, std::string method);
+    Request();
     ~Request();
-
-    std::string url;
-    std::string method;
 
 };
 
