@@ -17,7 +17,7 @@ class Server {
     int process(struct ahc_info info);
 
   private:
-    int queueResponse(Response* r, MHD_Connection* connection);
+    int queueResponse(Response r, MHD_Connection* c);
     Router router;
 
   public:

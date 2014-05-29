@@ -12,7 +12,7 @@ class Router {
     Router();
     ~Router();
 
-    Response* handle(Request* request);
+    Response  handle(Request* request);
 
 };
  
