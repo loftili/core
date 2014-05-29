@@ -1,12 +1,10 @@
-#include "../inc/server.h"
+#include "server.h"
 
 namespace rasbeat {
 
 Server* Server::server_instance;
 
-Server::Server() : router() {
-
-}
+Server::Server() : router() { }
 
 int Server::process(struct ahc_info info) {
   Request* request = static_cast<Request*>(*info.con_cls);
@@ -19,7 +17,7 @@ int Server::process(struct ahc_info info) {
     return MHD_YES;
   }
 
-  Response response = router.handle(request);
+  Response* response = router.handle(request);
 
   // the request is no longer needed now - clean it up
   delete request;
@@ -28,10 +26,10 @@ int Server::process(struct ahc_info info) {
   return queueResponse(response, info.connection);
 }
 
-int Server::queueResponse(Response response, MHD_Connection* connection) {
-  int length = response.length;
-  void* data = response.content;
-  int status = response.status;
+int Server::queueResponse(Response* response, MHD_Connection* connection) {
+  int length = response->length;
+  void* data = response->content;
+  int status = response->status;
 
   struct MHD_Response* m_response;
 
@@ -40,6 +38,7 @@ int Server::queueResponse(Response response, MHD_Connection* connection) {
 
   // cleanup
   MHD_destroy_response(m_response);
+  delete response;
 
   // send back the MHD status
   return ret;

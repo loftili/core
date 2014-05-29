@@ -3,7 +3,7 @@
 
 #include <microhttpd.h>
 #include "rasbeat.h"
-#include "router.h"
+#include "dispatch/router.h"
 #include "communication/request.h"
 #include "communication/response.h"
 
@@ -17,7 +17,7 @@ class Server {
     int process(struct ahc_info info);
 
   private:
-    int queueResponse(Response r, MHD_Connection* c);
+    int queueResponse(Response* r, MHD_Connection* c);
     Router router;
 
   public:

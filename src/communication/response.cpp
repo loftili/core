@@ -1,4 +1,4 @@
-#include "../../inc/communication/response.h"
+#include "communication/response.h"
 
 namespace rasbeat {
 

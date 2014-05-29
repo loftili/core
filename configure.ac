@@ -19,5 +19,5 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/communication/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
