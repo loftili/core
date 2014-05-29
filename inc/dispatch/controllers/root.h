@@ -1,9 +1,9 @@
-#ifndef _RASBEAT_ROOT_CONTROLLER_H
-#define _RASBEAT_ROOT_CONTROLLER_H
+#ifndef _LOFTILI_ROOT_CONTROLLER_H
+#define _LOFTILI_ROOT_CONTROLLER_H
 
 #include "dispatch/controller.h"
 
-namespace rasbeat {
+namespace loftili {
 
 class RootController : public Controller {
 };

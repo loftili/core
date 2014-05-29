@@ -1,6 +1,6 @@
 #include "server.h"
 
-namespace rasbeat {
+namespace loftili {
 
 Server* Server::server_instance;
 
@@ -27,6 +27,9 @@ int Server::process(struct ahc_info info) {
 }
 
 int Server::queueResponse(Response* response, MHD_Connection* connection) {
+  if(response == NULL)
+    response = new Response(404);
+
   int length = response->length;
   void* data = response->content;
   int status = response->status;
@@ -52,7 +55,7 @@ int Server::run() {
 
   MHD_Daemon* daemon = MHD_start_daemon(
     MHD_USE_DEBUG | MHD_USE_SELECT_INTERNALLY, 
-    RASB_DEFAULT_PORT, NULL, 
+    LOFTILI_DEFAULT_PORT, NULL, 
     NULL, &ahc, NULL, 
     MHD_OPTION_END);
 

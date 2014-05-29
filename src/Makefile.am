@@ -1,6 +1,6 @@
-bin_PROGRAMS = rasb
-rasb_CPPFLAGS = -I../inc
-rasb_SOURCES = \
+bin_PROGRAMS = loftili
+loftili_CPPFLAGS = -I../inc
+loftili_SOURCES = \
   main.cpp \
 	server.cpp \
 	dispatch/router.cpp \

@@ -1,6 +1,6 @@
 #include "dispatch/router.h"
 
-namespace rasbeat {
+namespace loftili {
 
 Router::Router() {
   routes.add(new RootController());

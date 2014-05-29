@@ -1,7 +1,7 @@
-#ifndef _RASBEAT_CONTROLLER_H
-#define _RASBEAT_CONTROLLER_H
+#ifndef _LOFTILI_CONTROLLER_H
+#define _LOFTILI_CONTROLLER_H
 
-namespace rasbeat {
+namespace loftili {
 
 class Controller {
   

@@ -1,6 +1,6 @@
 #include "dispatch/controller.h"
 
-namespace rasbeat {
+namespace loftili {
 
 Controller::Controller() { }
 

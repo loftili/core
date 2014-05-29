@@ -1,10 +1,10 @@
-#ifndef _RASBEAT_ROUTE_LIST_H
-#define _RASBEAT_ROUTE_LIST_H
+#ifndef _LOFTILI_ROUTE_LIST_H
+#define _LOFTILI_ROUTE_LIST_H
 
 #include <vector>
 #include "controller.h"
 
-namespace rasbeat {
+namespace loftili {
 
 class RouteList {
 

@@ -1,6 +1,6 @@
 #include "communication/request.h"
 
-namespace rasbeat {
+namespace loftili {
 
 Request::Request(string u, string m) : url(u), method(m){
 }

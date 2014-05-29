@@ -1,9 +1,9 @@
-#ifndef _RASBEAT_RESPONSE_H
-#define _RASBEAT_RESPONSE_H
+#ifndef _LOFTILI_RESPONSE_H
+#define _LOFTILI_RESPONSE_H
 
-#include "../rasbeat.h"
+#include "../loftili.h"
 
-namespace rasbeat {
+namespace loftili {
 
 class Response {
 

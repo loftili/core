@@ -1,8 +1,8 @@
-AC_INIT([rasb], [1.0.0])
+AC_INIT([loftili], [1.0.0])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_COPYRIGHT([
-Rasbeat is an open source audio player built for the raspberry pi. 
+Loftili is an open source audio player built for the raspberry pi. 
 Licensed under the GNU GPL v3.0 license. 
 Copyright Danny Hadley 2014
 ])

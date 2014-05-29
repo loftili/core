@@ -1,10 +1,10 @@
-#ifndef _RASBEAT_ROUTER_H
-#define _RASBEAT_ROUTER_H
+#ifndef _LOFTILI_ROUTER_H
+#define _LOFTILI_ROUTER_H
 
 #include "route_list.h"
 #include "controllers/root.h"
 
-namespace rasbeat {
+namespace loftili {
 
 class Request;
 class Response;
