@@ -1,4 +1,4 @@
-AC_INIT([rasbeat], [1.0.0])
+AC_INIT([rasb], [1.0.0])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_COPYRIGHT([
@@ -8,9 +8,14 @@ Copyright Danny Hadley 2014
 ])
 
 AC_PROG_CXX
-AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
 AC_LANG([C++])
+
+AC_MSG_CHECKING([if able to compile lambda expressions with c++ 11])
+CPPFLAGS="$CPPFLAGS -std=c++0x"
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+  auto a = [] () { };
+]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 

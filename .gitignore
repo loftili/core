@@ -10,8 +10,7 @@ INSTALL
 /install-sh
 /missing
 /stamp-h1
-/src/rasbeat
-rasbeat
+/src/rasb
 /src/.deps
 *.swp
 *.o
