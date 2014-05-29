@@ -14,26 +14,31 @@ int Server::process(struct ahc_info info) {
   // first attempts are meant to handle the headers
   // only. the data comes in second
   if(request == NULL) {
-    request = new Request();
+    request = new Request(info.url, info.method);
     *info.con_cls = request;
     return MHD_YES;
   }
 
-  Response r = router.handle(request);
-  free(request);
-  return queueResponse(r, info.connection);
+  Response* response = router.handle(request);
+  delete request;
+  return queueResponse(response, info.connection);
 }
 
-int Server::queueResponse(Response r, MHD_Connection* connection) {
-  int length = r.getLength();
-  void* data = r.getContent();
-  int status = r.getStatus();
+int Server::queueResponse(Response* response, MHD_Connection* connection) {
+  int length = response->length;
+  void* data = response->content;
+  int status = response->status;
 
-  struct MHD_Response* response;
+  struct MHD_Response* m_response;
 
-  response = MHD_create_response_from_data(length, data, MHD_NO, MHD_NO);
-  int ret = MHD_queue_response(connection, status, response);
-  MHD_destroy_response(response);
+  m_response = MHD_create_response_from_data(length, data, MHD_NO, MHD_NO);
+  int ret = MHD_queue_response(connection, status, m_response);
+
+  // cleanup
+  MHD_destroy_response(m_response);
+  delete response;
+
+  // send back the MHD status
   return ret;
 }
 

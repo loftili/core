@@ -2,14 +2,17 @@
 #define _RASBEAT_REQUEST_H
 
 #include <iostream>
+using namespace std;
 
 namespace rasbeat {
 
 struct Request {
 
   public:
-    Request();
+    Request(string url, string method);
     ~Request();
+    string url;
+    string method;
 
 };
 

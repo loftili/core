@@ -21,3 +21,4 @@ config.sub
 libtool
 ltmain.sh
 .deps/
+.dirstamp

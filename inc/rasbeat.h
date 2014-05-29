@@ -2,6 +2,7 @@
 #define _RASBEAT_H
 
 #define RASB_DEFAULT_PORT 8888
+#define RASB_EMPTY_RESPONSE "<html><head></head><body></body></html>"
 
 #include <iostream>
 #include <string.h>

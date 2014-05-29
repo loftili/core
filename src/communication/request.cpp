@@ -2,7 +2,7 @@
 
 namespace rasbeat {
 
-Request::Request() {
+Request::Request(string u, string m) : url(u), method(m){
 }
 
 Request::~Request() {

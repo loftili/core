@@ -2,23 +2,16 @@
 
 namespace rasbeat {
 
-Response::Response() {
+Response::Response() : length(10), status(200) {
+  content = (void*)RASB_EMPTY_RESPONSE;
+}
+
+Response::Response(int _status) : length(10), status(_status) {
+  content = (void*)RASB_EMPTY_RESPONSE;
 }
 
 Response::~Response() {
-}
-
-int Response::getLength() {
-  return 12;
-}
-
-void* Response::getContent() {
-  const char* page = "<h1>hi!</h1>";
-  return (void*)page;
-}
-
-int Response::getStatus() {
-  return 200;
-}
+  std::cout << "in response cleanup" << std::endl;
+} 
 
 }

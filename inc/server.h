@@ -5,6 +5,7 @@
 #include "rasbeat.h"
 #include "router.h"
 #include "communication/request.h"
+#include "communication/response.h"
 
 namespace rasbeat {
 
@@ -16,7 +17,7 @@ class Server {
     int process(struct ahc_info info);
 
   private:
-    int queueResponse(Response r, MHD_Connection* connection);
+    int queueResponse(Response* r, MHD_Connection* connection);
     Router router;
 
   public:
