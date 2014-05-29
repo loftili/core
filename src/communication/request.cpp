@@ -2,7 +2,7 @@
 
 namespace rasbeat {
 
-Request::Request() : first(true) {
+Request::Request() {
 }
 
 Request::~Request() {
