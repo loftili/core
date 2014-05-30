@@ -3,6 +3,7 @@
 
 #include "route_list.h"
 #include "controllers/root.h"
+#include "controllers/player.h"
 
 namespace loftili {
 

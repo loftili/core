@@ -6,6 +6,11 @@
 namespace loftili {
 
 class RootController : public Controller {
+
+public:
+  ~RootController();
+  void initialize();
+
 };
 
 }

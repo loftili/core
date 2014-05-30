@@ -4,7 +4,10 @@ namespace loftili {
 
 Server* Server::server_instance;
 
-Server::Server() : router() { }
+Server::Server() : router() { 
+}
+
+Server::~Server() { }
 
 int Server::process(struct ahc_info info) {
   Request* request = static_cast<Request*>(*info.con_cls);
@@ -47,9 +50,6 @@ int Server::queueResponse(Response* response, MHD_Connection* connection) {
   return ret;
 }
 
-Server::~Server() {
-}
-
 int Server::run() {
   server_instance = new Server();
 
@@ -69,7 +69,7 @@ int Server::run() {
     std::cin >> exit_code;
   }
 
-  free(server_instance);
+  delete server_instance;
   MHD_stop_daemon(daemon);
   return 0;
 }

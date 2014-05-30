@@ -4,6 +4,7 @@ namespace loftili {
 
 Router::Router() {
   routes.add(new RootController());
+  routes.add(new PlayerController());
 }
 
 Router::~Router() {
@@ -11,9 +12,8 @@ Router::~Router() {
 }
 
 Response* Router::handle(Request* request) {
-  Response* r;
-
-  return r;
+  Controller* c = routes.find(request);
+  return c->respondTo(request);
 }
 
 }

@@ -2,4 +2,10 @@
 
 namespace loftili {
 
+RootController::~RootController() { }
+
+void RootController::initialize() {
+  name = "RootController";
+}
+
 }
