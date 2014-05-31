@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include <ao/ao.h>
+#include <audio/manager.h>
 
 namespace loftili {
 
@@ -16,15 +16,11 @@ public:
   ~Player();
   void start();
   void stop();
+  bool isPlaying();
 
 private:
-  ao_device* device;
-  int ao_driver;
-  ao_sample_format format;
-  char *buffer;
-  int buf_size;
-  int sample;
-  float freq;
+  char* data;
+  bool playing;
 
 };
 
