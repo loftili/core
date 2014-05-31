@@ -1,8 +1,8 @@
 #ifndef _LOFTILI_PLAYER_CONTROLLER_H
 #define _LOFTILI_PLAYER_CONTROLLER_H
 
-#include <dispatch/controller.h>
-#include <audio/player.h>
+#include "dispatch/controller.h"
+#include "audio/player.h"
 
 namespace loftili {
 

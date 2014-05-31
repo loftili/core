@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-Request::Request(string u, string m) : url(u), method(m){
+Request::Request(std::string u, std::string m) : url(u), method(m){
 }
 
 Request::~Request() {

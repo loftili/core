@@ -2,17 +2,16 @@
 #define _LOFTILI_REQUEST_H
 
 #include <iostream>
-using namespace std;
 
 namespace loftili {
 
 struct Request {
 
   public:
-    Request(string url, string method);
+    Request(std::string url, std::string method);
     ~Request();
-    string url;
-    string method;
+    std::string url;
+    std::string method;
 
 };
 

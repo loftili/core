@@ -1,7 +1,7 @@
 #ifndef _LOFTILI_RESPONSE_H
 #define _LOFTILI_RESPONSE_H
 
-#include "../loftili.h"
+#include "loftili.h"
 
 namespace loftili {
 
