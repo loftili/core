@@ -19,13 +19,12 @@ Player::Player() : freq(440.0) {
     std::cout << "NO DEVICE!" << std::endl;
   else
     std::cout << "DEVICE CREATED" << std::endl;
-
 }
 
 Player::~Player() {
   std::cout << "closing the player" << std::endl;
-  ao_shutdown();
   ao_close(device);
+  ao_shutdown();
 }
 
 void Player::start() {
