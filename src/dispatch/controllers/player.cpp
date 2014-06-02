@@ -9,7 +9,7 @@ PlayerController::~PlayerController() {
 
 void PlayerController::initialize() {
   name = "PlayerController";
-  player = new Player();
+  player = new AudioPlayer();
 }
 
 Response* PlayerController::respondTo(Request* request) {

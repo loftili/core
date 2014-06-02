@@ -2,26 +2,24 @@
 
 namespace loftili {
 
-Player::Player() : playing(false) {
+AudioPlayer::AudioPlayer() : playing(false) {
   std::cout << "creating the player" << std::endl;
 }
 
-Player::~Player() {
+AudioPlayer::~AudioPlayer() {
   std::cout << "closing the player" << std::endl;
 }
 
-void Player::start() {
+void AudioPlayer::start() {
   playing = true;
-  Manager::begin(this);
 }
 
-bool Player::isPlaying() {
+bool AudioPlayer::isPlaying() {
   return playing;
 }
 
-void Player::stop() {
+void AudioPlayer::stop() {
   playing = false;
-  Manager::stop();
 }
 
 }

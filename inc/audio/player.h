@@ -2,18 +2,15 @@
 #define _LOFTILI_PLAYER_H
 
 #include <iostream>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
 #include "audio/manager.h"
 
 namespace loftili {
 
-class Player {
+class AudioPlayer {
 
 public:
-  Player();
-  ~Player();
+  AudioPlayer();
+  ~AudioPlayer();
   void start();
   void stop();
   bool isPlaying();

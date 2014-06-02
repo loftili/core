@@ -18,7 +18,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
-AC_CHECK_LIB([ao], [ao_initialize], [], [AC_MSG_ERROR([libao not installed])])
+AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install it])])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

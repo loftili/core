@@ -3,6 +3,7 @@
 
 #include "dispatch/controller.h"
 #include "audio/player.h"
+#include "audio/manager.h"
 
 namespace loftili {
 
@@ -14,7 +15,8 @@ public:
   Response* respondTo(Request* r);
 
 private:
-  Player* player;
+  AudioPlayer* player;
+  AudioManager* manager;
 
 };
 
