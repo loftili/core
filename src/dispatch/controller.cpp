@@ -2,10 +2,12 @@
 
 namespace loftili {
 
-Controller::Controller() {  }
+Controller::Controller() {  
+  log = new Logger();
+}
 
 Response* Controller::respondTo(Request* request) {
-  std::cout << name << " is responding via base class" << std::endl;
+  log->info("Responding via Controller base class");
   Response* r;
   return r;
 }

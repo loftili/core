@@ -3,17 +3,18 @@
 namespace loftili {
 
 AudioPlayer::AudioPlayer() : playing(false) {
-  std::cout << "creating the player" << std::endl;
+  log = new Logger("AudioPlayer");
   int success = Pa_Initialize();
+
   if(success != paNoError)
-    std::cout << "had trouble initializing portaudio" << std::endl;
+    log->fatal("Unable to load portaudio library");
   else
-    std::cout << "initialized portaudio" << std::endl;
+    log->info("Successfully loaded portaudio library");
 }
 
 AudioPlayer::~AudioPlayer() {
-  std::cout << "closing the player" << std::endl;
   Pa_Terminate();
+  delete log;
 }
 
 void AudioPlayer::start() {

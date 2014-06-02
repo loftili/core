@@ -1,8 +1,8 @@
 #ifndef _LOFTILI_PLAYER_H
 #define _LOFTILI_PLAYER_H
 
-#include <iostream>
 #include <portaudio.h>
+#include "util/logger.h"
 
 namespace loftili {
 
@@ -16,6 +16,7 @@ public:
   bool isPlaying();
 
 private:
+  Logger* log;
   char* data;
   bool playing;
 

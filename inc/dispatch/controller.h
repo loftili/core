@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <iostream>
+#include "util/logger.h"
 #include "communication/response.h"
 #include "communication/request.h"
 
@@ -17,6 +18,9 @@ public:
   virtual void initialize() = 0;
 
   std::string name;
+
+protected:
+  Logger* log;
 
 };
 

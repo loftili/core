@@ -3,7 +3,7 @@
 namespace loftili {
 
 PlayerController::~PlayerController() {
-  std::cout << "deleting the player controller" << std::endl;
+  log->info("deleting the player controller");
   delete player;
 }
 
@@ -14,7 +14,8 @@ void PlayerController::initialize() {
 
 Response* PlayerController::respondTo(Request* request) {
   Response* r = new Response(200);
-  std::cout << "PlayerController is responding to: " << request->url << std::endl;
+  log->info("PlayerController is responding to: ");
+  log->info(request->url);
 
   if(request->url == "/start")
     player->start();
