@@ -2,7 +2,7 @@
 #define _LOFTILI_PLAYER_H
 
 #include <iostream>
-#include "audio/manager.h"
+#include <portaudio.h>
 
 namespace loftili {
 
