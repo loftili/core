@@ -1,4 +1,10 @@
-AC_INIT([loftili], [1.0.0])
+m4_define([loftili_MAJOR_VERSION], [0])
+m4_define([loftili_MINOR_VERSION], [0])
+m4_define([loftili_REVISION], [1])
+m4_define([loftili_PKG_VERSION], [loftili_MAJOR_VERSION.loftili_MINOR_VERSION.loftili_REVISION])
+
+AC_INIT([loftili], [loftili_PKG_VERSION], [danny@lofti.li])
+AC_DEFINE([LOFTILI_PKG_VERSION], ["loftili_PKG_VERSION"])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_COPYRIGHT([
