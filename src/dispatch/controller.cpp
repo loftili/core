@@ -2,8 +2,8 @@
 
 namespace loftili {
 
-Controller::Controller() {  
-  log = new Logger();
+void Controller::initialize() {  
+  log = new Logger(logName());
 }
 
 Response* Controller::respondTo(Request* request) {

@@ -4,22 +4,23 @@
 #include <string.h>
 #include <iostream>
 #include "util/logger.h"
+#include "util/loggable.h"
 #include "communication/response.h"
 #include "communication/request.h"
 
 namespace loftili {
 
-class Controller {
+class Controller : public Loggable {
   
 public:
-  Controller();
   virtual ~Controller() {};
   virtual Response* respondTo(Request* r);
-  virtual void initialize() = 0;
+  void initialize();
 
   std::string name;
 
 protected:
+  virtual std::string logName() { return "Controller"; }
   Logger* log;
 
 };

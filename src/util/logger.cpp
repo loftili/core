@@ -2,9 +2,14 @@
 
 namespace loftili {
 
-Logger::Logger() { }
-Logger::Logger(std::string n) { 
+Logger::Logger(std::string n) {
+  std::cout << "creating a logger for: " << n << std::endl;
   name = n;
+}
+
+Logger::Logger(Loggable* loggable) { 
+  std::cout << "creating a logger for: " << loggable->logName() << std::endl;
+  name = loggable->logName();
 }
 Logger::~Logger() { }
 

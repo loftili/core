@@ -10,9 +10,12 @@ namespace loftili {
 class PlayerController : public Controller {
 
 public:
+  PlayerController();
   ~PlayerController();
-  void initialize();
   Response* respondTo(Request* r);
+
+protected:
+  std::string logName() { return "PlayerController"; }
 
 private:
   AudioPlayer* player;

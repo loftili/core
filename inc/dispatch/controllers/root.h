@@ -8,8 +8,11 @@ namespace loftili {
 class RootController : public Controller {
 
 public:
+  RootController();
   ~RootController();
-  void initialize();
+
+protected:
+  std::string logName() { return "RootController"; }
 
 };
 

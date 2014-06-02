@@ -6,7 +6,7 @@
 
 namespace loftili {
 
-class AudioPlayer {
+class AudioPlayer : public Loggable {
 
 public:
   AudioPlayer();
@@ -14,6 +14,9 @@ public:
   void start();
   void stop();
   bool isPlaying();
+
+protected:
+  std::string logName() { return "AudioPlayer"; }
 
 private:
   Logger* log;

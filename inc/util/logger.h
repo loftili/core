@@ -3,14 +3,15 @@
 
 #include <iostream>
 #include <fstream>
+#include "util/loggable.h"
 
 namespace loftili {
 
 class Logger {
 
 public:
-  Logger();
   Logger(std::string n);
+  Logger(Loggable* loggable);
   ~Logger();
 
   void fatal(std::string msg);

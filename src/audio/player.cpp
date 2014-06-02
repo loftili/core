@@ -3,7 +3,7 @@
 namespace loftili {
 
 AudioPlayer::AudioPlayer() : playing(false) {
-  log = new Logger("AudioPlayer");
+  log = new Logger(this);
   int success = Pa_Initialize();
 
   if(success != paNoError)

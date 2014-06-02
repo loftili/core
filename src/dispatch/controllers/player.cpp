@@ -2,14 +2,14 @@
 
 namespace loftili {
 
+PlayerController::PlayerController() {
+  name = "PlayerController";
+  player = new AudioPlayer();
+}
+
 PlayerController::~PlayerController() {
   log->info("deleting the player controller");
   delete player;
-}
-
-void PlayerController::initialize() {
-  name = "PlayerController";
-  player = new AudioPlayer();
 }
 
 Response* PlayerController::respondTo(Request* request) {
