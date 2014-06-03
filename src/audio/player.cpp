@@ -14,8 +14,9 @@ void AudioPlayer::onFinish(void* data) {
 AudioPlayer::AudioPlayer() : playing(false), stream(0), ready(false), left_phase(0), device_info(0), right_phase(0), last_error(0) {
   log = new Logger(this);
   int success = Pa_Initialize();
+  int devices = Pa_GetDeviceCount();
 
-  if(success != paNoError)
+  if(success != paNoError || devices < 1)
     log->fatal("Unable to load portaudio library");
   else {
     log->info("Successfully loaded portaudio library");

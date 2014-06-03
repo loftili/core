@@ -26,6 +26,14 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install it])])
 AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
+AC_CHECK_LIB([asound], [main], [ac_asound="yes"], [ac_asound="no"])
+if test "x$ac_asound" = "xno"; then
+AC_MSG_ERROR([ALSA libasound library not found.])
+else 
+   LIBS="$LIBS -lasound"
+fi
+
+LIBS="$LIBS -ljack"
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
