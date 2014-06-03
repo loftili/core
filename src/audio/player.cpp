@@ -112,7 +112,11 @@ bool AudioPlayer::isPlaying() {
 }
 
 void AudioPlayer::stop() {
+  if(!playing)
+    return;
+
   playing = false;
+  Pa_StopStream(stream);
   Pa_CloseStream(stream);
   stream = 0;
   log->info("Closing stream");
