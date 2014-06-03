@@ -19,8 +19,10 @@ Response* PlayerController::respondTo(Request* request) {
 
   if(request->url == "/start")
     player->start();
-  else
+  else {
     player->stop();
+    r->status = 404;
+  }
 
   return r;
 }

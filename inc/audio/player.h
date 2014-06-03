@@ -36,10 +36,12 @@ private:
 private:
   int whilePlaying(const void* input, void* output, unsigned long fpb, const PaStreamCallbackTimeInfo* time_info, PaStreamCallbackFlags flags);
   int onFinished();
+  bool prepare();
 
 private:
   Logger* log;
   bool playing;
+  bool ready;
   PaStream* stream;
   PaStreamParameters output_config;
   PaError last_error;

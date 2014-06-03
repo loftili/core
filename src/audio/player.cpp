@@ -11,19 +11,24 @@ void AudioPlayer::onFinish(void* data) {
 }
 
 
-AudioPlayer::AudioPlayer() : playing(false), stream(0), left_phase(0), device_info(0), right_phase(0), last_error(0) {
+AudioPlayer::AudioPlayer() : playing(false), stream(0), ready(false), left_phase(0), device_info(0), right_phase(0), last_error(0) {
   log = new Logger(this);
   int success = Pa_Initialize();
 
   if(success != paNoError)
     log->fatal("Unable to load portaudio library");
-  else
+  else {
     log->info("Successfully loaded portaudio library");
+    ready = prepare();
+  }
+}
 
+bool AudioPlayer::prepare() {
   output_config.device = Pa_GetDefaultOutputDevice();
-  if(output_config.device == paNoDevice)
+  if(output_config.device == paNoDevice) {
     log->fatal("Failed to get default output device");
-  else
+    return false;
+  } else
     log->info("Found default output device");
 
   device_info = Pa_GetDeviceInfo(output_config.device);
@@ -41,6 +46,7 @@ AudioPlayer::AudioPlayer() : playing(false), stream(0), left_phase(0), device_in
     sine[i] = (float) sin(((double)i/(double)TABLE_SIZE) * M_PI * 2.0);
   }
 
+  return true;
 }
 
 AudioPlayer::~AudioPlayer() {
@@ -74,7 +80,7 @@ int AudioPlayer::onFinished() {
 }
 
 void AudioPlayer::start() {
-  if(playing)
+  if(playing || !ready)
     return;
 
   unsigned long fpb = paFramesPerBufferUnspecified;
