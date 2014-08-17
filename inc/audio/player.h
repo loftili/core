@@ -13,6 +13,9 @@
 #include <portaudio.h>
 #include "util/logger.h"
 
+typedef PaStreamCallbackTimeInfo TimeInfo;
+typedef PaStreamCallbackFlags StreamFlags;
+
 namespace loftili {
 
 class AudioPlayer : public Loggable {
@@ -29,12 +32,12 @@ protected:
 
 // static
 private:
-  static int onPlay(const void* input, void* output, unsigned long fpb, const PaStreamCallbackTimeInfo* time_info, PaStreamCallbackFlags flags, void* data);
+  static int onPlay(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags, void* data);
   static void onFinish(void* data);
 
 // instance
 private:
-  int whilePlaying(const void* input, void* output, unsigned long fpb, const PaStreamCallbackTimeInfo* time_info, PaStreamCallbackFlags flags);
+  int whilePlaying(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags);
   int onFinished();
   bool prepare();
 
@@ -55,6 +58,5 @@ private:
 };
 
 }
-
 
 #endif
