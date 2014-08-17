@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-int AudioPlayer::onPlay(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags, void* data) {
+int AudioPlayer::onPlay(const void* input, void* output, FrameCount fpb, const TimeInfo* time_info, StreamFlags flags, void* data) {
   return ((AudioPlayer*)data)->whilePlaying(input, output, fpb, time_info, flags);
 }
 
@@ -54,7 +54,7 @@ AudioPlayer::~AudioPlayer() {
   delete log;
 }
 
-int AudioPlayer::whilePlaying(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags) {
+int AudioPlayer::whilePlaying(const void* input, void* output, FrameCount fpb, const TimeInfo* time_info, StreamFlags flags) {
   float *out = (float*)output;
   unsigned long i;
 

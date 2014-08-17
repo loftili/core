@@ -15,6 +15,7 @@
 
 typedef PaStreamCallbackTimeInfo TimeInfo;
 typedef PaStreamCallbackFlags StreamFlags;
+typedef unsigned long FrameCount;
 
 namespace loftili {
 
@@ -32,12 +33,12 @@ protected:
 
 // static
 private:
-  static int onPlay(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags, void* data);
+  static int onPlay(const void* input, void* output, FrameCount fpb, const TimeInfo* time_info, StreamFlags flags, void* data);
   static void onFinish(void* data);
 
 // instance
 private:
-  int whilePlaying(const void* input, void* output, unsigned long fpb, const TimeInfo* time_info, StreamFlags flags);
+  int whilePlaying(const void* input, void* output, FrameCount fpb, const TimeInfo* time_info, StreamFlags flags);
   int onFinished();
   bool prepare();
 
