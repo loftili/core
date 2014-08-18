@@ -79,9 +79,41 @@ int AudioPlayer::onFinished() {
   return 1;
 }
 
+bool AudioPlayer::readFile() {
+  log->info("reading file!");
+  std::string file_name = "/Users/dadley/src/loftili/core/some_nights.mp3";
+  mpg123_init();
+
+
+  std::ifstream f(file_name.c_str());
+  if (f.good()) {
+    log->info("file exsists, opening with mpg123");
+  } else {
+    log->info("file does not exist, cannot play");
+  }   
+  f.close();
+
+  file_handle = mpg123_new(NULL, NULL);
+  if(!file_handle) {
+    log->info("unable to create an mpg123 handle");
+    return false;
+  }
+
+  mpg123_open(file_handle, file_name.c_str());
+  mpg123_close(file_handle);
+  /*
+  mpg123_open(file_handle, file_name.c_str());
+  mpg123_close(file_handle);
+  */
+
+  return false;
+}
+
 void AudioPlayer::start() {
   if(playing || !ready)
     return;
+
+  readFile();
 
   unsigned long fpb = paFramesPerBufferUnspecified;
   last_error = Pa_OpenStream(&stream, NULL, &output_config, SAMPLE_RATE, fpb, paClipOff, &AudioPlayer::onPlay, this);
