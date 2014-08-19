@@ -23,10 +23,18 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   auto a = [] () { };
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
-AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
-AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install it])])
-AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
-AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
+AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([
+libmicrohttpd not installed
+source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/libmicrohttpd-0.9.37.tar.gz
+])])
+AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([
+portaudio is not installed
+source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/pa_stable_v19_20140130.tgz
+])])
+AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([
+libmpg123 is not installed
+source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/mpg123-1.20.1.tar.bz2
+])])
 
 AC_MSG_CHECKING([for an available audio device through portaudio])
 AC_TRY_RUN([
@@ -36,7 +44,12 @@ int main() {
   int success = Pa_Initialize();
   int device_count =  Pa_GetDeviceCount();
   return device_count > 0 ? 0 : 1;
-}], [AC_MSG_RESULT([ok])], [AC_MSG_ERROR([Unable to find an audio device to use with portaudio..])])
+}], [AC_MSG_RESULT([ok])], [AC_MSG_ERROR([
+Unable to find an audio device to use with portaudio...
+Try installing libasound2 or alsa lib.
+Alsa - http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/alsa-lib-1.0.27.2.tar.bz2
+You will need to re-compile and install port audio.
+])])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
