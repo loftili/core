@@ -27,6 +27,7 @@ AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([
 libmicrohttpd not installed
 source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/libmicrohttpd-0.9.37.tar.gz
 ])])
+AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install portaudio])])
 AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([
 portaudio is not installed
 source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/pa_stable_v19_20140130.tgz
