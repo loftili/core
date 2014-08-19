@@ -24,7 +24,11 @@ int PlayerController::respondTo(Request* req, Response* res) {
 
 int PlayerController::stop(Request* req, Response* res) {
   player->stop();
-  res->json();
+
+  ShallowJson json;
+  json["status"] = "started";
+
+  res->json(&json);
   return 0;
 }
 
