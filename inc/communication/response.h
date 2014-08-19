@@ -3,6 +3,7 @@
 
 #include "loftili.h"
 
+
 namespace loftili {
 
 class Response {
@@ -11,6 +12,8 @@ class Response {
     Response();
     Response(int _status);
     ~Response();
+    void json(void);
+    void json(ShallowJson* json);
 
     int length;
     void* content;

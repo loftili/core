@@ -20,7 +20,9 @@ int Server::process(struct ahc_info info) {
     return MHD_YES;
   }
 
-  Response* response = router.handle(request);
+  Response* response = new Response();
+
+  int handled = router.handle(request, response);
 
   // the request is no longer needed now - clean it up
   delete request;
@@ -30,16 +32,13 @@ int Server::process(struct ahc_info info) {
 }
 
 int Server::queueResponse(Response* response, MHD_Connection* connection) {
-  if(response == NULL)
-    response = new Response(404);
-
   int length = response->length;
   void* data = response->content;
   int status = response->status;
 
   struct MHD_Response* m_response;
-
-  m_response = MHD_create_response_from_data(length, data, MHD_NO, MHD_NO);
+  m_response = MHD_create_response_from_buffer(length, data, MHD_RESPMEM_MUST_COPY);
+  MHD_add_response_header(m_response, "Content-type", "application/json");
   int ret = MHD_queue_response(connection, status, m_response);
 
   // cleanup

@@ -9,7 +9,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <map>
 
+typedef std::map<std::string, std::string> ShallowJson;
 
 /* forward declare libmicrohttpd classes */
 class MHD_Connection;

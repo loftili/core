@@ -26,6 +26,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install it])])
 AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
+AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([libmicrohttpd not installed])])
 
 AC_MSG_CHECKING([for an available audio device through portaudio])
 AC_TRY_RUN([

@@ -6,10 +6,9 @@ void Controller::initialize() {
   log = new Logger(logName());
 }
 
-Response* Controller::respondTo(Request* request) {
+int Controller::respondTo(Request* request, Response* response) {
   log->info("Responding via Controller base class");
-  Response* r;
-  return r;
+  return 0;
 }
 
 }

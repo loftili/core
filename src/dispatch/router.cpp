@@ -11,9 +11,9 @@ Router::~Router() {
   routes.purge();
 }
 
-Response* Router::handle(Request* request) {
-  Controller* c = routes.find(request);
-  return c->respondTo(request);
+int Router::handle(Request* req, Response* res) {
+  Controller* c = routes.find(req);
+  return c->respondTo(req, res);
 }
 
 }
