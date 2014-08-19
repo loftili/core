@@ -22,6 +22,9 @@ void RouteList::purge() {
 }
 
 Controller* RouteList::find(Request* request) {
+  if(request->url == "/favicon.ico")
+    return controllers[0];
+
   return controllers[1];
 }
 

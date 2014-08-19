@@ -1,8 +1,8 @@
 #ifndef _LOFTILI_RESPONSE_H
 #define _LOFTILI_RESPONSE_H
 
+#include <cstring>
 #include "loftili.h"
-
 
 namespace loftili {
 

@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <iostream>
+#include <cstring>
 #include <string>
 #include <mpg123.h>
 #include <portaudio.h>
