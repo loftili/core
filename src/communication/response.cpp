@@ -10,6 +10,12 @@ Response::Response(int _status) : length(LOFTILI_EMPTY_RESPONSE_LEN), status(_st
   content = (void*)LOFTILI_EMPTY_RESPONSE;
 }
 
+void Response::json(void) {
+  content = (void*)"{\"hello\": \"world\"}";
+  length = strlen((char*)content);
+  status = 200;
+}
+
 Response::~Response() {
 } 
 

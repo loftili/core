@@ -7,5 +7,4 @@ RootController::RootController() {
 }
 
 RootController::~RootController() { }
-
 }

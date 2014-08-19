@@ -12,10 +12,14 @@ class PlayerController : public Controller {
 public:
   PlayerController();
   ~PlayerController();
-  Response* respondTo(Request* r);
+  int respondTo(Request* req, Response* res);
 
 protected:
   std::string logName() { return "PlayerController"; }
+
+private:
+  int start(Request* req, Response* res);
+  int stop(Request* req, Response* res);
 
 private:
   AudioPlayer* player;

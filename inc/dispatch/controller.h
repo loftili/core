@@ -14,7 +14,7 @@ class Controller : public Loggable {
   
 public:
   virtual ~Controller() {};
-  virtual Response* respondTo(Request* r);
+  virtual int respondTo(Request* req, Response* res);
   void initialize();
 
   std::string name;

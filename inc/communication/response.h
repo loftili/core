@@ -11,6 +11,7 @@ class Response {
     Response();
     Response(int _status);
     ~Response();
+    void json(void);
 
     int length;
     void* content;

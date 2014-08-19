@@ -16,7 +16,7 @@ class Router {
     Router();
     ~Router();
 
-    Response* handle(Request* request);
+    int handle(Request* req, Response* res);
 
   private:
     RouteList routes;

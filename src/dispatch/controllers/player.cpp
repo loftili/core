@@ -12,19 +12,26 @@ PlayerController::~PlayerController() {
   delete player;
 }
 
-Response* PlayerController::respondTo(Request* request) {
-  Response* r = new Response(200);
+int PlayerController::respondTo(Request* req, Response* res) {
   log->info("PlayerController is responding to: ");
-  log->info(request->url);
+  log->info(req->url);
 
-  if(request->url == "/start")
-    player->start();
-  else {
-    player->stop();
-    r->status = 404;
-  }
+  if(req->url == "/start")
+    return start(req, res);
+  else
+    return stop(req, res);
+}
 
-  return r;
+int PlayerController::stop(Request* req, Response* res) {
+  player->stop();
+  res->json();
+  return 0;
+}
+
+int PlayerController::start(Request* req, Response* res) {
+  player->start();
+  res->json();
+  return 0;
 }
 
 }
