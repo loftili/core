@@ -10,16 +10,18 @@ AudioPlayer::AudioPlayer() : playing(false), ready(true), audio_stream(0) {
   int success = Pa_Initialize();
   int devices = Pa_GetDeviceCount();
 
-  if(success != paNoError || devices < 1) {
-    std::cout << "-!> portaudio initialize fail" << std::endl;
-  }
-
-  std::cout << "-> portaudio initialized and ready" << std::endl;
+  if(success != paNoError || devices < 1)
+    log->fatal("portaudio initialize fail");
+  else 
+    log->info("portaudio initialized and device ready to go");
 }
 
 AudioPlayer::~AudioPlayer() {
   delete log;
-  delete audio_stream;
+
+  if(audio_stream)
+    delete audio_stream;
+
   Pa_Terminate();
 }
 
@@ -27,7 +29,7 @@ void AudioPlayer::start() {
   if(playing || !ready)
     return;
 
-  log->info("Creating new audio stream");
+  log->info("creating new audio stream");
   audio_stream = new AudioStream("/music/Fun/some_nights.mp3");
 
   audio_stream->start();
@@ -42,10 +44,9 @@ void AudioPlayer::stop() {
   if(!playing)
     return;
 
-  if(audio_stream != 0) {
-    audio_stream->stop();
-    audio_stream->clean();
-  }
+  // audio_stream garbage collection
+  delete audio_stream;
+  audio_stream = 0;
 
   playing = false;
 }

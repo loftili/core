@@ -3,13 +3,13 @@
 namespace loftili {
 
 int AudioStream::playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* data) {
-  AudioStream* stream = (AudioStream*)data;
-  pthread_mutex_lock(&stream->thread_mutex);
+  AudioStream* stream = static_cast<AudioStream*>(data);
+
+  if(!stream)
+    return 0;
 
   stream->playback(out);
 
-  pthread_cond_broadcast(&stream->thread_cond);
-  pthread_mutex_unlock(&stream->thread_mutex);
   return 0;
 }
 
@@ -18,8 +18,9 @@ AudioStream::AudioStream(std::string fname) :
   streaming(0), rate(0), channels(0), encoding(0),
   stream_size(0), buffer(0), ready(false) {
 
-  std::cout << "initializing mpg123 library" << std::endl;
-  name = "hello world!";
+  log = new Logger(this);
+  log->info("new audio stream created");
+
   if(initialize())
     prepare();
 }
@@ -27,47 +28,55 @@ AudioStream::AudioStream(std::string fname) :
 AudioStream::~AudioStream() {
   mpg123_close(m_handle);
   mpg123_delete(m_handle);
-}
 
-void AudioStream::clean() {
-  mpg123_close(m_handle);
-  mpg123_delete(m_handle);
+  if(buffer) {
+    free(buffer);
+    buffer = 0;
+  }
 
-  std::cout << "Audiostream cleanup" << std::endl;
-  std::cout << " - portaudio cleanup" << std::endl;
+  if(p_stream) {
+    Pa_StopStream(p_stream);
+    Pa_CloseStream(p_stream);
+  }
 }
 
 bool AudioStream::initialize() {
   bool ok = true;
+  log->info("initializing audio stream - opening mpg handle and portaudio stream");
+
   m_handle = mpg123_new(NULL, NULL);
   int m_error = mpg123_open(m_handle, filename.c_str());
   if(m_error == MPG123_ERR) {
-    std::cout << "error opening file" << std::endl;
+    log->fatal("failed opening the audio stream\'s file");
     ok = false;
   }
+  log->info("successfully opened file, proceeding to portaudio init");
+
+  m_error = Pa_OpenDefaultStream(&p_stream, 0, 2, paFloat32, 44100, FRAME_PER_BUFFER, &AudioStream::playback, (void*)this);
+  if(m_error != paNoError) {
+    log->fatal("failed opening port audio\'s default stream");
+    ok = false;
+  }
+  log->info("successfully opened a portaudio stream");
+
   return ok;
 }
 
 int AudioStream::prepare() {
   int m_error;
-  std::cout << "successfully opened file" << std::endl;
   mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT, 0.);
 
   m_error = mpg123_getformat(m_handle, &rate, &channels, &encoding);
   if(m_error != MPG123_OK) {
-    std::cout << "bad file format!" << std::endl;
-    clean();
+    log->fatal("bad file format!");
     return 1;
   }
 
-  std::cout << "file format checked out, prepping buffer" << std::endl;
-
+  log->info("file format checked out, prepping buffer");
   mpg123_format_none(m_handle);
   mpg123_format(m_handle, rate, channels, encoding);
-
   stream_size = FRAME_PER_BUFFER * 2.0;
   buffer = (float*) malloc(sizeof(float) * stream_size);
-
   ready = true;
 }
 
@@ -75,15 +84,9 @@ int AudioStream::start() {
   if(!ready || streaming == 1) 
     return 0;
 
-  int m_error = Pa_OpenDefaultStream(&p_stream, 0, 2, paFloat32, 44100, FRAME_PER_BUFFER, &AudioStream::playback, (void*)this);
-  if(m_error != paNoError) {
-    std::cout << "unable to open portaudio stream!" << std::endl;
-    return 1;
-  }
-
   streaming = 1;
-  std::cout << "portaudio stream opened, opening threads" << std::endl;
-  m_error = Pa_StartStream(p_stream);
+  log->info("starting port audio stream");
+  int m_error = Pa_StartStream(p_stream);
   return 0;
 }
 
@@ -91,27 +94,6 @@ void AudioStream::playback(void* output_buffer) {
   size_t done = 0;
   mpg123_read(m_handle, (unsigned char*)buffer, stream_size * sizeof(float), &done);
   memcpy(output_buffer, buffer, sizeof(float) * stream_size);
-}
-
-bool AudioStream::isPlaying() {
-  std::cout << "streaming: " << streaming << std::endl;
-  return streaming;
-}
-
-int AudioStream::stop() {
-  if(!ready || streaming == 0) 
-    return 0;
-
-  if(buffer != 0) {
-    free(buffer);
-    buffer = 0;
-  }
-
-  Pa_StopStream(p_stream);
-  Pa_CloseStream(p_stream);
-
-  streaming = 0;
-  return 0;
 }
 
 }

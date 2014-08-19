@@ -6,6 +6,7 @@
 #include <string>
 #include <mpg123.h>
 #include <portaudio.h>
+#include "util/logger.h"
 #define FRAME_PER_BUFFER 4096
 
 typedef PaStreamCallbackTimeInfo TimeInfo;
@@ -14,41 +15,36 @@ typedef unsigned long FrameCount;
 
 namespace loftili {
 
-class AudioStream {
+class AudioStream : public Loggable {
 
-  public:
-    AudioStream(std::string fname);
-    ~AudioStream();
-    int start();
-    int stop();
-    void clean();
-    int streaming;
+public:
+  AudioStream(std::string fname);
+  ~AudioStream();
+  int start();
+  int streaming;
 
-  private:
-    static int playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* d);
+private:
+  static int playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* d);
 
-  protected:
-    void playback(void* output);
-    bool isPlaying();
+protected:
+  void playback(void* output);
+  std::string logName() { return "AudioStream"; }
 
-  private:
-    mpg123_handle* m_handle;
-    PaStream* p_stream;
-    int prepare();
-    bool initialize();
-    std::string name;
+private:
+  Logger* log;
+  mpg123_handle* m_handle;
+  PaStream* p_stream;
+  int prepare();
+  bool initialize();
 
-    std::string filename;
-    int last_error;
-    bool ready;
-    long rate;
-    int channels;
-    int encoding;
-    int stream_size;
-    pthread_t load_thread;
-    pthread_mutex_t thread_mutex;
-    pthread_cond_t thread_cond;
-    float* buffer;
+  std::string filename;
+  int last_error;
+  bool ready;
+  long rate;
+  int channels;
+  int encoding;
+  int stream_size;
+  float* buffer;
 
 };
 
