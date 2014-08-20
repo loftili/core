@@ -23,18 +23,13 @@ int PlayerController::respondTo(Request* req, Response* res) {
 }
 
 int PlayerController::stop(Request* req, Response* res) {
+  log->info("stoppping audio player");
   player->stop();
-
-  ShallowJson json;
-  json["status"] = "started";
-
-  res->json(&json);
   return 0;
 }
 
 int PlayerController::start(Request* req, Response* res) {
   player->start();
-  res->json();
   return 0;
 }
 
