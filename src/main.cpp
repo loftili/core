@@ -9,5 +9,5 @@ int main(int argc, char * argv[]) {
   Options opts = cli::Parser::parse(argc, argv);
 
   if(!opts.help)
-    return Server::run(opts.port == 0 ? LOFTILI_DEFAULT_PORT : opts.port);
+    return Server::run(opts);
 }

@@ -49,8 +49,9 @@ int Server::queueResponse(Response* response, MHD_Connection* connection) {
   return ret;
 }
 
-int Server::run(int port) {
+int Server::run(Options opts) {
   Logger log("SERVER STARTUP");
+  int port = opts.port;
 
   log.info("preparing a new server instance");
   server_instance = new Server();
