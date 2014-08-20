@@ -21,7 +21,7 @@ class Server {
     Router router;
 
   public:
-    static int run();
+    static int run(int port);
     static int ahc(
       void* cls, 
       MHD_Connection* connection, 

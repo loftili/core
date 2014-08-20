@@ -49,17 +49,21 @@ int Server::queueResponse(Response* response, MHD_Connection* connection) {
   return ret;
 }
 
-int Server::run() {
+int Server::run(int port) {
+  Logger log("SERVER STARTUP");
+
+  log.info("preparing a new server instance");
   server_instance = new Server();
 
+  log.info("starting libmicrohttp daemon on: " + std::to_string(port));
   MHD_Daemon* daemon = MHD_start_daemon(
     MHD_USE_DEBUG | MHD_USE_SELECT_INTERNALLY, 
-    LOFTILI_DEFAULT_PORT, NULL, 
+    port, NULL, 
     NULL, &ahc, NULL, 
     MHD_OPTION_END);
 
   if(daemon == NULL) {
-    std::cout << "Daemon unable to start successfully!" << std::endl;
+    log.fatal("Daemon unable to start successfully!");
     return 1;
   }
 

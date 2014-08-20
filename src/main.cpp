@@ -1,9 +1,13 @@
 #include "loftili.h"
+#include "util/cli/parser.h"
+#include "util/options.h"
 #include "server.h"
 
-int main(int argc, char ** argv) {
-  if(argc > 1)
-    std::cout << LOFTILI_PKG_VERSION << std::endl;
-  else
-    return loftili::Server::run();
+using namespace loftili;
+
+int main(int argc, char * argv[]) {
+  Options opts = cli::Parser::parse(argc, argv);
+
+  if(!opts.help)
+    return Server::run(LOFTILI_DEFAULT_PORT);
 }
