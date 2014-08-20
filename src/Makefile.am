@@ -4,6 +4,8 @@ loftili_SOURCES = \
   main.cpp \
 	server.cpp \
   util/logger.cpp \
+  util/options.cpp \
+  util/cli/parser.cpp \
 	dispatch/router.cpp \
   dispatch/route_list.cpp \
   dispatch/controller.cpp \

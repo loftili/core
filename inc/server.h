@@ -3,6 +3,7 @@
 
 #include <microhttpd.h>
 #include "loftili.h"
+#include "util/options.h"
 #include "dispatch/router.h"
 #include "communication/request.h"
 #include "communication/response.h"
@@ -21,7 +22,7 @@ class Server {
     Router router;
 
   public:
-    static int run();
+    static int run(Options opts);
     static int ahc(
       void* cls, 
       MHD_Connection* connection, 

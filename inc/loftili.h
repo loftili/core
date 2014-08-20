@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
+#include <config.h>
 
 typedef std::map<std::string, std::string> ShallowJson;
 
