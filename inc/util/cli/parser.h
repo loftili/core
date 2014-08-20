@@ -15,7 +15,6 @@ public:
 
 private:
   static void help();
-  static bool read(int argc, char* argv[], int* out);
   static bool missing(char param);
 
 };

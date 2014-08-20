@@ -6,15 +6,14 @@ m4_define([loftili_PKG_VERSION], [loftili_MAJOR_VERSION.loftili_MINOR_VERSION.lo
 AC_INIT(
 [loftili], 
 [loftili_PKG_VERSION], 
-[bugs@lofti.li], 
+[bugs@loftili.com], 
 [], 
-[http://lofti.li])
+[http://loftili.com])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-
 AC_COPYRIGHT([
 Loftili is an open source audio player built for the raspberry pi. 
-Licensed under the GNU GPL v3.0 license. 
+Licensed under the MIT license. 
 Copyright Danny Hadley 2014
 ])
 

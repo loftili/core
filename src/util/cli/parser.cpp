@@ -8,36 +8,29 @@ Options Parser::parse(int argc, char* argv[]) {
 
   int port = 0;
   int c = 0;
+  opterr = 0;
 
-  while(read(argc, argv, &c)) {
+  while((c = getopt (argc, argv, "p::hun:")) != -1) {
     switch(c) {
       case 'p':
-        port = atoi(optarg);
+        opts.port = atoi(optarg);
         break;
       case 'h':
         help();
-        break;
+        opts.help = true;
+        return opts;
+      case '?':
+        opts.help = true;
+        missing(optopt);
+        return opts;
       default:
         break;
     }
   }
 
+  opts.help = false;
+
   return opts;
-}
-
-bool Parser::read(int argc, char* argv[], int* out) {
-  opterr = 0;
-
-  *out = getopt(argc, argv, "p:h::");
-
-  if(*out == '?')
-    return missing(optopt);
-  else if(*out == -1) {
-    help();
-    return false;
-  }
-
-  return true;
 }
 
 bool Parser::missing(char param) {
@@ -47,11 +40,14 @@ bool Parser::missing(char param) {
 }
 
 void Parser::help() {
-  printf("Loftili core v%s \n", PACKAGE_VERSION);
+  printf("loftili core v%s \n", PACKAGE_VERSION);
+  printf("get involved @ %s \n", PACKAGE_URL);
+  printf("please send all issues to %s \n\n", PACKAGE_BUGREPORT);
   printf("options: \n");
-  printf("   -%-*s %s", 5, "p", "the port to run the lofiti web server on \n");
-  printf("   -%-*s %s", 5, "u", "your username. will be used to connect with the loftili api \n");
-  printf("   -%-*s %s", 5, "h", "display this help text \n");
+  printf("   -%s %-*s %s", "p", 15, "PORT", "the port to run the lofiti web server on \n");
+  printf("   -%s %-*s %s", "u", 15, "USERNAME", "your username. will be used to connect with the loftili api \n");
+  printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "the name this device should be communicating under \n");
+  printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
 
 }
