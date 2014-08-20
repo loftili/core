@@ -45,6 +45,7 @@ void AudioPlayer::stop() {
     return;
 
   // audio_stream garbage collection
+  log->info("cleaning up audio stream");
   delete audio_stream;
   audio_stream = 0;
 

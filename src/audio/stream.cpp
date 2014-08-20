@@ -5,7 +5,7 @@ namespace loftili {
 int AudioStream::playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* data) {
   AudioStream* stream = static_cast<AudioStream*>(data);
 
-  if(!stream)
+  if(!stream || stream->buffer == 0)
     return 0;
 
   stream->playback(out);
@@ -26,6 +26,13 @@ AudioStream::AudioStream(std::string fname) :
 }
 
 AudioStream::~AudioStream() {
+  log->info("audio stream being deleted!");
+
+  if(p_stream) {
+    Pa_StopStream(p_stream);
+    Pa_CloseStream(p_stream);
+  }
+
   mpg123_close(m_handle);
   mpg123_delete(m_handle);
 
@@ -34,10 +41,7 @@ AudioStream::~AudioStream() {
     buffer = 0;
   }
 
-  if(p_stream) {
-    Pa_StopStream(p_stream);
-    Pa_CloseStream(p_stream);
-  }
+  delete log;
 }
 
 bool AudioStream::initialize() {
