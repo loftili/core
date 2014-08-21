@@ -10,10 +10,13 @@ Options Parser::parse(int argc, char* argv[]) {
   int c = 0;
   opterr = 0;
 
-  while((c = getopt (argc, argv, "p::hun:")) != -1) {
+  while((c = getopt (argc, argv, "l::p::hun:")) != -1) {
     switch(c) {
       case 'p':
         opts.port = atoi(optarg);
+        break;
+      case 'l':
+        opts.logfile = optarg;
         break;
       case 'h':
         help();

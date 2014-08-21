@@ -11,6 +11,7 @@ class Options {
     Options();
     int port;
     bool help;
+    char* logfile;
 
 };
 

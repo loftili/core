@@ -32,6 +32,11 @@ int Server::process(struct ahc_info info) {
 }
 
 int Server::run(Options opts) {
+  std::ofstream out(opts.logfile);
+  std::streambuf *coutbuf = std::cout.rdbuf();
+  std::cout.rdbuf(out.rdbuf());
+
+
   Logger log("SERVER STARTUP");
   int port = opts.port;
 

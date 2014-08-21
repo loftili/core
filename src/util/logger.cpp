@@ -9,7 +9,9 @@ Logger::Logger(std::string n) {
 Logger::Logger(Loggable* loggable) { 
   name = loggable->logName();
 }
-Logger::~Logger() { }
+
+Logger::~Logger() { 
+}
 
 void Logger::info(std::string msg) {
   std::cout << "[" << name << "][info] - " << msg << std::endl;
