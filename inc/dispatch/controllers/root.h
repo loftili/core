@@ -7,12 +7,12 @@ namespace loftili {
 
 class RootController : public Controller {
 
-public:
-  RootController();
-  ~RootController();
+  public:
+    RootController();
+    ~RootController();
 
-protected:
-  std::string logName() { return "RootController"; }
+  protected:
+    std::string logName() { return "RootController"; }
 
 };
 

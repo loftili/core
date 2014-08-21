@@ -12,7 +12,8 @@
 #include <map>
 #include <config.h>
 
-typedef std::map<std::string, std::string> ShallowJson;
+typedef std::map<std::string, std::string> HttpHeaders;
+typedef std::pair<std::string, std::string> HttpHeader;
 
 /* forward declare libmicrohttpd classes */
 class MHD_Connection;

@@ -12,16 +12,16 @@ namespace loftili {
 
 class Controller : public Loggable {
   
-public:
-  virtual ~Controller() {};
-  virtual int respondTo(Request* req, Response* res);
-  void initialize();
+  public:
+    virtual ~Controller() {};
+    virtual int respondTo(Request* req, Response* res);
+    void initialize();
 
-  std::string name;
+    std::string name;
 
-protected:
-  virtual std::string logName() { return "Controller"; }
-  Logger* log;
+  protected:
+    virtual std::string logName() { return "Controller"; }
+    Logger* log;
 
 };
 

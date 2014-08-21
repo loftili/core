@@ -9,17 +9,17 @@ namespace loftili {
 
 class Logger {
 
-public:
-  Logger(std::string n);
-  Logger(Loggable* loggable);
-  ~Logger();
+  public:
+    Logger(std::string n);
+    Logger(Loggable* loggable);
+    ~Logger();
 
-  void fatal(std::string msg);
-  void info(std::string msg);
+    void fatal(std::string msg);
+    void info(std::string msg);
 
-private:
-  void send();
-  std::string name;
+  private:
+    void send();
+    std::string name;
 
 };
 

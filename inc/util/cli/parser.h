@@ -10,12 +10,12 @@ namespace cli {
 
 class Parser {
 
-public:
-  static Options parse(int argc, char* argv[]);
+  public:
+    static Options parse(int argc, char* argv[]);
 
-private:
-  static void help();
-  static bool missing(char param);
+  private:
+    static void help();
+    static bool missing(char param);
 
 };
 

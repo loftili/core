@@ -14,24 +14,24 @@ namespace loftili {
 
 class AudioPlayer : public Loggable {
 
-public:
-  AudioPlayer();
-  ~AudioPlayer();
-  void start();
-  void stop();
-  bool isPlaying();
+  public:
+    AudioPlayer();
+    ~AudioPlayer();
+    void start();
+    void stop();
+    bool isPlaying();
 
-protected:
-  std::string logName() { return "AudioPlayer"; }
+  protected:
+    std::string logName() { return "AudioPlayer"; }
 
-private:
-  bool prepare();
+  private:
+    bool prepare();
 
-private:
-  Logger* log;
-  bool playing;
-  bool ready;
-  AudioStream* audio_stream;
+  private:
+    Logger* log;
+    bool playing;
+    bool ready;
+    AudioStream* audio_stream;
 
 };
 

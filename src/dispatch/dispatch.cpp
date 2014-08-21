@@ -26,7 +26,9 @@ int Dispatch::send(Response* res, MHD_Connection* connection) {
 }
 
 void Dispatch::headers(MHD_Response* m_res, Response* res) {
-  MHD_add_response_header(m_res, "Content-type", "application/json");
+  HttpHeaders::const_iterator it = res->headers.begin();
+  for(it; it != res->headers.end(); ++it)
+    MHD_add_response_header(m_res, it->first.c_str(), it->second.c_str());
 }
 
 }

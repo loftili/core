@@ -3,27 +3,25 @@
 
 #include "dispatch/controller.h"
 #include "audio/player.h"
-#include "audio/manager.h"
 
 namespace loftili {
 
 class PlayerController : public Controller {
 
-public:
-  PlayerController();
-  ~PlayerController();
-  int respondTo(Request* req, Response* res);
+  public:
+    PlayerController();
+    ~PlayerController();
+    int respondTo(Request* req, Response* res);
 
-protected:
-  std::string logName() { return "PlayerController"; }
+  protected:
+    std::string logName() { return "PlayerController"; }
 
-private:
-  int start(Request* req, Response* res);
-  int stop(Request* req, Response* res);
+  private:
+    int start(Request* req, Response* res);
+    int stop(Request* req, Response* res);
 
-private:
-  AudioPlayer* player;
-  AudioManager* manager;
+  private:
+    AudioPlayer* player;
 
 };
 

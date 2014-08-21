@@ -9,16 +9,16 @@ namespace loftili {
 
 class RouteList {
 
-public:
-  RouteList();
-  ~RouteList();
-  
-  void add(Controller* c);
-  void purge();
-  Controller* find(Request* r);
+  public:
+    RouteList();
+    ~RouteList();
+    
+    void add(Controller* c);
+    void purge();
+    Controller* find(Request* r);
 
-private:
-  std::vector<Controller*> controllers;
+  private:
+    std::vector<Controller*> controllers;
 
 };
 

@@ -7,10 +7,10 @@ namespace loftili {
 
 class Options {
 
-public:
-  Options();
-  int port;
-  bool help;
+  public:
+    Options();
+    int port;
+    bool help;
 
 };
 

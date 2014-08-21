@@ -7,10 +7,10 @@ namespace loftili {
 
 class Loggable { 
 
-friend class Logger;
+  friend class Logger;
 
-protected:
-  virtual std::string logName() { return "Loggable"; }
+  protected:
+    virtual std::string logName() { return "Loggable"; }
 
 };
 

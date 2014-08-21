@@ -12,7 +12,6 @@ loftili_SOURCES = \
   dispatch/controller.cpp \
   communication/response.cpp \
   communication/request.cpp \
-  audio/manager.cpp \
   audio/player.cpp \
   audio/stream.cpp \
   dispatch/controllers/root.cpp \

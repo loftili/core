@@ -13,13 +13,15 @@ class Response {
     Response(int _status);
     ~Response();
     void json(void);
-    void json(ShallowJson* json);
+
+  private:
+    void setDefaultHeaders();
 
   public:
     int length;
     void* content;
     int status;
-    std::map<char,int> headers;
+    HttpHeaders headers;
 
 };
 
