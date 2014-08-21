@@ -4,6 +4,7 @@
 #include <microhttpd.h>
 #include "loftili.h"
 #include "util/options.h"
+#include "dispatch/dispatch.h"
 #include "dispatch/router.h"
 #include "communication/request.h"
 #include "communication/response.h"
@@ -18,7 +19,7 @@ class Server {
     int process(struct ahc_info info);
 
   private:
-    int queueResponse(Response* r, MHD_Connection* c);
+    Dispatch dispatch;
     Router router;
 
   public:

@@ -4,7 +4,7 @@ namespace loftili {
 
 Server* Server::server_instance;
 
-Server::Server() : router() { 
+Server::Server() : router(), dispatch() { 
 }
 
 Server::~Server() { }
@@ -28,25 +28,7 @@ int Server::process(struct ahc_info info) {
   delete request;
   
   // send back the final response to the client
-  return queueResponse(response, info.connection);
-}
-
-int Server::queueResponse(Response* response, MHD_Connection* connection) {
-  int length = response->length;
-  void* data = response->content;
-  int status = response->status;
-
-  struct MHD_Response* m_response;
-  m_response = MHD_create_response_from_buffer(length, data, MHD_RESPMEM_MUST_COPY);
-  MHD_add_response_header(m_response, "Content-type", "application/json");
-  int ret = MHD_queue_response(connection, status, m_response);
-
-  // cleanup
-  MHD_destroy_response(m_response);
-  delete response;
-
-  // send back the MHD status
-  return ret;
+  return dispatch.send(response, info.connection);
 }
 
 int Server::run(Options opts) {

@@ -15,9 +15,11 @@ class Response {
     void json(void);
     void json(ShallowJson* json);
 
+  public:
     int length;
     void* content;
     int status;
+    std::map<char,int> headers;
 
 };
 
