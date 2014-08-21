@@ -17,6 +17,7 @@ Options Parser::parse(int argc, char* argv[]) {
         break;
       case 'l':
         opts.logfile = optarg;
+        opts.use_log = true;
         break;
       case 'h':
         help();

@@ -2,6 +2,11 @@
 
 namespace loftili {
 
-Options::Options() : port(LOFTILI_DEFAULT_PORT), help(true), logfile("loftili.log") { }
+Options::Options() { 
+  port = LOFTILI_DEFAULT_PORT;
+  help = true;
+  logfile = "loftili.log";
+  use_log = false;
+}
 
 }
