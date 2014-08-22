@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <time.h>
 #include "util/loggable.h"
 
 namespace loftili {
@@ -18,8 +19,9 @@ class Logger {
     void info(std::string msg);
 
   private:
-    void send();
+    void send(std::string msg, std::string level);
     std::string name;
+    time_t timer;
 
 };
 
