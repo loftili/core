@@ -13,8 +13,8 @@ Response::Response(int _status) : length(LOFTILI_EMPTY_RESPONSE_LEN), status(_st
 }
 
 void Response::setDefaultHeaders() {
-  headers.insert(HttpHeader("Content-Type", "application/json"));
-  headers.insert(HttpHeader("x-loftili-version", PACKAGE_VERSION));
+  headers.insert(HttpHeader(HEADER_CONTENT_TYPE, "application/json"));
+  headers.insert(HttpHeader(HEADER_LOFTILI_VERSION, PACKAGE_VERSION));
 }
 
 void Response::json(void) {

@@ -2,15 +2,14 @@
 #define _LOFTILI_H
 
 #define LOFTILI_DEFAULT_PORT 8888
-#define LOFTILI_EMPTY_RESPONSE "<html><head></head><body></body></html>"
-#define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 
 #include <iostream>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
-#include <config.h>
+#include "config.h"
+#include "headers.h"
 
 typedef std::map<std::string, std::string> HttpHeaders;
 typedef std::pair<std::string, std::string> HttpHeader;

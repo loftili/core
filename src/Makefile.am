@@ -6,6 +6,7 @@ loftili_SOURCES = \
   util/logger.cpp \
   util/options.cpp \
   util/cli/parser.cpp \
+	dispatch/auth.cpp \
 	dispatch/dispatch.cpp \
 	dispatch/router.cpp \
   dispatch/route_list.cpp \

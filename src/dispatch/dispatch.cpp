@@ -2,8 +2,21 @@
 
 namespace loftili {
 
-Dispatch::Dispatch() { }
-Dispatch::~Dispatch() { }
+Dispatch::Dispatch() : log("Dispatch"), auth() { 
+}
+
+Dispatch::~Dispatch() {
+}
+
+bool Dispatch::validate(MHD_Connection* connection) {
+  const char* auth_val = MHD_lookup_connection_value(connection, MHD_HEADER_KIND, "x-loftili-auth");
+  if(auth_val != NULL) {
+    log.info("loftili auth header found: " + std::string(auth_val));
+    return auth.validate(auth_val);
+  } else {
+    return false;
+  }
+}
 
 int Dispatch::send(Response* res, MHD_Connection* connection) {
   int length = res->length;

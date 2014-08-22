@@ -20,6 +20,9 @@ int Server::process(struct ahc_info info) {
     return MHD_YES;
   }
 
+  if(!dispatch.validate(info.connection))
+    return MHD_NO;
+
   Response* response = new Response();
 
   int handled = router.handle(request, response);
