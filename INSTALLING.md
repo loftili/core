@@ -46,6 +46,14 @@ make
 sudo make install
 cd ..
 
+wget http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/mpg123-1.20.1.tar.bz2
+tar xjvf mpg123-1.20.1.tar.bz2
+cd mpg123-1.20.1
+./configure
+make
+sudo make install
+cd ..
+
 git clone git@github.com:loftili/core.git
 cd core
 ./bootstrap && ./configure
