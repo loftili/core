@@ -18,6 +18,13 @@ bool Dispatch::validate(MHD_Connection* connection) {
   }
 }
 
+int Dispatch::reject(Request* req, MHD_Connection* connection) {
+  delete req;
+
+  Response* res = new Response(401);
+  return send(res, connection);
+}
+
 int Dispatch::send(Response* res, MHD_Connection* connection) {
   int length = res->length;
   void* data = res->content;

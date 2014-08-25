@@ -1,7 +1,7 @@
 #ifndef _LOFTILI_RESPONSE_H
 #define _LOFTILI_RESPONSE_H
 
-#define LOFTILI_EMPTY_RESPONSE "<html><head></head><body></body></html>"
+#define LOFTILI_EMPTY_RESPONSE "{}"
 #define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 
 #include <cstring>

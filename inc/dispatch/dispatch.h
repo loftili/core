@@ -5,6 +5,7 @@
 #include "util/logger.h"
 #include "dispatch/auth.h"
 #include "communication/response.h"
+#include "communication/request.h"
 
 namespace loftili {
 
@@ -14,6 +15,7 @@ class Dispatch {
     Dispatch();
     ~Dispatch();
     int send(Response* res, MHD_Connection* connection);
+    int reject(Request* req, MHD_Connection* connection);
     bool validate(MHD_Connection* connection);
 
   private:

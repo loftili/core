@@ -20,8 +20,9 @@ int Server::process(struct ahc_info info) {
     return MHD_YES;
   }
 
-  if(!dispatch.validate(info.connection))
-    return MHD_NO;
+  if(!dispatch.validate(info.connection)) {
+    return dispatch.reject(request, info.connection);
+  }
 
   Response* response = new Response();
 
