@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "loftili.h"
 
 namespace loftili {
 
@@ -14,6 +15,7 @@ struct Request {
     ~Request();
     std::string url;
     std::string method;
+    int c_method;
 
 };
 

@@ -5,6 +5,13 @@ namespace loftili {
 PlayerController::PlayerController() {
   name = "PlayerController";
   player = new AudioPlayer();
+
+  ControllerMethod start = ControllerMethod("/start", player_methods::START);
+  ControllerMethod stop = ControllerMethod("/stop", player_methods::STOP);
+  ControllerMethod status = ControllerMethod("/status", player_methods::STATUS);
+  method_map.insert(start);
+  method_map.insert(stop);
+  method_map.insert(status);
 }
 
 PlayerController::~PlayerController() {
@@ -13,13 +20,16 @@ PlayerController::~PlayerController() {
 }
 
 int PlayerController::respondTo(Request* req, Response* res) {
-  log->info("PlayerController is responding to: ");
-  log->info(req->url);
+  log->info(std::string("PlayerController is responding to: ") + req->url);
 
-  if(req->url == "/start")
-    return start(req, res);
-  else
-    return stop(req, res);
+  switch(req->c_method) {
+    case START:
+      return start(req, res);
+    case STOP:
+      return stop(req, res);
+    case STATUS:
+      return stop(req, res);
+  }
 }
 
 int PlayerController::stop(Request* req, Response* res) {

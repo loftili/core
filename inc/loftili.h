@@ -2,6 +2,8 @@
 #define _LOFTILI_H
 
 #define LOFTILI_DEFAULT_PORT 8888
+#define LOFTILI_EMPTY_RESPONSE "{}"
+#define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 
 #include <iostream>
 #include <string.h>
@@ -13,6 +15,7 @@
 
 typedef std::map<std::string, std::string> HttpHeaders;
 typedef std::pair<std::string, std::string> HttpHeader;
+typedef std::pair<std::string, int> ControllerMethod;
 
 /* forward declare libmicrohttpd classes */
 class MHD_Connection;

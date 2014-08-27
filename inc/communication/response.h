@@ -1,9 +1,6 @@
 #ifndef _LOFTILI_RESPONSE_H
 #define _LOFTILI_RESPONSE_H
 
-#define LOFTILI_EMPTY_RESPONSE "{}"
-#define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
-
 #include <cstring>
 #include "loftili.h"
 
@@ -25,6 +22,7 @@ class Response {
     void* content;
     int status;
     HttpHeaders headers;
+    ControllerMethod c_method;
 
 };
 

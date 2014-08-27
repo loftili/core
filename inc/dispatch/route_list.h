@@ -19,6 +19,7 @@ class RouteList {
 
   private:
     std::vector<Controller*> controllers;
+    Logger* log;
 
 };
 

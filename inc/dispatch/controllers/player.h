@@ -6,6 +6,12 @@
 
 namespace loftili {
 
+enum player_methods {
+  START,
+  STOP,
+  STATUS
+};
+
 class PlayerController : public Controller {
 
   public:

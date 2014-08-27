@@ -5,5 +5,6 @@
 
 #define HEADER_CONTENT_TYPE MHD_HTTP_HEADER_CONTENT_TYPE
 #define HEADER_LOFTILI_VERSION "x-loftili-version"
+#define HEADER_LOFTILI_AUTH "x-loftili-auth"
 
 #endif
