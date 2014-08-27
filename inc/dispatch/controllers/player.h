@@ -25,6 +25,7 @@ class PlayerController : public Controller {
   private:
     int start(Request* req, Response* res);
     int stop(Request* req, Response* res);
+    int status(Request* req, Response* res);
 
   private:
     AudioPlayer* player;

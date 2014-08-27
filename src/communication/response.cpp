@@ -17,7 +17,14 @@ void Response::setDefaultHeaders() {
   headers.insert(HttpHeader(HEADER_LOFTILI_VERSION, PACKAGE_VERSION));
 }
 
-void Response::json(void) {
+void Response::json(std::string key, std::string value) {
+  std::stringstream stream;
+  stream << "{\"" << key << "\":\"" << value << "\"}";
+
+  std::string fin = stream.str();
+
+  content = (void*) fin.c_str();
+  length = fin.length();
   status = 200;
 }
 

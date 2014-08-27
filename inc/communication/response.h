@@ -2,6 +2,7 @@
 #define _LOFTILI_RESPONSE_H
 
 #include <cstring>
+#include <sstream>
 #include "loftili.h"
 
 namespace loftili {
@@ -12,7 +13,7 @@ class Response {
     Response();
     Response(int _status);
     ~Response();
-    void json(void);
+    void json(std::string key, std::string value);
 
   private:
     void setDefaultHeaders();

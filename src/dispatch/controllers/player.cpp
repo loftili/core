@@ -28,8 +28,12 @@ int PlayerController::respondTo(Request* req, Response* res) {
     case STOP:
       return stop(req, res);
     case STATUS:
-      return stop(req, res);
+      return status(req, res);
   }
+}
+
+int PlayerController::status(Request* req, Response* res) {
+  res->json("status", player->isPlaying() ? "playing" : "stopped");
 }
 
 int PlayerController::stop(Request* req, Response* res) {
