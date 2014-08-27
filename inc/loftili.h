@@ -12,6 +12,7 @@
 #include <map>
 #include "config.h"
 #include "headers.h"
+#include "codes.h"
 
 typedef std::map<std::string, std::string> HttpHeaders;
 typedef std::pair<std::string, std::string> HttpHeader;

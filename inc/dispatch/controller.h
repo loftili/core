@@ -11,6 +11,10 @@
 
 namespace loftili {
 
+enum base_methods {
+  MISSING = -1
+};
+
 class Controller : public Loggable {
   friend class RouteList;
   

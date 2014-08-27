@@ -9,7 +9,7 @@ Dispatch::~Dispatch() {
 }
 
 bool Dispatch::validate(MHD_Connection* connection) {
-  const char* auth_val = MHD_lookup_connection_value(connection, MHD_HEADER_KIND, "x-loftili-auth");
+  const char* auth_val = MHD_lookup_connection_value(connection, MHD_HEADER_KIND, HEADER_LOFTILI_AUTH);
   if(auth_val != NULL) {
     log.info("loftili auth header found: " + std::string(auth_val));
     return auth.validate(auth_val);
@@ -20,8 +20,7 @@ bool Dispatch::validate(MHD_Connection* connection) {
 
 int Dispatch::reject(Request* req, MHD_Connection* connection) {
   delete req;
-
-  Response* res = new Response(401);
+  Response* res = new Response(HTTP_NO_AUTH);
   return send(res, connection);
 }
 
