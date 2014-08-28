@@ -5,7 +5,7 @@ namespace loftili {
 int AudioStream::playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* data) {
   AudioStream* stream = static_cast<AudioStream*>(data);
 
-  if(!stream || stream->buffer == 0)
+  if(!stream)
     return 0;
 
   stream->playback(out);
@@ -15,7 +15,7 @@ int AudioStream::playback(const void* in, void* out, FrameCount fpb, const TimeI
 
 AudioStream::AudioStream(std::string fname) : 
   p_stream(0), m_handle(0), streaming(0),
-  stream_size(0), buffer(0), ready(false) {
+  stream_size(0), ready(false) {
 
   log = new Logger(this);
   log->info("new audio stream created");
@@ -39,11 +39,6 @@ AudioStream::~AudioStream() {
     mpg123_delete(m_handle);
   }
   mpg123_exit();
-
-  if(buffer) {
-    log->info("audio stream closing buffer");
-    free(buffer);
-  }
 
   delete log;
 }
@@ -96,7 +91,6 @@ int AudioStream::prepare() {
   mpg123_format_none(m_handle);
   mpg123_format(m_handle, rate, channels, encoding);
   stream_size = FRAME_PER_BUFFER * 2.0;
-  buffer = (float*) malloc(sizeof(float) * stream_size);
   ready = true;
 }
 
@@ -111,9 +105,8 @@ int AudioStream::start() {
 }
 
 void AudioStream::playback(void* output_buffer) {
-  size_t done = 0;
-  mpg123_read(m_handle, (unsigned char*)buffer, stream_size * sizeof(float), &done);
-  memcpy(output_buffer, buffer, sizeof(float) * stream_size);
+  size_t done;
+  mpg123_read(m_handle, (unsigned char*)output_buffer, stream_size * sizeof(float), &done);
 }
 
 }

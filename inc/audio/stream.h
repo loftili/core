@@ -41,7 +41,6 @@ class AudioStream : public Loggable {
     PaStream* p_stream;
     bool ready;
     int stream_size;
-    float* buffer;
 
 };
 
