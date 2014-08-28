@@ -14,39 +14,53 @@ int AudioStream::playback(const void* in, void* out, FrameCount fpb, const TimeI
 }
 
 AudioStream::AudioStream(std::string fname) : 
-  p_stream(0), m_handle(0), filename(fname), 
-  streaming(0), rate(0), channels(0), encoding(0),
+  p_stream(0), m_handle(0), streaming(0),
   stream_size(0), buffer(0), ready(false) {
 
   log = new Logger(this);
   log->info("new audio stream created");
 
-  if(initialize())
-    prepare();
+  if(initialize(fname)) prepare();
 }
 
 AudioStream::~AudioStream() {
   log->info("audio stream being deleted!");
 
   if(p_stream) {
+    log->info("audio stream closing portaudio");
     Pa_StopStream(p_stream);
     Pa_CloseStream(p_stream);
   }
+  Pa_Terminate();
 
-  mpg123_close(m_handle);
-  mpg123_delete(m_handle);
+  if(m_handle) {
+    log->info("audio stream closing mpg123");
+    mpg123_close(m_handle);
+    mpg123_delete(m_handle);
+  }
+  mpg123_exit();
 
   if(buffer) {
+    log->info("audio stream closing buffer");
     free(buffer);
-    buffer = 0;
   }
 
   delete log;
 }
 
-bool AudioStream::initialize() {
+bool AudioStream::initialize(std::string filename) {
   bool ok = true;
   log->info("initializing audio stream - opening mpg handle and portaudio stream");
+
+  mpg123_init();
+
+  int success = Pa_Initialize();
+  int devices = Pa_GetDeviceCount();
+  if(success != paNoError || devices < 1) {
+    log->fatal("portaudio initialize fail");
+    return false;
+  }
+  log->info("portaudio initialized and device ready to go");
 
   m_handle = mpg123_new(NULL, NULL);
   int m_error = mpg123_open(m_handle, filename.c_str());
@@ -68,6 +82,8 @@ bool AudioStream::initialize() {
 
 int AudioStream::prepare() {
   int m_error;
+  int channels, encoding;
+  long rate;
   mpg123_param(m_handle, MPG123_ADD_FLAGS, MPG123_FORCE_FLOAT, 0.);
 
   m_error = mpg123_getformat(m_handle, &rate, &channels, &encoding);

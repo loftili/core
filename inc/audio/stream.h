@@ -32,18 +32,14 @@ class AudioStream : public Loggable {
     std::string logName() { return "AudioStream"; }
 
   private:
+    int prepare();
+    bool initialize(std::string filename);
+
+  private:
     Logger* log;
     mpg123_handle* m_handle;
     PaStream* p_stream;
-    int prepare();
-    bool initialize();
-
-    std::string filename;
-    int last_error;
     bool ready;
-    long rate;
-    int channels;
-    int encoding;
     int stream_size;
     float* buffer;
 
