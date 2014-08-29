@@ -6,6 +6,8 @@ RootController::RootController() {
   name = "RootController";
 }
 
-RootController::~RootController() { }
+RootController::~RootController() {
+  delete log;
+}
 
 }

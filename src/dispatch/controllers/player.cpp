@@ -17,6 +17,7 @@ PlayerController::PlayerController() {
 PlayerController::~PlayerController() {
   log->info("deleting the player controller");
   delete player;
+  delete log;
 }
 
 int PlayerController::respondTo(Request* req, Response* res) {
