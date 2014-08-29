@@ -11,6 +11,7 @@ Server::~Server() { }
 
 int Server::process(struct ahc_info info) {
   Request* request = static_cast<Request*>(*info.con_cls);
+  Response response;
 
   // first attempts are meant to handle the headers
   // only. the data comes in second
@@ -24,15 +25,14 @@ int Server::process(struct ahc_info info) {
     return dispatch.reject(request, info.connection);
   }
 
-  Response* response = new Response();
 
-  int handled = router.handle(request, response);
+  int handled = router.handle(request, &response);
 
   // the request is no longer needed now - clean it up
   delete request;
   
   // send back the final response to the client
-  return dispatch.send(response, info.connection);
+  return dispatch.send(&response, info.connection);
 }
 
 int Server::run(Options opts) {

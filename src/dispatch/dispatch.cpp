@@ -38,7 +38,6 @@ int Dispatch::send(Response* res, MHD_Connection* connection) {
 
   // cleanup
   MHD_destroy_response(m_res);
-  delete res;
 
   // send back the MHD status
   return ret;
