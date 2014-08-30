@@ -9,10 +9,16 @@ class Options {
 
   public:
     Options();
+    ~Options();
+
+  public:
     int port;
     bool help;
     char* logfile;
     bool use_log;
+    std::string username;
+    std::string password;
+    std::string devicename;
 
 };
 

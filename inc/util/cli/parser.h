@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <getopt.h>
+#include <termios.h>
 #include "util/options.h"
 
 namespace loftili {
@@ -16,6 +17,7 @@ class Parser {
   private:
     static void help();
     static bool missing(char param);
+    static void stdinecho(bool enable);
 
 };
 
