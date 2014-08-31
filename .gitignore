@@ -2,6 +2,8 @@ Makefile.in
 Makefile
 COPYING
 INSTALL
+*.tar.gz
+/vendor
 *.log
 /autom4te.cache
 /aclocal.m4
