@@ -40,6 +40,11 @@ AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([
 libmpg123 is not installed
 source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/mpg123-1.20.1.tar.bz2
 ])])
+AC_CHECK_LIB([curl], [curl_global_init], [], [AC_MSG_ERROR([
+libcurl is not installed
+source: http://curl.askapache.com/download/curl-7.37.1.tar.gz
+])])
+
 
 AC_MSG_CHECKING([for an available audio device through portaudio])
 AC_TRY_RUN([
