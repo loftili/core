@@ -7,6 +7,7 @@ loftili_SOURCES = \
 	server.cpp \
   util/logger.cpp \
   util/options.cpp \
+  util/registration.cpp \
   util/cli/parser.cpp \
 	dispatch/auth.cpp \
 	dispatch/dispatch.cpp \

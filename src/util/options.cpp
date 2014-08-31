@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-Options::Options() : password(""), devicename(""), username("") { 
+Options::Options() : password(""), devicename(""), username(""), api_host("") { 
   port = LOFTILI_DEFAULT_PORT;
   help = true;
   logfile = "loftili.log";
