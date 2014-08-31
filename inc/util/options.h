@@ -19,6 +19,7 @@ class Options {
     std::string username;
     std::string password;
     std::string devicename;
+    std::string api_host;
 
 };
 

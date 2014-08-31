@@ -6,12 +6,13 @@ namespace cli {
 Options Parser::parse(int argc, char* argv[]) {
   Options opts;
 
-  int port = 0;
-  int c = 0;
+  int c;
   opterr = 0;
-
-  while((c = getopt (argc, argv, "l::p::u::n::h:")) != -1) {
+  while((c = getopt (argc, argv, "l::p::u::n::a::h:")) != -1) {
     switch(c) {
+      case 'a':
+        opts.api_host = optarg;
+        break;
       case 'p':
         opts.port = atoi(optarg);
         break;
@@ -81,6 +82,7 @@ void Parser::help() {
   printf("   -%s %-*s %s", "p", 15, "PORT", "the port to run the lofiti web server on \n");
   printf("   -%s %-*s %s", "u", 15, "USERNAME", "[required] your username. will be used to connect with the loftili api\n");
   printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "[required] the name this device should be communicating under\n");
+  printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
   printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
 
