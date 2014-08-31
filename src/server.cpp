@@ -4,10 +4,15 @@ namespace loftili {
 
 Server* Server::server_instance;
 
-Server::Server() : router(), dispatch() { 
+Server::Server(Options opts) : router(), dispatch(), registration(opts) { 
 }
 
 Server::~Server() { }
+
+bool Server::enroll() {
+  bool enrolled = registration.attempt();
+  return enrolled;
+}
 
 int Server::process(struct ahc_info info) {
   Request* request = static_cast<Request*>(*info.con_cls);
@@ -42,12 +47,17 @@ int Server::run(Options opts) {
     std::cout.rdbuf(out.rdbuf());
   }
 
-
   Logger log("SERVER STARTUP");
   int port = opts.port;
 
   log.info("preparing a new server instance");
-  server_instance = new Server();
+  server_instance = new Server(opts);
+  bool enrolled = server_instance->enroll();
+  if(!enrolled) {
+    log.info("failed device registration with server, exiting... please refer to http://loftili.com/faq");
+    delete server_instance;
+    return 1;
+  }
 
   log.info("starting libmicrohttp daemon on: " + std::to_string(port));
   MHD_Daemon* daemon = MHD_start_daemon(

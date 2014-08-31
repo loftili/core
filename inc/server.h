@@ -4,6 +4,7 @@
 #include <microhttpd.h>
 #include "loftili.h"
 #include "util/options.h"
+#include "util/registration.h"
 #include "dispatch/dispatch.h"
 #include "dispatch/router.h"
 #include "communication/request.h"
@@ -14,13 +15,15 @@ namespace loftili {
 class Server {
 
   public:
-    Server();
+    Server(Options opts);
     ~Server();
     int process(struct ahc_info info);
+    bool enroll();
 
   private:
     Dispatch dispatch;
     Router router;
+    Registration registration;
 
   public:
     static int run(Options opts);
