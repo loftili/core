@@ -4,6 +4,7 @@
 #include "loftili.h"
 #include "util/logger.h"
 #include "util/options.h"
+#include "communication/request.h"
 
 namespace loftili {
 
