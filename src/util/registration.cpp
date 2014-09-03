@@ -20,7 +20,7 @@ bool Registration::attempt() {
   r.insert("port", options.port);
 
   long http_code = r.send();
-  return (http_code > 300) ? false : true;
+  return (http_code > 300 || http_code == NULL) ? false : true;
 }
 
 }
