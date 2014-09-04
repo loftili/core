@@ -12,6 +12,7 @@ class Response {
   public:
     Response();
     Response(int _status);
+    Response(std::string con, int len);
     ~Response();
     void json(std::string key, std::string value);
 

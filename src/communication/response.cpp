@@ -3,12 +3,23 @@
 namespace loftili {
 
 Response::Response() : length(LOFTILI_EMPTY_RESPONSE_LEN), status(200) {
-  content = (void*)LOFTILI_EMPTY_RESPONSE;
+  content = malloc(sizeof(char) * length);
   setDefaultHeaders();
 }
 
+Response::~Response() {
+  if(content != NULL)
+    free(content);
+}
+
+Response::Response(std::string con, int len) : length(len) {
+  content = malloc(sizeof(char) * length);
+  size_t realsize = (sizeof(char) * length) + 1;
+  memcpy(content, con.c_str(), realsize);
+}
+
 Response::Response(int _status) : length(LOFTILI_EMPTY_RESPONSE_LEN), status(_status) {
-  content = (void*)LOFTILI_EMPTY_RESPONSE;
+  content = malloc(sizeof(char) * length);
   setDefaultHeaders();
 }
 
@@ -27,7 +38,5 @@ void Response::json(std::string key, std::string value) {
   length = fin.length();
   status = 200;
 }
-
-Response::~Response() { } 
 
 }
