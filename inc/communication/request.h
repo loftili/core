@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "loftili.h"
+#include "communication/response.h"
 
 namespace loftili {
 
@@ -17,7 +18,7 @@ struct Request {
     void insert(std::string key, std::string value);
     void insert(std::string key, int value);
     static size_t receiver(char* ptr, size_t size, size_t nmemb, void* userdata);
-    long send();
+    void send(Response* res);
 
   public:
     std::string url;
@@ -26,6 +27,9 @@ struct Request {
     JsonBuffer buffer;
     rapidjson::PrettyWriter<JsonBuffer> writer;
     CURL* curl;
+
+  private:
+    bool writing;
 
 
 };
