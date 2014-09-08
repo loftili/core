@@ -4,6 +4,7 @@
 #include <cstring>
 #include <sstream>
 #include "loftili.h"
+#include "communication/json.h"
 
 namespace loftili {
 
@@ -14,7 +15,7 @@ class Response {
     Response(int _status);
     Response(std::string con, int len);
     ~Response();
-    void json(std::string key, std::string value);
+    void json(Json* doc);
 
   private:
     void setDefaultHeaders();
