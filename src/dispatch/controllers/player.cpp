@@ -34,7 +34,11 @@ int PlayerController::respondTo(Request* req, Response* res) {
 }
 
 int PlayerController::status(Request* req, Response* res) {
-  res->json("status", player->isPlaying() ? "playing" : "stopped");
+  Json* doc = new Json();
+  doc->insert("status", player->isPlaying() ? "playing" : "stopped");
+  res->json(doc);
+  delete doc;
+  return 0;
 }
 
 int PlayerController::stop(Request* req, Response* res) {

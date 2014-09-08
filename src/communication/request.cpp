@@ -13,37 +13,20 @@ size_t Request::receiver(char* ptr, size_t size, size_t nmemb, void* userdata) {
   return realsize;
 }
 
-Request::Request() : writer(buffer), writing(false) {
+Request::Request() { 
 }
 
-Request::Request(std::string u, std::string m) : url(u), method(m), writer(buffer), writing(false) {
+Request::Request(std::string u, std::string m) : url(u), method(m) {
 }
 
 Request::~Request() {
   std::cout << "cleaning up request" << std::endl;
 }
 
-void Request::insert(std::string key, std::string value) {
-  if(!writing)
-    writer.StartObject();
-
-  writer.String(key.c_str());
-  writer.String(value.c_str(), value.length());
-  writing = true;
-}
-
-void Request::insert(std::string key, int value) {
-  if(!writing)
-    writer.StartObject();
-
-  writer.String(key.c_str());
-  writer.Int(value);
-  writing = true;
-}
-
 void Request::send(Response* res) {
-  writer.EndObject();
-  writing = false;
+}
+
+void Request::send(Json* doc, Response* res) {
   curl = curl_easy_init();
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Request::receiver);
@@ -52,7 +35,7 @@ void Request::send(Response* res) {
   if(method == "POST")
     curl_easy_setopt(curl, CURLOPT_POST, 1);
 
-  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer.GetString());
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, doc->buffer());
   struct curl_slist* header_list = NULL;
   header_list = curl_slist_append(header_list, "Content-Type: application/json");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);

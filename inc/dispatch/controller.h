@@ -8,6 +8,7 @@
 #include "util/loggable.h"
 #include "communication/response.h"
 #include "communication/request.h"
+#include "communication/json.h"
 
 namespace loftili {
 
