@@ -21,7 +21,6 @@ bool Registration::attempt() {
   req_json->insert("password", options.password);
   req_json->insert("devicename", options.devicename);
   req_json->insert("port", options.port);
-  std::cout << req_json->buffer() << std::endl;
 
   req.send(req_json, res);
   bool success = (res->status > 300 || res->status == NULL) ? false : true;
