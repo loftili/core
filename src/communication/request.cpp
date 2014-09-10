@@ -20,7 +20,6 @@ Request::Request(std::string u, std::string m) : url(u), method(m) {
 }
 
 Request::~Request() {
-  std::cout << "cleaning up request" << std::endl;
 }
 
 void Request::send(Response* res) {

@@ -10,7 +10,7 @@ AudioPlayer::AudioPlayer() : playing(false), ready(true), audio_stream(0) {
 AudioPlayer::~AudioPlayer() {
   delete log;
 
-  if(audio_stream)
+  if(audio_stream && playing)
     delete audio_stream;
 }
 
