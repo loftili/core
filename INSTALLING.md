@@ -20,6 +20,15 @@ sudo apt-get install autoconf -y
 sudo apt-get install automake -y
 sudo apt-get install libtool -y
 
+
+wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/curl-7.37.1.tar.gz
+tar xvzf curl-7.37.1.tar.gz
+cd curl-7.37.1
+./configure
+make
+sudo make install
+cd ..
+
 wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/libmicrohttpd-0.9.37.tar.gz
 tar xvzf libmicrohttpd-0.9.37.tar.gz
 cd libmicrohttpd-0.9.37/
