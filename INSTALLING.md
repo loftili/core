@@ -20,7 +20,7 @@ sudo apt-get install autoconf -y
 sudo apt-get install automake -y
 sudo apt-get install libtool -y
 
-wget http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/libmicrohttpd-0.9.37.tar.gz
+wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/libmicrohttpd-0.9.37.tar.gz
 tar xvzf libmicrohttpd-0.9.37.tar.gz
 cd libmicrohttpd-0.9.37/
 ./configure
@@ -30,7 +30,7 @@ cd ..
 
 sudo apt-get install libasound2-dev
 
-wget http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/alsa-lib-1.0.27.2.tar.bz2
+wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/alsa-lib-1.0.28.tar.bz2
 tar xjf alsa-lib-1.0.27.2.tar.bz2
 cd alsa-lib-1.0.27.2/
 ./configure
@@ -38,7 +38,7 @@ make
 sudo make install
 cd ..
 
-wget http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/pa_stable_v19_20140130.tgz
+wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/pa_stable_v19_20140130.tgz
 tar xvzf pa_stable_v19_20140130.tgz
 cd pa_stable_v19_20140130
 ./configure
@@ -46,7 +46,7 @@ make
 sudo make install
 cd ..
 
-wget http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/mpg123-1.20.1.tar.bz2
+wget http://ftp.sizethreestudios.com/artifacts/loftili/libs/mpg123-1.20.1.tar.bz2
 tar xjvf mpg123-1.20.1.tar.bz2
 cd mpg123-1.20.1
 ./configure
