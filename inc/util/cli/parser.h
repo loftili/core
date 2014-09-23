@@ -15,6 +15,7 @@ class Parser {
     static Options parse(int argc, char* argv[]);
 
   private:
+    static void fillPassword(Options* opts);
     static void help();
     static bool missing(char param);
     static void stdinecho(bool enable);

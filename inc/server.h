@@ -2,6 +2,7 @@
 #define _LOFTILI_SERVER_H
 
 #include <microhttpd.h>
+#include <ao/ao.h>
 #include "loftili.h"
 #include "util/options.h"
 #include "util/registration.h"
@@ -36,6 +37,12 @@ class Server {
       const char* upload_data,
       size_t* data_size,
       void** con_cls
+    );
+    static void completion(
+      void *cls,
+      struct MHD_Connection *connection,
+      void **con_cls,
+      enum MHD_RequestTerminationCode toe
     );
 
   private:

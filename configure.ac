@@ -31,10 +31,10 @@ AC_CHECK_LIB([microhttpd], [MHD_start_daemon], [], [AC_MSG_ERROR([
 libmicrohttpd not installed
 source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/libmicrohttpd-0.9.37.tar.gz
 ])])
-AC_CHECK_HEADERS([portaudio.h],[],[AC_MSG_ERROR([Missing a required header, please install portaudio])])
-AC_CHECK_LIB([portaudio], [Pa_GetVersionText], [], [AC_MSG_ERROR([
-portaudio is not installed
-source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/pa_stable_v19_20140130.tgz
+AC_CHECK_HEADERS([ao/ao.h],[],[AC_MSG_ERROR([Missing a required header, please install libao])])
+AC_CHECK_LIB([ao], [ao_initialize], [], [AC_MSG_ERROR([
+libao is not installed
+source: 
 ])])
 AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([
 libmpg123 is not installed
@@ -46,19 +46,20 @@ source: http://curl.askapache.com/download/curl-7.37.1.tar.gz
 ])])
 
 
-AC_MSG_CHECKING([for an available audio device through portaudio])
+AC_MSG_CHECKING([for an available audio device through libao])
 AC_TRY_RUN([
-#include <portaudio.h>
+#include <ao/ao.h>
 #include <iostream>
 int main() {
-  int success = Pa_Initialize();
-  int device_count =  Pa_GetDeviceCount();
-  return device_count > 0 ? 0 : 1;
+  ao_initialize();
+  int driver_id = ao_default_driver_id();
+  ao_shutdown();
+  return driver_id >= 0 ? 0 : 1;
 }], [AC_MSG_RESULT([ok])], [AC_MSG_ERROR([
-Unable to find an audio device to use with portaudio...
-Try installing libasound2 or alsa lib.
-Alsa - http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/alsa-lib-1.0.27.2.tar.bz2
-You will need to re-compile and install port audio.
+Libao was not able to find a default audio driver. Please read the
+documentation for libao online at http://www.xiph.org/ao/. A copy
+of the library can be downloaded from our ftp server.
+source: http://ftp.sizethreestudios.com/artifacts/loftili/libs/libao-1.2.0.tar.gz
 ])])
 
 AC_CONFIG_FILES([Makefile src/Makefile])

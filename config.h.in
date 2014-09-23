@@ -1,10 +1,16 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define to 1 if you have the <ao/ao.h> header file. */
+#undef HAVE_AO_AO_H
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `ao' library (-lao). */
+#undef HAVE_LIBAO
 
 /* Define to 1 if you have the `curl' library (-lcurl). */
 #undef HAVE_LIBCURL
@@ -15,14 +21,8 @@
 /* Define to 1 if you have the `mpg123' library (-lmpg123). */
 #undef HAVE_LIBMPG123
 
-/* Define to 1 if you have the `portaudio' library (-lportaudio). */
-#undef HAVE_LIBPORTAUDIO
-
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
-
-/* Define to 1 if you have the <portaudio.h> header file. */
-#undef HAVE_PORTAUDIO_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

@@ -35,7 +35,11 @@ int PlayerController::respondTo(Request* req, Response* res) {
 
 int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
-  doc->insert("status", player->isPlaying() ? "playing" : "stopped");
+  PlayerStatus status = player->status();
+  doc->insert("status", status.playing ? "playing" : "stopped");
+  doc->insert("position", status.position);
+  doc->insert("duration", status.duration);
+  doc->insert("downloading", status.downloading);
   res->json(doc);
   delete doc;
   return 0;
@@ -48,7 +52,14 @@ int PlayerController::stop(Request* req, Response* res) {
 }
 
 int PlayerController::start(Request* req, Response* res) {
-  player->start();
+  char* track_url = req->query("track");
+  if(track_url != NULL) {
+    log->info("starting audio player for: ");
+    log->info(track_url);
+
+    player->start(track_url);
+  } else
+    missing(res);
   return 0;
 }
 

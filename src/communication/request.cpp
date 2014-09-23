@@ -13,16 +13,42 @@ size_t Request::receiver(char* ptr, size_t size, size_t nmemb, void* userdata) {
   return realsize;
 }
 
-Request::Request() { 
+Request::Request() : url(""), method(""), connection(0) { 
 }
 
-Request::Request(std::string u, std::string m) : url(u), method(m) {
+Request::Request(ahc_info info) {
+  url = info.url;
+  method = info.method;
+  connection = info.connection;
+}
+
+Request::Request(std::string u, std::string m) : url(u), method(m), connection(0) {
 }
 
 Request::~Request() {
 }
 
 void Request::send(Response* res) {
+  curl = curl_easy_init();
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Request::receiver);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*) res);
+  curl_easy_perform(curl);
+  long http_code = 0;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+  curl_easy_cleanup(curl);
+  res->status = (int) http_code;
+}
+
+char* Request::query(std::string key) {
+  char* value = NULL;
+
+  value = (char*) MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, key.c_str());
+
+  if(value == NULL)
+    return NULL;
+
+  return value;
 }
 
 void Request::send(Json* doc, Response* res) {
@@ -31,10 +57,11 @@ void Request::send(Json* doc, Response* res) {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Request::receiver);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*) res);
 
-  if(method == "POST")
+  if(method == "POST") {
     curl_easy_setopt(curl, CURLOPT_POST, 1);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, doc->buffer());
+  }
 
-  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, doc->buffer());
   struct curl_slist* header_list = NULL;
   header_list = curl_slist_append(header_list, "Content-Type: application/json");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);

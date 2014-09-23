@@ -16,6 +16,7 @@ class Options {
     bool help;
     char* logfile;
     bool use_log;
+    bool standalone;
     std::string username;
     std::string password;
     std::string devicename;

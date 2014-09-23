@@ -18,10 +18,9 @@ bool Dispatch::validate(MHD_Connection* connection) {
   }
 }
 
-int Dispatch::reject(Request* req, MHD_Connection* connection) {
-  delete req;
-  Response* res = new Response(HTTP_NO_AUTH);
-  return send(res, connection);
+int Dispatch::reject(Request* req) {
+  Response* res = new Response(401);
+  return send(res, req->connection);
 }
 
 int Dispatch::send(Response* res, MHD_Connection* connection) {

@@ -27,6 +27,9 @@ class Controller : public Loggable {
 
   protected:
     virtual std::string logName() { return "Controller"; }
+    void missing(Response* res);
+
+  protected:
     std::map<std::string, int> method_map;
     Logger* log;
 

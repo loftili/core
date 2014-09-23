@@ -8,7 +8,7 @@ Options Parser::parse(int argc, char* argv[]) {
 
   int c;
   opterr = 0;
-  while((c = getopt (argc, argv, "l::p::u::n::a::h:")) != -1) {
+  while((c = getopt(argc, argv, "l:p:u:n:a:h::d::")) != -1) {
     switch(c) {
       case 'a':
         opts.api_host = optarg;
@@ -31,9 +31,14 @@ Options Parser::parse(int argc, char* argv[]) {
          opts.devicename = optarg;
          break;
       case '?':
-        opts.help = true;
-        missing(optopt);
-        return opts;
+        if((char)optopt == 'd') {
+          opts.standalone = true;
+        } else { 
+          opts.help = true;
+          missing(optopt);
+          return opts;
+        }
+        break;
       default:
         break;
     }
@@ -44,16 +49,21 @@ Options Parser::parse(int argc, char* argv[]) {
     return opts;
   }
 
-  printf("enter your loftili password (for %s): \n", opts.username.c_str());
-  stdinecho(false);
-  std::string password;
-  getline(std::cin, password);
-  opts.password = password;
-  stdinecho(true);
+  if(!opts.standalone)
+    fillPassword(&opts);
 
   opts.help = false;
 
   return opts;
+}
+
+void Parser::fillPassword(Options* opts) {
+  printf("enter your loftili password (for %s): \n", opts->username.c_str());
+  stdinecho(false);
+  std::string password;
+  getline(std::cin, password);
+  opts->password = password;
+  stdinecho(true);
 }
 
 void Parser::stdinecho(bool enable) {
@@ -83,6 +93,7 @@ void Parser::help() {
   printf("   -%s %-*s %s", "u", 15, "USERNAME", "[required] your username. will be used to connect with the loftili api\n");
   printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "[required] the name this device should be communicating under\n");
   printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
+  printf("   -%s %-*s %s", "d", 15, "DEBUG", "this will skip the device\'s registration process \n");
   printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
 
