@@ -15,7 +15,7 @@ class Dispatch {
     Dispatch();
     ~Dispatch();
     int send(Response* res, MHD_Connection* connection);
-    int reject(Request* req, MHD_Connection* connection);
+    int reject(Request* req);
     bool validate(MHD_Connection* connection);
 
   private:

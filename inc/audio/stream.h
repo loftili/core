@@ -2,17 +2,15 @@
 #define _LOFTILI_AUDIO_STREAM_H
 
 #include <pthread.h>
-#include <iostream>
 #include <cstring>
-#include <string>
 #include <mpg123.h>
-#include <portaudio.h>
+#include <ao/ao.h>
+#include "loftili.h"
 #include "util/logger.h"
-#define FRAME_PER_BUFFER 4096
+#include "communication/request.h"
+#include "communication/response.h"
+#define BITS 8
 
-typedef PaStreamCallbackTimeInfo TimeInfo;
-typedef PaStreamCallbackFlags StreamFlags;
-typedef unsigned long FrameCount;
 
 namespace loftili {
 
@@ -21,27 +19,37 @@ class AudioStream : public Loggable {
   public:
     AudioStream(std::string fname);
     ~AudioStream();
+    off_t position();
+    off_t duration();
+    bool downloading();
+    bool finished();
     int start();
+
+  public:
     int streaming;
 
-  private:
-    static int playback(const void* in, void* out, FrameCount fpb, const TimeInfo* ti, StreamFlags f, void* d);
-
   protected:
-    void playback(void* output);
     std::string logName() { return "AudioStream"; }
 
   private:
-    int prepare();
-    bool initialize(std::string filename);
+    static void* stream(void* stream_instance_data);
+
+  private:
+    bool initialize();
 
   private:
     Logger* log;
     mpg123_handle* m_handle;
-    PaStream* p_stream;
-    bool ready;
-    int stream_size;
+    Response* download_res;
+    std::string file_location;
 
+    off_t current_frame;
+    off_t length;
+    bool canceled;
+    bool dl_flag;
+    bool is_finished;
+
+    pthread_t downloader;
 };
 
 }

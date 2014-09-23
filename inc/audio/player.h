@@ -12,20 +12,30 @@
 
 namespace loftili {
 
+struct PlayerStatus {
+  bool playing;
+  int position;
+  int duration;
+  bool downloading;
+};
+
 class AudioPlayer : public Loggable {
 
   public:
     AudioPlayer();
     ~AudioPlayer();
     void start();
+    void start(char* track_url);
     void stop();
-    bool isPlaying();
+    PlayerStatus status();
+    off_t position();
 
   protected:
     std::string logName() { return "AudioPlayer"; }
 
   private:
     bool prepare();
+    bool finished();
 
   private:
     Logger* log;

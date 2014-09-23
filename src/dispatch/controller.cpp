@@ -6,6 +6,10 @@ void Controller::initialize() {
   log = new Logger(logName());
 }
 
+void Controller::missing(Response* res) {
+  res->status = 404;
+}
+
 int Controller::respondTo(Request* request, Response* response) {
   log->info("Responding via Controller base class");
 

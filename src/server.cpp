@@ -1,4 +1,5 @@
 #include <server.h>
+#define METHOD_ERROR "<html><head><title>Illegal request</title></head><body>Go away.</body></html>"
 
 namespace loftili {
 
@@ -17,25 +18,26 @@ bool Server::enroll() {
 int Server::process(struct ahc_info info) {
   Request* request = static_cast<Request*>(*info.con_cls);
   Response response;
+  bool is_post = strcmp(info.method, "POST") == 0;
 
   // first attempts are meant to handle the headers
   // only. the data comes in second
   if(request == NULL) {
-    request = new Request(info.url, info.method);
+    request = new Request(info);
     *info.con_cls = request;
+
+    if(is_post)
+      return MHD_NO;
+
     return MHD_YES;
   }
 
-  if(!dispatch.validate(info.connection)) {
-    return dispatch.reject(request, info.connection);
+  if(!dispatch.validate(request->connection)) {
+    return dispatch.reject(request);
   }
-
 
   int handled = router.handle(request, &response);
 
-  // the request is no longer needed now - clean it up
-  delete request;
-  
   // send back the final response to the client
   return dispatch.send(&response, info.connection);
 }
@@ -52,19 +54,28 @@ int Server::run(Options opts) {
 
   log.info("preparing a new server instance");
   server_instance = new Server(opts);
-  bool enrolled = server_instance->enroll();
-  if(!enrolled) {
-    log.info("failed device registration with server, exiting... please refer to http://loftili.com/faq");
-    delete server_instance;
-    return 1;
+
+  if(!opts.standalone) {
+    bool enrolled = server_instance->enroll();
+    if(!enrolled) {
+      log.info("failed device registration with server, exiting... please refer to http://loftili.com/faq");
+      delete server_instance;
+      return 1;
+    }
+  } else {
+    log.info("running core server in standalone mode...");
   }
+
+  log.info("initializing audio library");
+  ao_initialize();
 
   log.info("starting libmicrohttp daemon on: " + std::to_string(port));
   MHD_Daemon* daemon = MHD_start_daemon(
-    MHD_USE_DEBUG | MHD_USE_SELECT_INTERNALLY, 
-    port, NULL, 
-    NULL, &ahc, NULL, 
-    MHD_OPTION_END);
+    MHD_USE_DEBUG | MHD_USE_SELECT_INTERNALLY, port, 
+    NULL, NULL, 
+    &ahc, NULL,
+    MHD_OPTION_NOTIFY_COMPLETED, &completion,
+    NULL, MHD_OPTION_END);
 
   if(daemon == NULL) {
     log.fatal("Daemon unable to start successfully!");
@@ -78,7 +89,13 @@ int Server::run(Options opts) {
 
   delete server_instance;
   MHD_stop_daemon(daemon);
+  ao_shutdown();
   return 0;
+}
+
+void Server::completion(void *cls, MHD_Connection* connection, void **con_cls, MHD_RequestTerminationCode toe) {
+  Request* request = (Request*) *con_cls;
+  delete request;
 }
 
 int Server::ahc(void* cls, MHD_Connection* connection, 

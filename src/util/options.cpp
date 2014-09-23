@@ -7,6 +7,7 @@ Options::Options() : password(""), devicename(""), username(""), api_host("") {
   help = true;
   logfile = "loftili.log";
   use_log = false;
+  standalone = false;
 }
 
 Options::~Options() {
