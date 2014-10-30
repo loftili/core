@@ -44,7 +44,7 @@ Options Parser::parse(int argc, char* argv[]) {
     }
   }
 
-  if(opts.devicename == "" || opts.username == "") {
+  if((opts.devicename == "" || opts.username == "") && !opts.standalone) {
     help();
     return opts;
   }

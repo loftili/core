@@ -15,6 +15,7 @@ namespace loftili {
 
 class Server {
 
+  // MEMBER
   public:
     Server(Options opts);
     ~Server();
@@ -25,7 +26,9 @@ class Server {
     Dispatch dispatch;
     Router router;
     Registration registration;
+    bool standalone;
 
+  // STATIC
   public:
     static int run(Options opts);
     static int ahc(

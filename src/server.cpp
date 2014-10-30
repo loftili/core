@@ -6,6 +6,7 @@ namespace loftili {
 Server* Server::server_instance;
 
 Server::Server(Options opts) : router(), dispatch(), registration(opts) { 
+  standalone = opts.standalone;
 }
 
 Server::~Server() { }
@@ -32,9 +33,9 @@ int Server::process(struct ahc_info info) {
     return MHD_YES;
   }
 
-  if(!dispatch.validate(request->connection)) {
+  bool validated = standalone ? true : dispatch.validate(request->connection);
+  if(!validated)
     return dispatch.reject(request);
-  }
 
   int handled = router.handle(request, &response);
 
