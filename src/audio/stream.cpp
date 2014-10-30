@@ -50,6 +50,7 @@ void* AudioStream::stream(void* stream_instance_data) {
   audio_stream->dl_flag = false;
 
   if(res->status != 200 || res->status == NULL) {
+    log->info("Problem downloading the audio file.");
     audio_stream->is_finished = true;
     delete res;
     return NULL;
