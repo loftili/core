@@ -39,6 +39,7 @@ int PlayerController::status(Request* req, Response* res) {
 
   if(current_stream) {
     int state = current_stream->state();
+    int stream_position, stream_duration;
     switch(state) {
       case STREAM_STATE_ERRORED:
         doc->insert("status", "errored");
@@ -46,11 +47,13 @@ int PlayerController::status(Request* req, Response* res) {
       case STREAM_STATE_BUFFERING:
         doc->insert("status", "buffering");
         break;
-      case STREAM_STATE_PLAYING:
-        doc->insert("status", "playing");
-        break;
       case STREAM_STATE_FINISHED:
-        doc->insert("status", "finished");
+      case STREAM_STATE_PLAYING:
+        doc->insert("status", state == STREAM_STATE_PLAYING ? "playing" : "finished");
+        stream_position = current_stream->position();
+        stream_duration = current_stream->duration();
+        doc->insert("position", stream_position);
+        doc->insert("duration", stream_duration);
         break;
       default:
         doc->insert("status", "unknown");
