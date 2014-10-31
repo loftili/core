@@ -6,6 +6,11 @@
 #include <time.h>
 #include "util/loggable.h"
 
+enum LOG_STATE {
+  LOG_STATE_READY,
+  LOG_STATE_BAD
+};
+
 namespace loftili {
 
 class Logger {
@@ -22,6 +27,14 @@ class Logger {
     void send(std::string msg, std::string level);
     std::string name;
     time_t timer;
+
+  public:
+    static LOG_STATE use(std::string file_name);
+    static void close();
+
+  private:
+    static bool use_file;
+    static std::ofstream log_stream;
 
 };
 

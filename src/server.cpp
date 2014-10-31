@@ -44,8 +44,11 @@ int Server::process(struct ahc_info info) {
 }
 
 int Server::run(Options opts) {
-  if(opts.use_log)
-    freopen(opts.logfile, "w", stdout);
+  if(opts.use_log) {
+    LOG_STATE opened = Logger::use(opts.logfile);
+    if(opened != LOG_STATE_READY)
+      return 1;
+  }
 
   Logger log("SERVER STARTUP");
   int port = opts.port;
@@ -85,6 +88,7 @@ int Server::run(Options opts) {
     std::cin >> exit_code;
   }
 
+  Logger::close();
   delete server_instance;
   MHD_stop_daemon(daemon);
   ao_shutdown();
