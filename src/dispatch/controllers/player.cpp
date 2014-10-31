@@ -36,32 +36,63 @@ int PlayerController::respondTo(Request* req, Response* res) {
 
 int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
+
+  if(current_stream) {
+    int state = current_stream->state();
+    switch(state) {
+      case STREAM_STATE_ERRORED:
+        doc->insert("status", "errored");
+        break;
+      case STREAM_STATE_BUFFERING:
+        doc->insert("status", "buffering");
+        break;
+      case STREAM_STATE_PLAYING:
+        doc->insert("status", "playing");
+        break;
+      case STREAM_STATE_FINISHED:
+        doc->insert("status", "finished");
+        break;
+      default:
+        doc->insert("status", "unknown");
+        break;
+    }
+  } else {
+    doc->insert("status", "stopped");
+  }
+
   res->json(doc);
   delete doc;
   return 0;
 }
 
 int PlayerController::stop(Request* req, Response* res) {
-  log->info("stoppping audio player");
+  log->info("stoppping audio");
 
   if(current_stream)
     delete current_stream;
+
+  current_stream = 0;
 
   return 0;
 }
 
 int PlayerController::start(Request* req, Response* res) {
   char* track_url = req->query("track");
-  if(track_url != NULL) {
-    log->info("deleting previous audio stream");
-    if(current_stream)
-      delete current_stream;
-    log->info("starting audio stream");
-    current_stream = new AudioStream(track_url);
-    current_stream->start();
-  } else {
+
+  if(track_url == NULL) {
     missing(res);
+    return 0;
   }
+
+  log->info("deleting previous audio stream");
+
+  if(current_stream)
+    delete current_stream;
+
+  log->info("starting audio stream");
+  current_stream = new AudioStream(track_url);
+  current_stream->start();
+
   return 0;
 }
 

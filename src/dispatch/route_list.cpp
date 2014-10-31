@@ -25,15 +25,14 @@ void RouteList::purge() {
 }
 
 Controller* RouteList::find(Request* request) {
-  if(request->url == "/favicon.ico")
-    return controllers[0];
+  log->info("searching route list for matching controller");
 
-  log->info("Searching route list for matching controller");
   for(auto it = controllers.begin(); it != controllers.end(); ++it) {
     Controller* c = (Controller*)*it;
-    log->info(std::string("Found controller: ") + c->logName());
+    log->info(std::string("found controller: ") + c->logName());
+
     for(auto method = c->method_map.begin(); method != c->method_map.end(); ++method) {
-        log->info(std::string("Found method: ") + method->first);
+        log->info(std::string("found method: ") + method->first);
         if(method->first == request->url) {
           request->c_method = method->second;
           return c;
@@ -41,7 +40,7 @@ Controller* RouteList::find(Request* request) {
     }
   }
 
-  request->c_method = -1;
+  request->c_method = CONTROLLER_METHOD_MISSING;
   return controllers[0];
 }
 

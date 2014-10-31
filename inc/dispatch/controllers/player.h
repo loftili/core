@@ -6,13 +6,13 @@
 
 namespace loftili {
 
-enum PlayerMethods {
+enum PLAYER_METHOD { 
   PLAYER_METHOD_START,
   PLAYER_METHOD_STOP,
   PLAYER_METHOD_STATUS
 };
 
-enum PlayerState {
+enum PLAYER_STATE {
   PLAYER_STATE_PLAYING,
   PLAYER_STATE_STOPPED,
   PLAYER_STATE_ERRORED
@@ -35,7 +35,7 @@ class PlayerController : public Controller {
 
   private:
     AudioStream* current_stream;
-    PlayerState current_state;
+    PLAYER_STATE current_state;
 
 };
 

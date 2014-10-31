@@ -12,8 +12,8 @@
 
 namespace loftili {
 
-enum base_methods {
-  MISSING = -1
+enum CONTROLLER_METHOD {
+  CONTROLLER_METHOD_MISSING = -1
 };
 
 class Controller : public Loggable {
