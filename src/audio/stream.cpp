@@ -3,19 +3,22 @@
 
 namespace loftili {
 
-AudioStream::AudioStream(std::string fname) : 
-  m_handle(0), streaming(0), canceled(false),
-  current_frame(0), length(0), download_res(0),
-  dl_flag(false), is_finished(false), file_location(fname) {
-
+AudioStream::AudioStream(std::string fname) {
   log = new Logger(this);
   log->info("new audio stream created");
+  m_handle = 0;
+  current_frame = 0;
+  length = 0;
+  download_res = 0;
+  file_location = fname;
+  current_state = STREAM_STATE_EMPTY;
 
   initialize();
 }
 
 AudioStream::~AudioStream() {
   log->info("audio stream being deleted!");
+  current_state = STREAM_STATE_ABORTED;
 
   if(m_handle) {
     log->info("audio stream closing mpg123");
@@ -29,7 +32,6 @@ AudioStream::~AudioStream() {
     delete download_res;
 
   log->info("starting closing up threads");
-  canceled = true;
   pthread_join(downloader, NULL);
   log->info("finished closing threads, deleting logger");
 
@@ -43,19 +45,16 @@ void* AudioStream::stream(void* stream_instance_data) {
   Request req;
 
   log->info("Attempting to download file");
-  audio_stream->dl_flag = true;
   req.url = audio_stream->file_location;
   req.method = "GET";
   req.send(res);
-  audio_stream->dl_flag = false;
 
   if(res->status != 200 || res->status == NULL) {
-    audio_stream->is_finished = true;
+    log->info("Problem downloading the audio file.");
+    audio_stream->current_state = STREAM_STATE_ERRORED;
     delete res;
     return NULL;
   }
-
-  audio_stream->download_res = res;
 
   log->info("Successfully downloaded file, sending into mpg stream");
   mpg123_feed(audio_stream->m_handle, (const unsigned char*)res->content, res->length);
@@ -66,10 +65,13 @@ void* AudioStream::stream(void* stream_instance_data) {
 
   int err = mpg123_decode_frame(audio_stream->m_handle, &frame_offset, &audio, &done);
   if(err != MPG123_NEW_FORMAT) {
-    log->info("File not a valid mpg format, closing thread.");
+    audio_stream->current_state = STREAM_STATE_ERRORED;
+    log->info("file does not appear to be valid mpg format, closing thread.");
     return NULL;
   }
-  log->info("File IS a valid mpg format, continuing thread.");
+
+  audio_stream->current_state = STREAM_STATE_PLAYING;
+  log->info("File is a valid mpg format, continuing thread.");
   int channels, encoding;
   long rate;
 
@@ -95,27 +97,23 @@ void* AudioStream::stream(void* stream_instance_data) {
       default:
         break;
     }
-  } while(done > 0 && !audio_stream->canceled);
+  } while(done > 0 && !audio_stream->current_state != STREAM_STATE_ABORTED);
+  audio_stream->current_state = STREAM_STATE_FINISHED;
 
   ao_close(dev);
-  audio_stream->is_finished = true;
   return NULL;
-}
-
-bool AudioStream::downloading() {
-  return dl_flag;
 }
 
 off_t AudioStream::position() {
   return current_frame;
 }
 
-bool AudioStream::finished() {
-  return is_finished;
-}
-
 off_t AudioStream::duration() {
   return length;
+}
+
+STREAM_STATE AudioStream::state() {
+  return current_state;
 }
 
 bool AudioStream::initialize() {
@@ -136,10 +134,10 @@ bool AudioStream::initialize() {
 }
 
 int AudioStream::start() {
-  if(streaming == 1) 
+  if(current_state != STREAM_STATE_EMPTY)
     return 0;
 
-  streaming = 1;
+  current_state = STREAM_STATE_BUFFERING;
   log->info("starting audio stream");
   pthread_create(&downloader, NULL, AudioStream::stream, (void*) this);
   return 0;

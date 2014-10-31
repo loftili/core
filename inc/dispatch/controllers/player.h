@@ -2,14 +2,20 @@
 #define _LOFTILI_PLAYER_CONTROLLER_H
 
 #include "dispatch/controller.h"
-#include "audio/player.h"
+#include "audio/stream.h"
 
 namespace loftili {
 
-enum player_methods {
-  START,
-  STOP,
-  STATUS
+enum PLAYER_METHOD { 
+  PLAYER_METHOD_START,
+  PLAYER_METHOD_STOP,
+  PLAYER_METHOD_STATUS
+};
+
+enum PLAYER_STATE {
+  PLAYER_STATE_PLAYING,
+  PLAYER_STATE_STOPPED,
+  PLAYER_STATE_ERRORED
 };
 
 class PlayerController : public Controller {
@@ -28,7 +34,8 @@ class PlayerController : public Controller {
     int status(Request* req, Response* res);
 
   private:
-    AudioPlayer* player;
+    AudioStream* current_stream;
+    PLAYER_STATE current_state;
 
 };
 

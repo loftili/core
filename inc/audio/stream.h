@@ -14,6 +14,15 @@
 
 namespace loftili {
 
+enum STREAM_STATE {
+  STREAM_STATE_EMPTY,
+  STREAM_STATE_PLAYING,
+  STREAM_STATE_FINISHED,
+  STREAM_STATE_ERRORED,
+  STREAM_STATE_BUFFERING,
+  STREAM_STATE_ABORTED
+};
+
 class AudioStream : public Loggable {
 
   public:
@@ -21,12 +30,8 @@ class AudioStream : public Loggable {
     ~AudioStream();
     off_t position();
     off_t duration();
-    bool downloading();
-    bool finished();
     int start();
-
-  public:
-    int streaming;
+    STREAM_STATE state();
 
   protected:
     std::string logName() { return "AudioStream"; }
@@ -45,9 +50,7 @@ class AudioStream : public Loggable {
 
     off_t current_frame;
     off_t length;
-    bool canceled;
-    bool dl_flag;
-    bool is_finished;
+    STREAM_STATE current_state;
 
     pthread_t downloader;
 };

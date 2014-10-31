@@ -11,9 +11,12 @@ void Controller::missing(Response* res) {
 }
 
 int Controller::respondTo(Request* request, Response* response) {
-  log->info("Responding via Controller base class");
+  log->info("responding via Controller base class");
+  std::stringstream ss;
+  ss << "url: " << request->url;
+  log->info(ss.str());
 
-  if(request->c_method == MISSING)
+  if(request->c_method == CONTROLLER_METHOD_MISSING)
     response->status = HTTP_NOT_FOUND;
 
   return 0;
