@@ -30,6 +30,9 @@ Options Parser::parse(int argc, char* argv[]) {
       case 'n':
          opts.devicename = optarg;
          break;
+      case 'd':
+         opts.standalone = true;
+         break;
       case '?':
         if((char)optopt == 'd') {
           opts.standalone = true;
