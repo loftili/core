@@ -3,15 +3,29 @@
 
 namespace loftili {
 
+size_t AudioStream::download(void* contents, size_t size, size_t nmemb, void* data) {
+  AudioStream* stream = (AudioStream*) data;
+  size_t realsize = size * nmemb;
+
+  stream->download_buffer = (unsigned char*) realloc(stream->download_buffer, stream->download_size + realsize + 1);
+  void* end = &((char*)stream->download_buffer)[stream->download_size];
+  memcpy(end, contents, realsize);
+  stream->download_size += realsize;
+  ((unsigned char*)stream->download_buffer)[stream->download_size] = 0;
+
+  return realsize;
+}
+
 AudioStream::AudioStream(std::string fname) {
   log = new Logger(this);
   log->info("new audio stream created");
   m_handle = 0;
   current_frame = 0;
   length = 0;
-  download_res = 0;
   file_location = fname;
   current_state = STREAM_STATE_EMPTY;
+  download_buffer = 0;
+  download_size = 0;
 
   initialize();
 }
@@ -28,9 +42,6 @@ AudioStream::~AudioStream() {
 
   mpg123_exit();
 
-  if(download_res)
-    delete download_res;
-
   log->info("starting closing up threads");
   pthread_join(downloader, NULL);
   log->info("finished closing threads, deleting logger");
@@ -40,43 +51,49 @@ AudioStream::~AudioStream() {
 
 void* AudioStream::stream(void* stream_instance_data) {
   AudioStream* audio_stream = (AudioStream*) stream_instance_data;
-  Response* res = new Response();
   Logger* log = audio_stream->log;
-  Request req;
 
-  log->info("Attempting to download file");
-  req.url = audio_stream->file_location;
-  req.method = "GET";
-  req.send(res);
+  log->info("attempting to download file");
 
-  if(res->status != 200 || res->status == NULL) {
+  CURL* curl = curl_easy_init();
+  CURLcode res;
+  curl_easy_setopt(curl, CURLOPT_URL, audio_stream->file_location.c_str());
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, AudioStream::download);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, audio_stream);
+  res = curl_easy_perform(curl);
+  curl_easy_cleanup(curl);
+
+  if(res != CURLE_OK) {
     log->info("Problem downloading the audio file.");
     audio_stream->current_state = STREAM_STATE_ERRORED;
-    delete res;
     return NULL;
   }
 
   log->info("Successfully downloaded file, sending into mpg stream");
-  mpg123_feed(audio_stream->m_handle, (const unsigned char*)res->content, res->length);
+  mpg123_feed(audio_stream->m_handle, audio_stream->download_buffer, audio_stream->download_size);
 
   off_t frame_offset;
   unsigned char* audio;
   size_t done;
+  int channels, encoding;
+  long rate;
 
-  int err = mpg123_decode_frame(audio_stream->m_handle, &frame_offset, &audio, &done);
-  if(err != MPG123_NEW_FORMAT) {
+  // int err = mpg123_decode_frame(audio_stream->m_handle, &frame_offset, &audio, &done);
+  int err = mpg123_getformat(audio_stream->m_handle, &rate, &channels, &encoding);
+  if(err != MPG123_OK) {
     audio_stream->current_state = STREAM_STATE_ERRORED;
     log->info("file does not appear to be valid mpg format, closing thread.");
+    std::stringstream ss;
+    ss << "error: " << err;
+    log->info(ss.str());
     return NULL;
   }
 
   audio_stream->current_state = STREAM_STATE_PLAYING;
   log->info("File is a valid mpg format, continuing thread.");
-  int channels, encoding;
-  long rate;
 
   mpg123_getformat(audio_stream->m_handle, &rate, &channels, &encoding);
-  audio_stream->length = res->length;
+  audio_stream->length = audio_stream->download_size;
 
   ao_sample_format format;
   format.bits = mpg123_encsize(encoding) * BITS;
