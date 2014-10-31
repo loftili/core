@@ -38,6 +38,7 @@ class AudioStream : public Loggable {
 
   private:
     static void* stream(void* stream_instance_data);
+    static size_t download(void* contents, size_t size, size_t nmemb, void* data);
 
   private:
     bool initialize();
@@ -45,8 +46,9 @@ class AudioStream : public Loggable {
   private:
     Logger* log;
     mpg123_handle* m_handle;
-    Response* download_res;
     std::string file_location;
+    unsigned char* download_buffer;
+    int download_size;
 
     off_t current_frame;
     off_t length;
