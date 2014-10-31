@@ -6,9 +6,80 @@ namespace cli {
 Options Parser::parse(int argc, char* argv[]) {
   Options opts;
 
+  int arg_index = 1;
+  for(arg_index; arg_index < argc; arg_index++) {
+    char* current = argv[arg_index];
+    if(current[0] != '-')
+      continue;
+
+    char flag_name = current[1];
+    std::string flag_val;
+
+    switch(flag_name) {
+      case 'a':
+        if(arg_index + 1 < argc) {
+          flag_val = argv[arg_index + 1];
+          opts.api_host = flag_val;
+        }
+        break;
+      case 'h':
+        help();
+        opts.help = true;
+        return opts;
+      case 'n':
+        if(arg_index + 1 < argc) {
+          flag_val = argv[arg_index + 1];
+          opts.devicename = flag_val;
+        }
+        break;
+      case 'u':
+        if(arg_index + 1 < argc) {
+          flag_val = argv[arg_index + 1];
+          opts.username = flag_val;
+        }
+        break;
+      case 'p':
+        if(arg_index + 1 < argc) {
+          flag_val = argv[arg_index + 1];
+          opts.port = std::stoi(flag_val);
+        }
+        break;
+      case 'l':
+        if(arg_index + 1 < argc) {
+          flag_val = argv[arg_index + 1];
+          opts.logfile = (char*) malloc(sizeof(char*) & flag_val.size());
+          strcpy(opts.logfile, (char*)flag_val.c_str());
+          opts.use_log = true;
+          arg_index++;
+        }
+        break;
+      case 'd':
+        opts.daemonize = true;
+        break;
+      case 's':
+        opts.standalone = true;
+        break;
+      default:
+        break;
+    }
+  }
+
+  if((opts.devicename == "" || opts.username == "") && !opts.standalone) {
+    help();
+    return opts;
+  }
+  
+  if(!opts.standalone)
+    fillPassword(&opts);
+
+  opts.help = false;
+
+  return opts;
+
+  /*
   int c;
   opterr = 0;
-  while((c = getopt(argc, argv, "l:p:u:n:a:h::d::")) != -1) {
+  while((c = getopt(argc, argv, "lpuna:bhd::")) != -1) {
     switch(c) {
       case 'a':
         opts.api_host = optarg;
@@ -25,17 +96,22 @@ Options Parser::parse(int argc, char* argv[]) {
         opts.help = true;
         return opts;
       case 'u':
-         opts.username = optarg;
-         break;
+        opts.username = optarg;
+        break;
       case 'n':
-         opts.devicename = optarg;
-         break;
+        opts.devicename = optarg;
+        break;
       case 'd':
-         opts.standalone = true;
-         break;
+        opts.standalone = true;
+        break;
+      case 'b':
+        opts.daemonize = true;
+        break;
       case '?':
         if((char)optopt == 'd') {
           opts.standalone = true;
+        } else if((char)optopt == 'b') {
+          opts.daemonize = true;
         } else { 
           opts.help = true;
           missing(optopt);
@@ -58,6 +134,7 @@ Options Parser::parse(int argc, char* argv[]) {
   opts.help = false;
 
   return opts;
+  */
 }
 
 void Parser::fillPassword(Options* opts) {
@@ -96,7 +173,8 @@ void Parser::help() {
   printf("   -%s %-*s %s", "u", 15, "USERNAME", "[required] your username. will be used to connect with the loftili api\n");
   printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "[required] the name this device should be communicating under\n");
   printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
-  printf("   -%s %-*s %s", "d", 15, "DEBUG", "this will skip the device\'s registration process \n");
+  printf("   -%s %-*s %s", "s", 15, "STANDALONE", "this will skip the device\'s registration process \n");
+  printf("   -%s %-*s %s", "d", 15, "DAEMONIZE", "this will skip the device\'s registration process \n");
   printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
 

@@ -17,6 +17,7 @@ class Options {
     char* logfile;
     bool use_log;
     bool standalone;
+    bool daemonize;
     std::string username;
     std::string password;
     std::string devicename;
