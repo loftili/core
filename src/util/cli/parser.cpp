@@ -47,8 +47,7 @@ Options Parser::parse(int argc, char* argv[]) {
       case 'l':
         if(arg_index + 1 < argc) {
           flag_val = argv[arg_index + 1];
-          opts.logfile = (char*) malloc(sizeof(char*) & flag_val.size());
-          strcpy(opts.logfile, (char*)flag_val.c_str());
+          opts.logfile = std::string(flag_val);
           opts.use_log = true;
           arg_index++;
         }
@@ -75,66 +74,6 @@ Options Parser::parse(int argc, char* argv[]) {
   opts.help = false;
 
   return opts;
-
-  /*
-  int c;
-  opterr = 0;
-  while((c = getopt(argc, argv, "lpuna:bhd::")) != -1) {
-    switch(c) {
-      case 'a':
-        opts.api_host = optarg;
-        break;
-      case 'p':
-        opts.port = atoi(optarg);
-        break;
-      case 'l':
-        opts.logfile = optarg;
-        opts.use_log = true;
-        break;
-      case 'h':
-        help();
-        opts.help = true;
-        return opts;
-      case 'u':
-        opts.username = optarg;
-        break;
-      case 'n':
-        opts.devicename = optarg;
-        break;
-      case 'd':
-        opts.standalone = true;
-        break;
-      case 'b':
-        opts.daemonize = true;
-        break;
-      case '?':
-        if((char)optopt == 'd') {
-          opts.standalone = true;
-        } else if((char)optopt == 'b') {
-          opts.daemonize = true;
-        } else { 
-          opts.help = true;
-          missing(optopt);
-          return opts;
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-  if((opts.devicename == "" || opts.username == "") && !opts.standalone) {
-    help();
-    return opts;
-  }
-
-  if(!opts.standalone)
-    fillPassword(&opts);
-
-  opts.help = false;
-
-  return opts;
-  */
 }
 
 void Parser::fillPassword(Options* opts) {
