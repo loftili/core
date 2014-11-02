@@ -63,12 +63,16 @@ void Request::send(Json* doc, Response* res) {
   }
 
   struct curl_slist* header_list = NULL;
+  CURLcode http_code;
+
   header_list = curl_slist_append(header_list, "Content-Type: application/json");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
+
   curl_easy_perform(curl);
-  long http_code = 0;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
   curl_slist_free_all(header_list);
+
   curl_easy_cleanup(curl);
   res->status = (int) http_code;
 }

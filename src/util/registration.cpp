@@ -17,6 +17,8 @@ bool Registration::attempt() {
   req.url = api_host + registration_endpoint;
   req.method = "POST";
 
+  log.info("api endpoint: ", req.url);
+
   req_json->insert("username", options.username);
   req_json->insert("password", options.password);
   req_json->insert("devicename", options.devicename);

@@ -22,9 +22,12 @@ class Logger {
 
     void fatal(std::string msg);
     void info(std::string msg);
+    void info(std::string a, std::string b);
 
   private:
     void send(std::string msg, std::string level);
+    void send(std::string a, std::string b, std::string level);
+    std::string timestr();
     std::string name;
     time_t timer;
 
