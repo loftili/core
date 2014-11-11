@@ -11,8 +11,16 @@ RouteList::~RouteList() {
 }
 
 void RouteList::add(Controller* controller) {
-  controller->initialize();
   controllers.push_back(controller);
+}
+
+void RouteList::initialize(Credentials creds, Options opts) {
+  auto it = controllers.begin();
+
+  for(it; it != controllers.end(); ++it) {
+    Controller* c = (Controller*)*it;
+    c->initialize(creds, opts);
+  }
 }
 
 void RouteList::purge() {

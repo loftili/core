@@ -5,7 +5,7 @@
 #include <ao/ao.h>
 #include "loftili.h"
 #include "util/options.h"
-#include "util/registration.h"
+#include "auth/registration.h"
 #include "dispatch/dispatch.h"
 #include "dispatch/router.h"
 #include "communication/request.h"

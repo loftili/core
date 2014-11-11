@@ -2,7 +2,9 @@
 #define _LOFTILI_PLAYER_CONTROLLER_H
 
 #include "dispatch/controller.h"
-#include "audio/stream.h"
+#include "auth/credentials.h"
+#include "util/options.h"
+#include "audio/player.h"
 
 namespace loftili {
 
@@ -12,18 +14,13 @@ enum PLAYER_METHOD {
   PLAYER_METHOD_STATUS
 };
 
-enum PLAYER_STATE {
-  PLAYER_STATE_PLAYING,
-  PLAYER_STATE_STOPPED,
-  PLAYER_STATE_ERRORED
-};
-
 class PlayerController : public Controller {
 
   public:
     PlayerController();
     ~PlayerController();
     int respondTo(Request* req, Response* res);
+    void initialize(Credentials init_credentials, Options init_options);
 
   protected:
     std::string logName() { return "PlayerController"; }
@@ -34,8 +31,7 @@ class PlayerController : public Controller {
     int status(Request* req, Response* res);
 
   private:
-    AudioStream* current_stream;
-    PLAYER_STATE current_state;
+    AudioPlayer player;
 
 };
 

@@ -12,8 +12,15 @@ Server::Server(Options opts) : router(), dispatch(), registration(opts) {
 Server::~Server() { }
 
 bool Server::enroll() {
-  bool enrolled = registration.attempt();
-  return enrolled;
+  bool is_valid = registration.attempt();
+
+  if(is_valid) {
+    Credentials creds = registration.creds();
+    Options opts = registration.opts();
+    router.initialize(creds, opts);
+  }
+
+  return is_valid;
 }
 
 int Server::process(struct ahc_info info) {

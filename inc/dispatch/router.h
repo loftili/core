@@ -2,6 +2,8 @@
 #define _LOFTILI_ROUTER_H
 
 #include "route_list.h"
+#include "auth/credentials.h"
+#include "util/options.h"
 #include "controllers/root.h"
 #include "controllers/player.h"
 
@@ -17,6 +19,7 @@ class Router {
     ~Router();
 
     int handle(Request* req, Response* res);
+    void initialize(Credentials creds, Options opts);
 
   private:
     RouteList routes;

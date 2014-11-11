@@ -2,8 +2,10 @@
 
 namespace loftili {
 
-void Controller::initialize() {  
+void Controller::initialize(Credentials init_credentials, Options init_options) {  
   log = new Logger(logName());
+  device_credentials = init_credentials;
+  device_options = init_options;
 }
 
 void Controller::missing(Response* res) {

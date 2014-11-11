@@ -28,14 +28,41 @@ Request::Request(std::string u, std::string m) : url(u), method(m), connection(0
 Request::~Request() {
 }
 
+void Request::addHeader(std::string name, std::string value) {
+  std::pair<std::string,std::string> new_header = std::make_pair(name, value);
+  headers.push_back(new_header);
+}
+
 void Request::send(Response* res) {
   curl = curl_easy_init();
   curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Request::receiver);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*) res);
-  curl_easy_perform(curl);
+
+  bool has_headers = headers.size() > 0;
+  struct curl_slist* header_list = NULL;
+
+  if(has_headers) {
+    auto it = headers.begin();
+
+    for(it; it != headers.end(); ++it) {
+      std::pair<std::string, std::string> header = (std::pair<std::string, std::string>) *it;
+      std::stringstream ss;
+      ss << header.first << ": " << header.second;
+      const char* header_full = ss.str().c_str();
+      header_list = curl_slist_append(header_list, header_full);
+    }
+
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
+  }
+
   long http_code = 0;
+  curl_easy_perform(curl);
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+  if(has_headers)
+    curl_slist_free_all(header_list);
+
   curl_easy_cleanup(curl);
   res->status = (int) http_code;
 }
