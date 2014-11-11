@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-PlayerController::PlayerController() : current_stream(0), current_state(PLAYER_STATE_STOPPED) {
+PlayerController::PlayerController() {
   name = "PlayerController";
   ControllerMethod start = ControllerMethod("/start", PLAYER_METHOD_START);
   ControllerMethod stop = ControllerMethod("/stop", PLAYER_METHOD_STOP);
@@ -14,11 +14,16 @@ PlayerController::PlayerController() : current_stream(0), current_state(PLAYER_S
 
 PlayerController::~PlayerController() {
   log->info("deleting the player controller");
-
-  if(current_stream)
-    delete current_stream;
-
   delete log;
+}
+
+void PlayerController::initialize(Credentials init_credentials, Options init_options) {
+  device_credentials = init_credentials;
+  device_options = init_options;
+
+  log = new Logger("PlayerController");
+
+  player.initialize(device_credentials, device_options);
 }
 
 int PlayerController::respondTo(Request* req, Response* res) {
@@ -37,30 +42,21 @@ int PlayerController::respondTo(Request* req, Response* res) {
 int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
 
-  if(current_stream) {
-    int state = current_stream->state();
-    int stream_position, stream_duration;
-    switch(state) {
-      case STREAM_STATE_ERRORED:
-        doc->insert("status", "errored");
-        break;
-      case STREAM_STATE_BUFFERING:
-        doc->insert("status", "buffering");
-        break;
-      case STREAM_STATE_FINISHED:
-      case STREAM_STATE_PLAYING:
-        doc->insert("status", state == STREAM_STATE_PLAYING ? "playing" : "finished");
-        stream_position = current_stream->position();
-        stream_duration = current_stream->duration();
-        doc->insert("position", stream_position);
-        doc->insert("duration", stream_duration);
-        break;
-      default:
-        doc->insert("status", "unknown");
-        break;
-    }
-  } else {
-    doc->insert("status", "stopped");
+  PLAYER_STATE player_state = player.state();
+
+  switch(player_state) {
+    case PLAYER_STATE_PLAYING:
+      doc->insert("status", "playing");
+      break;
+    case PLAYER_STATE_STOPPED:
+      doc->insert("status", "stopped");
+      break;
+    case PLAYER_STATE_ERRORED:
+      doc->insert("status", "errored");
+      break;
+    default:
+      doc->insert("status", "unknown");
+      break;
   }
 
   res->json(doc);
@@ -70,33 +66,21 @@ int PlayerController::status(Request* req, Response* res) {
 
 int PlayerController::stop(Request* req, Response* res) {
   log->info("stoppping audio");
-
-  if(current_stream)
-    delete current_stream;
-
-  current_stream = 0;
-
-  return 0;
+  player.stop();
+  return status(req, res);
 }
 
 int PlayerController::start(Request* req, Response* res) {
-  char* track_url = req->query("track");
+  PLAYER_STATE state = player.state();
 
-  if(track_url == NULL) {
-    missing(res);
+  if(state == PLAYER_STATE_PLAYING)
     return 0;
-  }
 
-  log->info("deleting previous audio stream");
+  log->info("telling audio player to start");
 
-  if(current_stream)
-    delete current_stream;
+  player.begin();
 
-  log->info("starting audio stream");
-  current_stream = new AudioStream(track_url);
-  current_stream->start();
-
-  return 0;
+  return status(req, res);
 }
 
 }

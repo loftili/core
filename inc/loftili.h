@@ -6,6 +6,7 @@
 #define LOFTILI_EMPTY_RESPONSE "{}"
 #define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 #define LOFTILI_API_HOME "http://api.loftili.com"
+#define LOFTILI_REGISTRATION_URL LOFTILI_API_HOME "/registration"
 
 #include <iostream>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include "headers.h"
 #include "codes.h"
 #include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 

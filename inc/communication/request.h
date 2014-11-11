@@ -2,6 +2,7 @@
 #define _LOFTILI_REQUEST_H
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <sstream>
 #include "loftili.h"
@@ -21,10 +22,12 @@ class Request {
     void send(Response* res);
     void send(Json* doc, Response* res);
     char* query(std::string key);
+    void addHeader(std::string name, std::string value);
 
   public:
     std::string url;
     std::string method;
+    std::vector<std::pair<std::string, std::string>> headers;
     int c_method;
     CURL* curl;
     MHD_Connection* connection;
