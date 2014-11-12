@@ -41,19 +41,25 @@ bool Registration::attempt() {
 
   delete req_json;
 
-  if(!success)
+  if(!success) {
+    delete res;
     return false;
+  }
 
   rapidjson::Document registration_doc;
   registration_doc.Parse<0>((char*) res->content);
 
-  if(!registration_doc["token"].IsString() || !registration_doc["id"].IsNumber())
+  if(!registration_doc["token"].IsString() || !registration_doc["id"].IsNumber()) {
+    delete res;
     return false;
+  }
 
   std::string token = registration_doc["token"].GetString();
   int device_id = (int) registration_doc["id"].GetInt();
 
   current_credentials.initialize(token, device_id);
+
+  delete res;
   return current_credentials.valid();
 }
 

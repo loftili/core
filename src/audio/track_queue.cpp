@@ -25,6 +25,7 @@ void TrackQueue::initialize(Credentials init_creds, Options init_opts) {
 
 void TrackQueue::load() {
   log->info("fetching track queue");
+  log->info(device_credentials.token());
   Request request;
   Response response("", 0);
 

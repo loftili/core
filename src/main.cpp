@@ -34,4 +34,6 @@ int main(int argc, char * argv[]) {
 
   if(!opts.help)
     return Server::run(opts);
+
+  return 1;
 }

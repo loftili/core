@@ -27,10 +27,10 @@ class Request {
   public:
     std::string url;
     std::string method;
-    std::vector<std::pair<std::string, std::string>> headers;
     int c_method;
     CURL* curl;
     MHD_Connection* connection;
+    std::vector<std::pair<std::string, std::string>> headers;
 
   private:
     bool writing;

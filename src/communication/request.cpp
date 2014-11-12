@@ -43,13 +43,15 @@ void Request::send(Response* res) {
   struct curl_slist* header_list = NULL;
 
   if(has_headers) {
-    auto it = headers.begin();
+    int header_count = headers.size();
+    std::cout << "addding [" << header_count << "] headers" << std::endl;
 
-    for(it; it != headers.end(); ++it) {
-      std::pair<std::string, std::string> header = (std::pair<std::string, std::string>) *it;
-      std::stringstream ss;
-      ss << header.first << ": " << header.second;
-      const char* header_full = ss.str().c_str();
+    for(int i = 0; i < header_count; i++) {
+      std::pair<std::string, std::string> header = (std::pair<std::string, std::string>) headers[i];
+      std::stringstream header_stream;
+      header_stream << header.first << ": " << header.second;
+      const char* header_full = header_stream.str().c_str();
+      std::cout << "full header: [" << header_full << "]" << std::endl;
       header_list = curl_slist_append(header_list, header_full);
     }
 
@@ -58,11 +60,8 @@ void Request::send(Response* res) {
 
   long http_code = 0;
   curl_easy_perform(curl);
+  curl_slist_free_all(header_list);
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-
-  if(has_headers)
-    curl_slist_free_all(header_list);
-
   curl_easy_cleanup(curl);
   res->status = (int) http_code;
 }

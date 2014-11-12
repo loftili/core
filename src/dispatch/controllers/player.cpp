@@ -18,11 +18,10 @@ PlayerController::~PlayerController() {
 }
 
 void PlayerController::initialize(Credentials init_credentials, Options init_options) {
-  device_credentials = init_credentials;
-  device_options = init_options;
-
   log = new Logger("PlayerController");
-
+  device_options = init_options;
+  device_credentials = init_credentials;
+  log->info("initalizing player controller");
   player.initialize(device_credentials, device_options);
 }
 

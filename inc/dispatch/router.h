@@ -22,7 +22,7 @@ class Router {
     void initialize(Credentials creds, Options opts);
 
   private:
-    RouteList routes;
+    RouteList* routes;
 
 };
  

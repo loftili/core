@@ -3,9 +3,9 @@
 namespace loftili {
 
 void Controller::initialize(Credentials init_credentials, Options init_options) {  
-  log = new Logger(logName());
-  device_credentials = init_credentials;
   device_options = init_options;
+  device_credentials = init_credentials;
+  log = new Logger(logName());
 }
 
 void Controller::missing(Response* res) {
