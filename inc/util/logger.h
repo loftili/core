@@ -13,31 +13,33 @@ enum LOG_STATE {
 
 namespace loftili {
 
+using namespace std;
+
 class Logger {
 
   public:
-    Logger(std::string n);
+    Logger(string n);
     Logger(Loggable* loggable);
     ~Logger();
 
-    void fatal(std::string msg);
-    void info(std::string msg);
-    void info(std::string a, std::string b);
+    void fatal(string msg);
+    void info(string msg);
+    void info(string a, string b);
 
   private:
-    void send(std::string msg, std::string level);
-    void send(std::string a, std::string b, std::string level);
-    std::string timestr();
-    std::string name;
+    void send(string msg, string level);
+    void send(string a, string b, string level);
+    string timestr();
+    string name;
     time_t timer;
 
   public:
-    static LOG_STATE use(std::string file_name);
+    static LOG_STATE use(string file_name);
     static void close();
 
   private:
     static bool use_file;
-    static std::ofstream log_stream;
+    static ofstream log_stream;
 
 };
 

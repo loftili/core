@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-AudioPlayer::AudioPlayer() : current_state(PLAYER_STATE_STOPPED) {
+AudioPlayer::AudioPlayer() : current_state(PLAYER_STATE_STOPPED), current_stream(0) {
   log = new Logger("Audio player");
 }
 
@@ -16,6 +16,12 @@ void AudioPlayer::initialize(Credentials device_credentials, Options device_opti
 
 PLAYER_STATE AudioPlayer::stop() {
   current_state = PLAYER_STATE_STOPPED;
+
+  if(current_stream)
+    delete current_stream;
+
+  current_stream = 0;
+
   return current_state;
 }
 
@@ -33,6 +39,15 @@ PLAYER_STATE AudioPlayer::begin() {
     current_state = PLAYER_STATE_ERRORED;
     return current_state;
   }
+
+  string current_track = track_queue.top();
+  log->info("starting: ", current_track);
+
+  if(current_stream)
+    delete current_stream;
+
+  current_stream = new AudioStream(current_track);
+  current_stream->start();
 
   return current_state;
 }
