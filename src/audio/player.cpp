@@ -26,7 +26,14 @@ PLAYER_STATE AudioPlayer::next() {
 PLAYER_STATE AudioPlayer::begin() {
   current_state = PLAYER_STATE_PLAYING;
   log->info("beginning audio player - finding queue from api");
-  track_queue.load();
+
+  QUEUE_STATUS queue_status = track_queue.load();
+
+  if(queue_status == QUEUE_STATUS_ERRORED) {
+    current_state = PLAYER_STATE_ERRORED;
+    return current_state;
+  }
+
   return current_state;
 }
 
