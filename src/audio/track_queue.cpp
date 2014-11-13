@@ -23,9 +23,8 @@ void TrackQueue::initialize(Credentials init_creds, Options init_opts) {
   device_options = init_opts;
 }
 
-void TrackQueue::load() {
+QUEUE_STATUS TrackQueue::load() {
   log->info("fetching track queue");
-  log->info(device_credentials.token());
   Request request;
   Response response("", 0);
 
@@ -34,8 +33,27 @@ void TrackQueue::load() {
   request.addHeader("x-loftili-device-auth", device_credentials.token());
   request.send(&response);
 
-  std::cout << endpoint() << std::endl;
-  std::cout << (char*) response.content << std::endl;
+  rapidjson::Document queue_document;
+  queue_document.Parse<0>((char*)response.content);
+  std::cout << (char*)response.content << std::endl;
+
+  bool can_use = queue_document.IsArray();
+
+  if(!can_use)
+    return QUEUE_STATUS_ERRORED;
+
+  int size = queue_document.Size();
+  for(int i = 0; i < size; i++) {
+    rapidjson::Value& queue_item = queue_document[i];
+
+    bool has_url = queue_item["streaming_url"].IsString();
+    if(has_url) {
+      std::string track_url = (std::string) queue_document[i]["streaming_url"].GetString();
+      track_urls.push_back(track_url);
+    }
+  }
+
+  return QUEUE_STATUS_FULL;
 }
 
 }
