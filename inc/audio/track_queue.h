@@ -21,6 +21,7 @@ class TrackQueue {
     TrackQueue();
     ~TrackQueue();
     QUEUE_STATUS load();
+    std::string top();
     void initialize(Credentials creds, Options opts);
 
   private:

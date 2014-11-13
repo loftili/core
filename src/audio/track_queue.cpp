@@ -23,6 +23,10 @@ void TrackQueue::initialize(Credentials init_creds, Options init_opts) {
   device_options = init_opts;
 }
 
+std::string TrackQueue::top() {
+  return track_urls.front();
+}
+
 QUEUE_STATUS TrackQueue::load() {
   log->info("fetching track queue");
   Request request;
@@ -35,7 +39,6 @@ QUEUE_STATUS TrackQueue::load() {
 
   rapidjson::Document queue_document;
   queue_document.Parse<0>((char*)response.content);
-  std::cout << (char*)response.content << std::endl;
 
   bool can_use = queue_document.IsArray();
 

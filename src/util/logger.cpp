@@ -3,9 +3,9 @@
 namespace loftili {
 
 bool Logger::use_file = false;
-std::ofstream Logger::log_stream;
+ofstream Logger::log_stream;
 
-Logger::Logger(std::string n) {
+Logger::Logger(string n) {
   name = n;
 }
 
@@ -16,21 +16,21 @@ Logger::Logger(Loggable* loggable) {
 Logger::~Logger() { 
 }
 
-void Logger::info(std::string msg) {
+void Logger::info(string msg) {
   send(msg, "INFO");
 }
 
-void Logger::info(std::string a, std::string b) {
+void Logger::info(string a, string b) {
   send(a, b, "INFO");
 }
 
 
-void Logger::fatal(std::string msg) {
+void Logger::fatal(string msg) {
   send(msg, "FATAL");
 }
 
-void Logger::send(std::string msg, std::string level) {
-  std::string time_stamp = timestr();
+void Logger::send(string msg, string level) {
+  string time_stamp = timestr();
   if(!use_file) {
     printf("[%s] [%s] [%s]: %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), msg.c_str());
   } else {
@@ -43,8 +43,8 @@ void Logger::send(std::string msg, std::string level) {
   }
 }
 
-void Logger::send(std::string a, std::string b, std::string level) {
-  std::string time_stamp = timestr();
+void Logger::send(string a, string b, string level) {
+  string time_stamp = timestr();
   if(!use_file) {
     printf("[%s] [%s] [%s]: %s %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), a.c_str(), b.c_str());
   } else {
@@ -57,15 +57,15 @@ void Logger::send(std::string a, std::string b, std::string level) {
   }
 }
 
-std::string Logger::timestr() {
+string Logger::timestr() {
   time(&timer);
-  std::string time_str = ctime(&timer);
+  string time_str = ctime(&timer);
   return time_str.substr(0, time_str.length() -1);
 }
 
-LOG_STATE Logger::use(std::string file_name) {
+LOG_STATE Logger::use(string file_name) {
   use_file = true;
-  log_stream.open(file_name, std::ofstream::out | std::ofstream::app);
+  log_stream.open(file_name, ofstream::out | ofstream::app);
   return log_stream.is_open() && log_stream.good() ? LOG_STATE_READY : LOG_STATE_BAD;
 }
 

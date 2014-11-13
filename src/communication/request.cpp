@@ -44,14 +44,12 @@ void Request::send(Response* res) {
 
   if(has_headers) {
     int header_count = headers.size();
-    std::cout << "addding [" << header_count << "] headers" << std::endl;
 
     for(int i = 0; i < header_count; i++) {
       std::pair<std::string, std::string> header = (std::pair<std::string, std::string>) headers[i];
       std::stringstream header_stream;
       header_stream << header.first << ": " << header.second;
       const char* header_full = header_stream.str().c_str();
-      std::cout << "full header: [" << header_full << "]" << std::endl;
       header_list = curl_slist_append(header_list, header_full);
     }
 
