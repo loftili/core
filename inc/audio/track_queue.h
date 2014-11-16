@@ -23,6 +23,7 @@ class TrackQueue {
     QUEUE_STATUS load();
     std::string top();
     void initialize(Credentials creds, Options opts);
+    QUEUE_STATUS status();
 
   private:
     std::string endpoint();

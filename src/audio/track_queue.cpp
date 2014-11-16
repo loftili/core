@@ -27,6 +27,10 @@ std::string TrackQueue::top() {
   return track_urls.front();
 }
 
+QUEUE_STATUS TrackQueue::status() {
+  return QUEUE_STATUS_EMPTY;
+}
+
 QUEUE_STATUS TrackQueue::load() {
   log->info("fetching track queue");
   Request request;
@@ -36,6 +40,9 @@ QUEUE_STATUS TrackQueue::load() {
   request.method = "GET";
   request.addHeader("x-loftili-device-auth", device_credentials.token());
   request.send(&response);
+
+  if(response.status != 200)
+    return QUEUE_STATUS_ERRORED;
 
   rapidjson::Document queue_document;
   queue_document.Parse<0>((char*)response.content);

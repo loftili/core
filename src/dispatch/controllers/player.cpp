@@ -7,9 +7,11 @@ PlayerController::PlayerController() {
   ControllerMethod start = ControllerMethod("/start", PLAYER_METHOD_START);
   ControllerMethod stop = ControllerMethod("/stop", PLAYER_METHOD_STOP);
   ControllerMethod status = ControllerMethod("/status", PLAYER_METHOD_STATUS);
+  ControllerMethod refresh = ControllerMethod("/refresh", PLAYER_METHOD_REFRESH);
   method_map.insert(start);
   method_map.insert(stop);
   method_map.insert(status);
+  method_map.insert(refresh);
 }
 
 PlayerController::~PlayerController() {
@@ -33,8 +35,12 @@ int PlayerController::respondTo(Request* req, Response* res) {
       return start(req, res);
     case PLAYER_METHOD_STOP:
       return stop(req, res);
+    case PLAYER_METHOD_REFRESH:
+      return refresh(req, res);
     case PLAYER_METHOD_STATUS:
       return status(req, res);
+    default:
+      return 0;
   }
 }
 
@@ -73,12 +79,20 @@ int PlayerController::start(Request* req, Response* res) {
   PLAYER_STATE state = player.state();
 
   if(state == PLAYER_STATE_PLAYING)
-    return 0;
+    return status(req, res);
 
   log->info("telling audio player to start");
+  player.start();
 
-  player.begin();
+  return status(req, res);
+}
 
+int PlayerController::refresh(Request* req, Response* res) {
+  log->info("stopping player");
+  player.stop();
+
+  log->info("starting player");
+  player.start();
   return status(req, res);
 }
 
