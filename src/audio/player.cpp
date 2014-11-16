@@ -17,39 +17,61 @@ void AudioPlayer::initialize(Credentials device_credentials, Options device_opti
 PLAYER_STATE AudioPlayer::stop() {
   current_state = PLAYER_STATE_STOPPED;
 
+  log->info("stopping the audio player");
+
   if(current_stream)
     delete current_stream;
 
   current_stream = 0;
+  pthread_join(playback_thread, NULL);
 
   return current_state;
 }
 
-PLAYER_STATE AudioPlayer::next() {
-  return current_state;
-}
-
-PLAYER_STATE AudioPlayer::begin() {
-  current_state = PLAYER_STATE_PLAYING;
-  log->info("beginning audio player - finding queue from api");
-
-  QUEUE_STATUS queue_status = track_queue.load();
-
-  if(queue_status == QUEUE_STATUS_ERRORED) {
-    current_state = PLAYER_STATE_ERRORED;
+PLAYER_STATE AudioPlayer::start() {
+  if(current_state == PLAYER_STATE_PLAYING)
     return current_state;
+
+  log->info("starting the audio player");
+  current_state = PLAYER_STATE_PLAYING;
+
+  pthread_create(&playback_thread, NULL, AudioPlayer::monitor, (void*) this);
+  return current_state;
+}
+
+void* AudioPlayer::monitor(void* player_instance_data) {
+  AudioPlayer* current_player = (AudioPlayer*) player_instance_data;
+
+  while(current_player->state() == PLAYER_STATE_PLAYING) {
+    current_player->check();
+    sleep(1);
   }
 
-  string current_track = track_queue.top();
-  log->info("starting: ", current_track);
+  return NULL;
+}
 
-  if(current_stream)
-    delete current_stream;
+int AudioPlayer::check() {
+  log->info("running check against current audio stream");
 
-  current_stream = new AudioStream(current_track);
-  current_stream->start();
+  if(!current_stream) {
+    log->info("not currently playing anything, loading in queue");
+    QUEUE_STATUS queue_status = track_queue.load();
 
-  return current_state;
+    if(queue_status != QUEUE_STATUS_FULL) {
+      log->info("unable to load the track queue");
+      current_state = PLAYER_STATE_ERRORED;
+      return 0;
+    }
+
+    std::string track_url = track_queue.top();
+    std::stringstream ss;
+
+    ss << "queue ready, starting: " << track_url;
+    current_stream = new AudioStream(track_url);
+    current_stream->start();
+  }
+
+  return 0;
 }
 
 PLAYER_STATE AudioPlayer::state() {

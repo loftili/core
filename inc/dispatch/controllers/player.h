@@ -11,6 +11,7 @@ namespace loftili {
 enum PLAYER_METHOD { 
   PLAYER_METHOD_START,
   PLAYER_METHOD_STOP,
+  PLAYER_METHOD_REFRESH,
   PLAYER_METHOD_STATUS
 };
 
@@ -29,6 +30,7 @@ class PlayerController : public Controller {
     int start(Request* req, Response* res);
     int stop(Request* req, Response* res);
     int status(Request* req, Response* res);
+    int refresh(Request* req, Response* res);
 
   private:
     AudioPlayer player;

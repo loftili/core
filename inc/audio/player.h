@@ -21,16 +21,19 @@ class AudioPlayer {
     AudioPlayer();
     ~AudioPlayer();
     PLAYER_STATE state();
-    PLAYER_STATE begin();
+    PLAYER_STATE start();
     PLAYER_STATE stop();
-    PLAYER_STATE next();
     void initialize(Credentials device_credentials, Options device_options);
 
   private:
+    int check();
+    static void* monitor(void* player_instance_data);
+
     Logger* log;
     PLAYER_STATE current_state;
     TrackQueue track_queue;
     AudioStream* current_stream;
+    pthread_t playback_thread;
 
 };
 
