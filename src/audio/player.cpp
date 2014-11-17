@@ -55,7 +55,7 @@ int AudioPlayer::check() {
 
   if(!current_stream) {
     log->info("not currently playing anything, loading in queue");
-    QUEUE_STATUS queue_status = track_queue.load();
+    QUEUE_STATUS queue_status = track_queue.fetch();
 
     if(queue_status != QUEUE_STATUS_FULL) {
       log->info("unable to load the track queue");
@@ -64,11 +64,32 @@ int AudioPlayer::check() {
     }
 
     std::string track_url = track_queue.top();
-    std::stringstream ss;
-
-    ss << "queue ready, starting: " << track_url;
+    std::stringstream queue_log;
+    queue_log << "queue ready, starting: " << track_url;
+    log->info(queue_log.str());
     current_stream = new AudioStream(track_url);
     current_stream->start();
+    return 0;
+  }
+
+  log->info("already playing audio, checking state");
+  STREAM_STATE current_stream_state = current_stream->state();
+
+  switch(current_stream_state) {
+    case STREAM_STATE_BUFFERING:
+    case STREAM_STATE_PLAYING:
+      log->info("still playing or buffering audio, proceeding");
+      break;
+    case STREAM_STATE_ERRORED:
+      log->info("errored playing stream, invalidating player status");
+      current_state = PLAYER_STATE_ERRORED;
+      break;
+    case STREAM_STATE_FINISHED:
+      log->info("finished playing latest track since last refresh, moving to next");
+      break;
+    default:
+      log->info("unkown state, agh!");
+      break;
   }
 
   return 0;

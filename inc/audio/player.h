@@ -5,7 +5,7 @@
 #include "auth/credentials.h"
 #include "audio/stream.h"
 #include "util/options.h"
-#include "audio/track_queue.h"
+#include "audio/track_manager.h"
 
 namespace loftili {
 
@@ -31,7 +31,7 @@ class AudioPlayer {
 
     Logger* log;
     PLAYER_STATE current_state;
-    TrackQueue track_queue;
+    TrackManager track_queue;
     AudioStream* current_stream;
     pthread_t playback_thread;
 

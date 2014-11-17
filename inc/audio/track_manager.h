@@ -15,12 +15,12 @@ enum QUEUE_STATUS {
   QUEUE_STATUS_EMPTY
 };
 
-class TrackQueue {
+class TrackManager {
 
   public:
-    TrackQueue();
-    ~TrackQueue();
-    QUEUE_STATUS load();
+    TrackManager();
+    ~TrackManager();
+    QUEUE_STATUS fetch();
     std::string top();
     void initialize(Credentials creds, Options opts);
     QUEUE_STATUS status();

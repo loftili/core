@@ -20,7 +20,7 @@ loftili_SOURCES = \
   communication/json.cpp \
   audio/stream.cpp \
   audio/player.cpp \
-  audio/track_queue.cpp \
+  audio/track_manager.cpp \
   dispatch/controllers/root.cpp \
   dispatch/controllers/player.cpp
 
