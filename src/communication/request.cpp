@@ -42,6 +42,11 @@ void Request::send(Response* res) {
   bool has_headers = headers.size() > 0;
   struct curl_slist* header_list = NULL;
 
+  if(method == "POST") {
+    curl_easy_setopt(curl, CURLOPT_POST, 1);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{}");
+  }
+
   if(has_headers) {
     int header_count = headers.size();
 
