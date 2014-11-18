@@ -60,6 +60,17 @@ int AudioPlayer::check() {
     if(queue_status != QUEUE_STATUS_FULL) {
       log->info("unable to load the track queue");
       current_state = PLAYER_STATE_ERRORED;
+      switch(queue_status) {
+        case QUEUE_STATUS_ERRORED:
+          last_error = "unable to load track queue information";
+          break;
+        case QUEUE_STATUS_EMPTY:
+          last_error = "empty track queue";
+          break;
+        default:
+          last_error = "unknown error occurred";
+          break;
+      }
       return 0;
     }
 
@@ -93,6 +104,10 @@ int AudioPlayer::check() {
   }
 
   return 0;
+}
+
+string AudioPlayer::lastError() {
+  return last_error;
 }
 
 PLAYER_STATE AudioPlayer::state() {
