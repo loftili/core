@@ -58,6 +58,7 @@ int PlayerController::status(Request* req, Response* res) {
       break;
     case PLAYER_STATE_ERRORED:
       doc->insert("status", "errored");
+      doc->insert("error", player.lastError());
       break;
     default:
       doc->insert("status", "unknown");

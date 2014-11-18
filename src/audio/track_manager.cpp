@@ -41,6 +41,9 @@ QUEUE_STATUS TrackManager::fetch() {
   request.addHeader("x-loftili-device-auth", device_credentials.token());
   request.send(&response);
 
+  if(response.status == 204)
+    return QUEUE_STATUS_EMPTY;
+
   if(response.status != 200)
     return QUEUE_STATUS_ERRORED;
 

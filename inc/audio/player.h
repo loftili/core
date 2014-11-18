@@ -20,6 +20,7 @@ class AudioPlayer {
   public:
     AudioPlayer();
     ~AudioPlayer();
+    string lastError();
     PLAYER_STATE state();
     PLAYER_STATE start();
     PLAYER_STATE stop();
@@ -29,6 +30,7 @@ class AudioPlayer {
     int check();
     static void* monitor(void* player_instance_data);
 
+    string last_error;
     Logger* log;
     PLAYER_STATE current_state;
     TrackManager track_queue;
