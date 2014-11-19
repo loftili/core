@@ -37,7 +37,7 @@ QUEUE_STATUS TrackManager::fetch() {
   Response response("", 0);
 
   request.url = endpoint();
-  request.method = "GET";
+  request.method = "POST";
   request.addHeader("x-loftili-device-auth", device_credentials.token());
   request.send(&response);
 
