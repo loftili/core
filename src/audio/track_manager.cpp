@@ -23,8 +23,10 @@ void TrackManager::initialize(Credentials init_creds, Options init_opts) {
   device_options = init_opts;
 }
 
-std::string TrackManager::top() {
-  return track_urls.front();
+std::string TrackManager::pop() {
+  string first_track = track_urls.front();
+  track_urls.pop();
+  return first_track;
 }
 
 QUEUE_STATUS TrackManager::status() {
@@ -61,7 +63,7 @@ QUEUE_STATUS TrackManager::fetch() {
     return QUEUE_STATUS_ERRORED;
 
   string track_url = (string) popped_track_info["streaming_url"].GetString();
-  track_urls.push_back(track_url);
+  track_urls.push(track_url);
 
   return QUEUE_STATUS_FULL;
 }

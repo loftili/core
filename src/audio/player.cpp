@@ -50,37 +50,43 @@ void* AudioPlayer::monitor(void* player_instance_data) {
   return NULL;
 }
 
+PLAYER_STATE AudioPlayer::next() {
+  QUEUE_STATUS queue_status = track_queue.fetch();
+
+  if(queue_status != QUEUE_STATUS_FULL) {
+    log->info("unable to load the track queue");
+    current_state = PLAYER_STATE_ERRORED;
+    switch(queue_status) {
+      case QUEUE_STATUS_ERRORED:
+        last_error = "unable to load track queue information";
+        break;
+      case QUEUE_STATUS_EMPTY:
+        last_error = "empty track queue";
+        break;
+      default:
+        last_error = "unknown error occurred";
+        break;
+    }
+    return current_state;
+  }
+
+  std::string track_url = track_queue.pop();
+  std::stringstream queue_log;
+  queue_log << "queue ready, starting: " << track_url;
+  log->info(queue_log.str());
+  current_stream = new AudioStream(track_url);
+  current_stream->start();
+
+  current_state = PLAYER_STATE_PLAYING;
+  return current_state;
+}
+
 int AudioPlayer::check() {
   log->info("running check against current audio stream");
 
   if(!current_stream) {
     log->info("not currently playing anything, loading in queue");
-    QUEUE_STATUS queue_status = track_queue.fetch();
-
-    if(queue_status != QUEUE_STATUS_FULL) {
-      log->info("unable to load the track queue");
-      current_state = PLAYER_STATE_ERRORED;
-      switch(queue_status) {
-        case QUEUE_STATUS_ERRORED:
-          last_error = "unable to load track queue information";
-          break;
-        case QUEUE_STATUS_EMPTY:
-          last_error = "empty track queue";
-          break;
-        default:
-          last_error = "unknown error occurred";
-          break;
-      }
-      return 0;
-    }
-
-    std::string track_url = track_queue.top();
-    std::stringstream queue_log;
-    queue_log << "queue ready, starting: " << track_url;
-    log->info(queue_log.str());
-    current_stream = new AudioStream(track_url);
-    current_stream->start();
-    return 0;
+    return next();
   }
 
   log->info("already playing audio, checking state");
@@ -88,8 +94,10 @@ int AudioPlayer::check() {
 
   switch(current_stream_state) {
     case STREAM_STATE_BUFFERING:
+      log->info("still buffering audio, proceeding");
+      break;
     case STREAM_STATE_PLAYING:
-      log->info("still playing or buffering audio, proceeding");
+      log->info("still playing audio stream");
       break;
     case STREAM_STATE_ERRORED:
       log->info("errored playing stream, invalidating player status");
@@ -97,6 +105,8 @@ int AudioPlayer::check() {
       break;
     case STREAM_STATE_FINISHED:
       log->info("finished playing latest track since last refresh, moving to next");
+      delete current_stream;
+      current_state = next();
       break;
     default:
       log->info("unkown state, agh!");

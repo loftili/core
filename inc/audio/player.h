@@ -27,6 +27,7 @@ class AudioPlayer {
     void initialize(Credentials device_credentials, Options device_options);
 
   private:
+    PLAYER_STATE next();
     int check();
     static void* monitor(void* player_instance_data);
 
