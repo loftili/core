@@ -15,13 +15,15 @@ enum QUEUE_STATUS {
   QUEUE_STATUS_EMPTY
 };
 
+using namespace std;
+
 class TrackManager {
 
   public:
     TrackManager();
     ~TrackManager();
     QUEUE_STATUS fetch();
-    std::string top();
+    std::string pop();
     void initialize(Credentials creds, Options opts);
     QUEUE_STATUS status();
 
@@ -33,7 +35,7 @@ class TrackManager {
     rapidjson::Document queue_doc;
     Credentials device_credentials;
     Options device_options;
-    std::vector<std::string> track_urls;
+    queue<string> track_urls;
 
 };
 

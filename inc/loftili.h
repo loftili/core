@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
+#include <queue>
 #include <curl/curl.h>
 #include "config.h"
 #include "headers.h"
