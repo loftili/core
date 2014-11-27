@@ -33,7 +33,7 @@ PLAYER_STATE AudioPlayer::start() {
     return current_state;
 
   log->info("starting the audio player");
-  current_state = PLAYER_STATE_PLAYING;
+  current_state = next();
 
   pthread_create(&playback_thread, NULL, AudioPlayer::monitor, (void*) this);
   return current_state;
@@ -51,6 +51,9 @@ void* AudioPlayer::monitor(void* player_instance_data) {
 }
 
 PLAYER_STATE AudioPlayer::next() {
+  if(current_stream)
+    delete current_stream;
+
   QUEUE_STATUS queue_status = track_queue.fetch();
 
   if(queue_status != QUEUE_STATUS_FULL) {
@@ -70,26 +73,23 @@ PLAYER_STATE AudioPlayer::next() {
     return current_state;
   }
 
-  std::string track_url = track_queue.pop();
+  current_track_url = track_queue.pop();
   std::stringstream queue_log;
-  queue_log << "queue ready, starting: " << track_url;
+  queue_log << "queue ready, starting: " << current_track_url;
   log->info(queue_log.str());
-  current_stream = new AudioStream(track_url);
+  current_stream = new AudioStream(current_track_url);
   current_stream->start();
 
   current_state = PLAYER_STATE_PLAYING;
   return current_state;
 }
 
+string AudioPlayer::trackURL() {
+  return current_track_url;
+}
+
 int AudioPlayer::check() {
   log->info("running check against current audio stream");
-
-  if(!current_stream) {
-    log->info("not currently playing anything, loading in queue");
-    return next();
-  }
-
-  log->info("already playing audio, checking state");
   STREAM_STATE current_stream_state = current_stream->state();
 
   switch(current_stream_state) {
@@ -105,7 +105,6 @@ int AudioPlayer::check() {
       break;
     case STREAM_STATE_FINISHED:
       log->info("finished playing latest track since last refresh, moving to next");
-      delete current_stream;
       current_state = next();
       break;
     default:
@@ -118,6 +117,10 @@ int AudioPlayer::check() {
 
 string AudioPlayer::lastError() {
   return last_error;
+}
+
+STREAM_STATE AudioPlayer::streamState() {
+  return current_stream ? current_stream->state() : STREAM_STATE_EMPTY;
 }
 
 PLAYER_STATE AudioPlayer::state() {
