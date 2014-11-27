@@ -51,6 +51,9 @@ void* AudioPlayer::monitor(void* player_instance_data) {
 }
 
 PLAYER_STATE AudioPlayer::next() {
+  if(current_stream)
+    delete current_stream;
+
   QUEUE_STATUS queue_status = track_queue.fetch();
 
   if(queue_status != QUEUE_STATUS_FULL) {
@@ -105,7 +108,6 @@ int AudioPlayer::check() {
       break;
     case STREAM_STATE_FINISHED:
       log->info("finished playing latest track since last refresh, moving to next");
-      delete current_stream;
       current_state = next();
       break;
     default:

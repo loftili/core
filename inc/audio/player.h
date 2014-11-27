@@ -24,10 +24,13 @@ class AudioPlayer {
     PLAYER_STATE state();
     PLAYER_STATE start();
     PLAYER_STATE stop();
+    PLAYER_STATE next();
     void initialize(Credentials device_credentials, Options device_options);
 
+  protected:
+    pthread_t playback_thread;
+
   private:
-    PLAYER_STATE next();
     int check();
     static void* monitor(void* player_instance_data);
 
@@ -36,7 +39,6 @@ class AudioPlayer {
     PLAYER_STATE current_state;
     TrackManager track_queue;
     AudioStream* current_stream;
-    pthread_t playback_thread;
 
 };
 
