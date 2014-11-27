@@ -119,6 +119,10 @@ string AudioPlayer::lastError() {
   return last_error;
 }
 
+STREAM_STATE AudioPlayer::streamState() {
+  return current_stream ? current_stream->state() : STREAM_STATE_EMPTY;
+}
+
 PLAYER_STATE AudioPlayer::state() {
   return current_state;
 }

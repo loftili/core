@@ -54,13 +54,28 @@ int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
 
   PLAYER_STATE player_state = player.state();
+  STREAM_STATE stream_state;
   string current_track_url;
 
   switch(player_state) {
     case PLAYER_STATE_PLAYING:
       current_track_url = player.trackURL();
+      stream_state = player.streamState();
+
       doc->insert("status", "playing");
       doc->insert("track", current_track_url);
+
+      switch(stream_state) {
+        case STREAM_STATE_PLAYING:
+          doc->insert("stream", "playing");
+          break;
+        case STREAM_STATE_BUFFERING:
+          doc->insert("stream", "buffering");
+          break;
+        default:
+          break;
+      }
+
       break;
     case PLAYER_STATE_STOPPED:
       doc->insert("status", "stopped");

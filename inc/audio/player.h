@@ -25,6 +25,8 @@ class AudioPlayer {
     PLAYER_STATE start();
     PLAYER_STATE stop();
     PLAYER_STATE next();
+
+    STREAM_STATE streamState();
     string trackURL();
     void initialize(Credentials device_credentials, Options device_options);
 
