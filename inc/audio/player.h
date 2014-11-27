@@ -25,6 +25,7 @@ class AudioPlayer {
     PLAYER_STATE start();
     PLAYER_STATE stop();
     PLAYER_STATE next();
+    string trackURL();
     void initialize(Credentials device_credentials, Options device_options);
 
   protected:
@@ -35,6 +36,7 @@ class AudioPlayer {
     static void* monitor(void* player_instance_data);
 
     string last_error;
+    string current_track_url;
     Logger* log;
     PLAYER_STATE current_state;
     TrackManager track_queue;

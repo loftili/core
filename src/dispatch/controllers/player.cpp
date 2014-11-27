@@ -54,10 +54,13 @@ int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
 
   PLAYER_STATE player_state = player.state();
+  string current_track_url;
 
   switch(player_state) {
     case PLAYER_STATE_PLAYING:
+      current_track_url = player.trackURL();
       doc->insert("status", "playing");
+      doc->insert("track", current_track_url);
       break;
     case PLAYER_STATE_STOPPED:
       doc->insert("status", "stopped");
