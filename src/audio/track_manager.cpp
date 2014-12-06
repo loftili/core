@@ -35,40 +35,55 @@ QUEUE_STATUS TrackManager::status() {
 
 QUEUE_STATUS TrackManager::fetch() {
   log->info("fetching track queue");
-  Request request;
-  Response response("", 0);
+  Request* request = new Request();
+  Response* response = new Response("", 0);
 
-  request.url = endpoint();
-  request.method = "POST";
-  request.addHeader("x-loftili-device-auth", device_credentials.token());
-  request.send(&response);
+  stringstream pop_url;
+  pop_url << endpoint() << "?device_token=" << device_credentials.token();
 
-  if(response.status == 204) {
+  request->url = pop_url.str();
+  request->method = "POST";
+  request->send(response);
+
+  if(response->status == 204) {
     log->info("track queue was empty!");
+    delete request;
+    delete response;
     return QUEUE_STATUS_EMPTY;
   }
 
-  if(response.status != 200) {
+  if(response->status != 200) {
     log->info("track queue fetch returned non 200 status code, failing");
-    log->info((char*) response.content);
+    log->info((char*) response->content);
+    delete response;
+    delete request;
     return QUEUE_STATUS_ERRORED;
   }
 
   rapidjson::Document popped_track_info;
-  popped_track_info.Parse<0>((char*) response.content);
+  popped_track_info.Parse<0>((char*) response->content);
 
   bool can_use = popped_track_info.IsObject();
 
-  if(!can_use)
+  if(!can_use) {
+    delete response;
+    delete request;
     return QUEUE_STATUS_ERRORED;
+  }
 
   can_use = popped_track_info["streaming_url"].IsString();
 
-  if(!can_use)
+  if(!can_use) {
+    delete response;
+    delete request;
     return QUEUE_STATUS_ERRORED;
+  }
 
   string track_url = (string) popped_track_info["streaming_url"].GetString();
   track_urls.push(track_url);
+
+  delete response;
+  delete request;
 
   return QUEUE_STATUS_FULL;
 }
