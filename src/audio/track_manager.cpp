@@ -43,14 +43,19 @@ QUEUE_STATUS TrackManager::fetch() {
   request.addHeader("x-loftili-device-auth", device_credentials.token());
   request.send(&response);
 
-  if(response.status == 204)
+  if(response.status == 204) {
+    log->info("track queue was empty!");
     return QUEUE_STATUS_EMPTY;
+  }
 
-  if(response.status != 200)
+  if(response.status != 200) {
+    log->info("track queue fetch returned non 200 status code, failing");
+    log->info((char*) response.content);
     return QUEUE_STATUS_ERRORED;
+  }
 
   rapidjson::Document popped_track_info;
-  popped_track_info.Parse<0>((char*)response.content);
+  popped_track_info.Parse<0>((char*) response.content);
 
   bool can_use = popped_track_info.IsObject();
 
