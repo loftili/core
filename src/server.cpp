@@ -41,6 +41,7 @@ int Server::process(struct ahc_info info) {
   }
 
   bool validated = standalone ? true : dispatch.validate(request->connection);
+
   if(!validated)
     return dispatch.reject(request);
 
