@@ -34,12 +34,9 @@ void Logger::send(string msg, string level) {
   if(!use_file) {
     printf("[%s] [%s] [%s]: %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), msg.c_str());
   } else {
-    int log_length = name.size() + level.size() + time_stamp.size() + msg.size() + 11;
-    char* buffer = (char*) malloc(sizeof(char) * log_length);
-    sprintf(buffer, "[%s] [%s] [%s]: %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), msg.c_str());
-    log_stream << buffer;
+    log_stream << "[" << name << "] [" << level << "] [" << time_stamp << "]: ";
+    log_stream << msg << endl;
     log_stream.flush();
-    free(buffer);
   }
 }
 
@@ -48,12 +45,9 @@ void Logger::send(string a, string b, string level) {
   if(!use_file) {
     printf("[%s] [%s] [%s]: %s %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), a.c_str(), b.c_str());
   } else {
-    int log_length = name.size() + level.size() + time_stamp.size() + a.size() + b.size() + 11;
-    char* buffer = (char*) malloc(sizeof(char) * log_length);
-    sprintf(buffer, "[%s] [%s] [%s]: %s %s \n", name.c_str(), level.c_str(), time_stamp.c_str(), a.c_str(), b.c_str());
-    log_stream << buffer;
+    log_stream << "[" << name << "] [" << level << "] [" << time_stamp << "]: ";
+    log_stream << a << " " << b << endl;
     log_stream.flush();
-    free(buffer);
   }
 }
 
