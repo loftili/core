@@ -73,19 +73,21 @@ PLAYER_STATE AudioPlayer::next() {
     return current_state;
   }
 
-  current_track_url = track_queue.pop();
+  current_track_info = track_queue.pop();
+
   std::stringstream queue_log;
-  queue_log << "queue ready, starting: " << current_track_url;
+  queue_log << "queue ready, starting: " << current_track_info.track_url;
   log->info(queue_log.str());
-  current_stream = new AudioStream(current_track_url);
+
+  current_stream = new AudioStream(current_track_info.track_url);
   current_stream->start();
 
   current_state = PLAYER_STATE_PLAYING;
   return current_state;
 }
 
-string AudioPlayer::trackURL() {
-  return current_track_url;
+track_info AudioPlayer::trackInfo() {
+  return current_track_info;
 }
 
 int AudioPlayer::check() {

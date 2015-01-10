@@ -8,7 +8,7 @@ PlayerController::PlayerController() {
   ControllerMethod start = ControllerMethod("/start", PLAYER_METHOD_START);
   ControllerMethod stop = ControllerMethod("/stop", PLAYER_METHOD_STOP);
   ControllerMethod status = ControllerMethod("/status", PLAYER_METHOD_STATUS);
-  ControllerMethod refresh = ControllerMethod("/refresh", PLAYER_METHOD_REFRESH);
+  ControllerMethod refresh = ControllerMethod("/restart", PLAYER_METHOD_REFRESH);
   ControllerMethod next = ControllerMethod("/next", PLAYER_METHOD_NEXT);
 
   method_map.insert(start);
@@ -55,15 +55,16 @@ int PlayerController::status(Request* req, Response* res) {
 
   PLAYER_STATE player_state = player.state();
   STREAM_STATE stream_state;
-  string current_track_url;
+  track_info playback_info;
 
   switch(player_state) {
     case PLAYER_STATE_PLAYING:
-      current_track_url = player.trackURL();
+      playback_info = player.trackInfo();
       stream_state = player.streamState();
 
       doc->insert("status", "playing");
-      doc->insert("track", current_track_url);
+      doc->insert("track_url", playback_info.track_url);
+      doc->insert("track_id", playback_info.track_id);
 
       switch(stream_state) {
         case STREAM_STATE_PLAYING:
