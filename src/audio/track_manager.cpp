@@ -23,9 +23,14 @@ void TrackManager::initialize(Credentials init_creds, Options init_opts) {
   device_options = init_opts;
 }
 
-std::string TrackManager::pop() {
-  string first_track = track_urls.front();
-  track_urls.pop();
+track_info TrackManager::pop() {
+  track_info first_track = track_list.front();
+
+  stringstream log_msg;
+  log_msg << "popping track[" << first_track.track_url << "]";
+  log->info(log_msg.str());
+
+  track_list.pop();
   return first_track;
 }
 
@@ -79,8 +84,11 @@ QUEUE_STATUS TrackManager::fetch() {
     return QUEUE_STATUS_ERRORED;
   }
 
-  string track_url = (string) popped_track_info["streaming_url"].GetString();
-  track_urls.push(track_url);
+  track_info fetched_track;
+  fetched_track.track_url = (string) popped_track_info["streaming_url"].GetString();
+  fetched_track.track_id = (int) popped_track_info["id"].GetInt();
+
+  track_list.push(fetched_track);
 
   delete response;
   delete request;

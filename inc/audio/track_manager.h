@@ -23,7 +23,7 @@ class TrackManager {
     TrackManager();
     ~TrackManager();
     QUEUE_STATUS fetch();
-    std::string pop();
+    track_info pop();
     void initialize(Credentials creds, Options opts);
     QUEUE_STATUS status();
 
@@ -35,7 +35,7 @@ class TrackManager {
     rapidjson::Document queue_doc;
     Credentials device_credentials;
     Options device_options;
-    queue<string> track_urls;
+    queue<track_info> track_list;
 
 };
 

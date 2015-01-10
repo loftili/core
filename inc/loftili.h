@@ -43,4 +43,9 @@ struct ahc_info {
   void** con_cls;
 };
 
+struct track_info {
+  std::string track_url;
+  int track_id;
+};
+
 #endif
