@@ -2,8 +2,7 @@
 #define _LOFTILI_PLAYER_CONTROLLER_H
 
 #include "dispatch/controller.h"
-#include "auth/credentials.h"
-#include "util/options.h"
+#include "services/playback_manager.h"
 #include "audio/player.h"
 
 namespace loftili {
@@ -22,7 +21,6 @@ class PlayerController : public Controller {
     PlayerController();
     ~PlayerController();
     int respondTo(Request* req, Response* res);
-    void initialize(Credentials init_credentials, Options init_options);
 
   protected:
     std::string logName() { return "PlayerController"; }
@@ -35,7 +33,7 @@ class PlayerController : public Controller {
     int next(Request* req, Response* res);
 
   private:
-    AudioPlayer player;
+    PlaybackManager* playback;
 
 };
 

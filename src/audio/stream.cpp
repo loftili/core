@@ -115,6 +115,7 @@ void* AudioStream::stream(void* stream_instance_data) {
         break;
     }
   } while(done > 0 && audio_stream->current_state != STREAM_STATE_ABORTED);
+
   audio_stream->current_state = STREAM_STATE_FINISHED;
 
   ao_close(dev);

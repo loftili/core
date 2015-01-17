@@ -5,6 +5,7 @@ INSTALL
 *.tar.gz
 /vendor
 *.log
+*.rdb
 /autom4te.cache
 /aclocal.m4
 /compile

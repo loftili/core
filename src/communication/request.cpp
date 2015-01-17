@@ -86,10 +86,14 @@ void Request::send(Json* doc, Response* res) {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &Request::receiver);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*) res);
 
-  if(method == "POST") {
-    curl_easy_setopt(curl, CURLOPT_POST, 1);
+  if(method == "POST" || method == "PUT")
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, doc->buffer());
-  }
+
+  if(method == "PUT")
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+
+  if(method == "POST")
+    curl_easy_setopt(curl, CURLOPT_POST, 1);
 
   struct curl_slist* header_list = NULL;
   CURLcode http_code;

@@ -6,7 +6,8 @@
 #define LOFTILI_EMPTY_RESPONSE "{}"
 #define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 #define LOFTILI_API_HOME "http://api.loftili.com"
-#define LOFTILI_REGISTRATION_URL LOFTILI_API_HOME "/registration"
+#define LOFTILI_REGISTRATION_PATH "/registration"
+#define LOFTILI_REGISTRATION_URL LOFTILI_API_HOME LOFTILI_REGISTRATION_PATH
 
 #include <iostream>
 #include <string.h>
@@ -43,9 +44,44 @@ struct ahc_info {
   void** con_cls;
 };
 
-struct track_info {
+enum PLAYER_STATE {
+  PLAYER_STATE_STOPPED,
+  PLAYER_STATE_BUFFERING,
+  PLAYER_STATE_PLAYING,
+  PLAYER_STATE_ERRORED
+};
+
+enum PLAYER_ERROR {
+  PLAYER_ERROR_NONE,
+  PLAYER_ERROR_QUEUE_EMPTY,
+  PLAYER_ERROR_QUEUE_LOAD,
+  PLAYER_ERROR_UNKNOWN
+};
+
+struct Track {
   std::string track_url;
   int track_id;
 };
+
+struct Configuration {
+  int port;
+  bool help;
+  bool use_log;
+  bool standalone;
+  bool daemonize;
+  std::string logfile;
+  std::string username;
+  std::string password;
+  std::string devicename;
+  std::string api_host;
+  std::string token;
+  int device_id;
+};
+
+namespace loftili {
+
+  extern Configuration* config;
+
+}
 
 #endif

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <getopt.h>
 #include <termios.h>
-#include "util/options.h"
+#include "loftili.h"
 
 namespace loftili {
 namespace cli {
@@ -12,10 +12,10 @@ namespace cli {
 class Parser {
 
   public:
-    static Options parse(int argc, char* argv[]);
+    static Configuration parse(int argc, char* argv[]);
 
   private:
-    static void fillPassword(Options* opts);
+    static void fillPassword(Configuration* config);
     static void help();
     static bool missing(char param);
     static void stdinecho(bool enable);
