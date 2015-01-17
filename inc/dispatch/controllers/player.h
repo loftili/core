@@ -2,6 +2,7 @@
 #define _LOFTILI_PLAYER_CONTROLLER_H
 
 #include "dispatch/controller.h"
+#include "services/playback_manager.h"
 #include "auth/credentials.h"
 #include "util/options.h"
 #include "audio/player.h"
@@ -35,7 +36,7 @@ class PlayerController : public Controller {
     int next(Request* req, Response* res);
 
   private:
-    AudioPlayer player;
+    PlaybackManager* playback;
 
 };
 

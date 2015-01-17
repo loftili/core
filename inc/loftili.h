@@ -43,7 +43,21 @@ struct ahc_info {
   void** con_cls;
 };
 
-struct track_info {
+enum PLAYER_STATE {
+  PLAYER_STATE_STOPPED,
+  PLAYER_STATE_BUFFERING,
+  PLAYER_STATE_PLAYING,
+  PLAYER_STATE_ERRORED
+};
+
+enum PLAYER_ERROR {
+  PLAYER_ERROR_NONE,
+  PLAYER_ERROR_QUEUE_EMPTY,
+  PLAYER_ERROR_QUEUE_LOAD,
+  PLAYER_ERROR_UNKNOWN
+};
+
+struct Track {
   std::string track_url;
   int track_id;
 };

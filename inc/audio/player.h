@@ -9,12 +9,6 @@
 
 namespace loftili {
 
-enum PLAYER_STATE {
-  PLAYER_STATE_PLAYING,
-  PLAYER_STATE_STOPPED,
-  PLAYER_STATE_ERRORED
-};
-
 class AudioPlayer {
 
   public:
@@ -27,20 +21,13 @@ class AudioPlayer {
     PLAYER_STATE next();
 
     STREAM_STATE streamState();
-    track_info trackInfo();
+    Track trackInfo();
     void initialize(Credentials device_credentials, Options device_options);
 
-  protected:
-    pthread_t playback_thread;
-
   private:
-    int check();
-    static void* monitor(void* player_instance_data);
-
-    string last_error;
+    PLAYER_ERROR last_error;
     Logger* log;
-    track_info current_track_info;
-    PLAYER_STATE current_state;
+    Track current_track_info;
     TrackManager track_queue;
     AudioStream* current_stream;
 

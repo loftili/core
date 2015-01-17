@@ -16,11 +16,14 @@ PlayerController::PlayerController() {
   method_map.insert(status);
   method_map.insert(refresh);
   method_map.insert(next);
+
+  playback = new PlaybackManager();
 }
 
 PlayerController::~PlayerController() {
   log->info("deleting the player controller");
   delete log;
+  delete playback;
 }
 
 void PlayerController::initialize(Credentials init_credentials, Options init_options) {
@@ -28,7 +31,7 @@ void PlayerController::initialize(Credentials init_credentials, Options init_opt
   device_options = init_options;
   device_credentials = init_credentials;
   log->info("initalizing player controller");
-  player.initialize(device_credentials, device_options);
+  playback->initialize(device_credentials, device_options);
 }
 
 int PlayerController::respondTo(Request* req, Response* res) {
@@ -53,37 +56,20 @@ int PlayerController::respondTo(Request* req, Response* res) {
 int PlayerController::status(Request* req, Response* res) {
   Json* doc = new Json();
 
-  PLAYER_STATE player_state = player.state();
-  STREAM_STATE stream_state;
-  track_info playback_info;
+  PLAYER_STATE player_state = playback->state();
 
   switch(player_state) {
     case PLAYER_STATE_PLAYING:
-      playback_info = player.trackInfo();
-      stream_state = player.streamState();
-
       doc->insert("status", "playing");
-      doc->insert("track_url", playback_info.track_url);
-      doc->insert("track_id", playback_info.track_id);
-
-      switch(stream_state) {
-        case STREAM_STATE_PLAYING:
-          doc->insert("stream", "playing");
-          break;
-        case STREAM_STATE_BUFFERING:
-          doc->insert("stream", "buffering");
-          break;
-        default:
-          break;
-      }
-
       break;
     case PLAYER_STATE_STOPPED:
       doc->insert("status", "stopped");
       break;
     case PLAYER_STATE_ERRORED:
       doc->insert("status", "errored");
-      doc->insert("error", player.lastError());
+      break;
+    case PLAYER_STATE_BUFFERING:
+      doc->insert("status", "buffering");
       break;
     default:
       doc->insert("status", "unknown");
@@ -91,33 +77,35 @@ int PlayerController::status(Request* req, Response* res) {
   }
 
   res->json(doc);
+
   delete doc;
+
   return 0;
 }
 
 int PlayerController::stop(Request* req, Response* res) {
   log->info("stoppping audio");
-  player.stop();
+  playback->stop();
   return status(req, res);
 }
 
 int PlayerController::start(Request* req, Response* res) {
-  PLAYER_STATE state = player.state();
+  PLAYER_STATE state = playback->state();
 
   if(state == PLAYER_STATE_PLAYING)
     return status(req, res);
 
   log->info("telling audio player to start");
-  player.start();
+  playback->start();
 
   return status(req, res);
 }
 
 int PlayerController::refresh(Request* req, Response* res) {
   log->info("stopping player");
-  player.stop();
+  playback->stop();
   log->info("starting player");
-  player.start();
+  playback->start();
   return status(req, res);
 }
 
