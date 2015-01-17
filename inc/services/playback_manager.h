@@ -20,7 +20,6 @@ class PlaybackManager {
     PLAYER_STATE next();
 
   protected:
-    PLAYER_STATE checkLoop();
     bool canceled;
 
   private:

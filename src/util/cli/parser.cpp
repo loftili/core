@@ -115,8 +115,7 @@ void Parser::help() {
   printf("   -%s %-*s %s", "u", 15, "USERNAME", "[required] your username. will be used to connect with the loftili api\n");
   printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "[required] the name this device should be communicating under\n");
   printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
-  printf("   -%s %-*s %s", "s", 15, "STANDALONE", "this will skip the device\'s registration process \n");
-  printf("   -%s %-*s %s", "d", 15, "DAEMONIZE", "this will skip the device\'s registration process \n");
+  printf("   -%s %-*s %s", "d", 15, "DAEMONIZE", "run loftili in daemon mode (background)\n");
   printf("   -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file \n");
   printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
