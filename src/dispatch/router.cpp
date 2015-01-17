@@ -10,10 +10,10 @@ Router::~Router() {
   delete routes;
 }
 
-void Router::initialize(Credentials creds, Options opts) {
+void Router::initialize() {
   routes->add(new RootController());
   routes->add(new PlayerController());
-  routes->initialize(creds, opts);
+  routes->initialize();
 }
 
 int Router::handle(Request* req, Response* res) {

@@ -23,10 +23,6 @@ PlaybackManager::~PlaybackManager() {
   delete log;
 }
 
-void PlaybackManager::initialize(Credentials device_credentials, Options device_options) {
-  player->initialize(device_credentials, device_options);
-}
-
 PLAYER_STATE PlaybackManager::start() {
   PLAYER_STATE received = player->start();
 

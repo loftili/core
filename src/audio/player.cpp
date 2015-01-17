@@ -16,10 +16,6 @@ AudioPlayer::~AudioPlayer() {
   delete log;
 }
 
-void AudioPlayer::initialize(Credentials device_credentials, Options device_options) {
-  track_queue.initialize(device_credentials, device_options);
-}
-
 PLAYER_STATE AudioPlayer::stop() {
   log->info("stopping the audio player");
 

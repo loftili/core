@@ -15,13 +15,11 @@ void RouteList::add(Controller* controller) {
   controllers.push_back(controller);
 }
 
-void RouteList::initialize(Credentials creds, Options opts) {
+void RouteList::initialize() {
   auto it = controllers.begin();
-  log->info("initalizing controllers");
-
   for(it; it != controllers.end(); ++it) {
     Controller* c = (Controller*) *it;
-    c->initialize(creds, opts);
+    c->initialize();
   }
 }
 

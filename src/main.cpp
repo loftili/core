@@ -1,17 +1,16 @@
-#include "loftili.h"
-#include "util/cli/parser.h"
-#include "util/options.h"
-#include "server.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "loftili.h"
+#include "util/cli/parser.h"
+#include "server.h"
 
 using namespace loftili;
 
 int main(int argc, char * argv[]) {
-  Options opts = cli::Parser::parse(argc, argv);
+  Configuration config = cli::Parser::parse(argc, argv);
 
-  if(opts.daemonize && !opts.help) {
-    std::cout << "starting" << std::endl;
+  if(config.daemonize && !config.help) {
+    std::cout << "starting as thread" << std::endl;
     pid_t pid, sid;
     pid = fork();
 
@@ -32,8 +31,8 @@ int main(int argc, char * argv[]) {
     close(STDERR_FILENO);
   }
 
-  if(!opts.help)
-    return Server::run(opts);
+  if(!config.help)
+    return Server::run(config);
 
   return 1;
 }

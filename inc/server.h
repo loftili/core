@@ -4,10 +4,9 @@
 #include <microhttpd.h>
 #include <ao/ao.h>
 #include "loftili.h"
-#include "util/options.h"
-#include "auth/registration.h"
 #include "dispatch/dispatch.h"
 #include "dispatch/router.h"
+#include "services/registration.h"
 #include "communication/request.h"
 #include "communication/response.h"
 
@@ -17,20 +16,18 @@ class Server {
 
   // MEMBER
   public:
-    Server(Options opts);
+    Server();
     ~Server();
     int process(struct ahc_info info);
-    bool enroll();
 
   private:
     Dispatch dispatch;
     Router router;
-    Registration registration;
-    bool standalone;
 
   // STATIC
   public:
-    static int run(Options opts);
+    static int run(Configuration config);
+
     static int ahc(
       void* cls, 
       MHD_Connection* connection, 
@@ -41,6 +38,7 @@ class Server {
       size_t* data_size,
       void** con_cls
     );
+
     static void completion(
       void *cls,
       struct MHD_Connection *connection,

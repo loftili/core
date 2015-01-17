@@ -4,10 +4,8 @@
 #include <string.h>
 #include <iostream>
 #include "loftili.h"
-#include "auth/credentials.h"
 #include "util/logger.h"
 #include "util/loggable.h"
-#include "util/options.h"
 #include "communication/response.h"
 #include "communication/request.h"
 #include "communication/json.h"
@@ -23,8 +21,8 @@ class Controller : public Loggable {
   
   public:
     virtual ~Controller() {};
+    void initialize();
     virtual int respondTo(Request* req, Response* res);
-    virtual void initialize(Credentials new_credentials, Options init_options);
     std::string name;
 
   protected:
@@ -34,8 +32,6 @@ class Controller : public Loggable {
   protected:
     std::map<std::string, int> method_map;
     Logger* log;
-    Credentials device_credentials;
-    Options device_options;
 
 };
 

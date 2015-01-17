@@ -3,8 +3,8 @@
 namespace loftili {
 namespace cli {
 
-Options Parser::parse(int argc, char* argv[]) {
-  Options opts;
+Configuration Parser::parse(int argc, char* argv[]) {
+  Configuration opts;
 
   int arg_index = 1;
   for(arg_index; arg_index < argc; arg_index++) {
@@ -67,6 +67,9 @@ Options Parser::parse(int argc, char* argv[]) {
     help();
     return opts;
   }
+
+  if(opts.port == 0)
+    opts.port = LOFTILI_DEFAULT_PORT;
   
   if(!opts.standalone)
     fillPassword(&opts);
@@ -76,7 +79,7 @@ Options Parser::parse(int argc, char* argv[]) {
   return opts;
 }
 
-void Parser::fillPassword(Options* opts) {
+void Parser::fillPassword(Configuration* opts) {
   printf("enter your loftili password (for %s): \n", opts->username.c_str());
   stdinecho(false);
   std::string password;

@@ -26,14 +26,6 @@ PlayerController::~PlayerController() {
   delete playback;
 }
 
-void PlayerController::initialize(Credentials init_credentials, Options init_options) {
-  log = new Logger("PlayerController");
-  device_options = init_options;
-  device_credentials = init_credentials;
-  log->info("initalizing player controller");
-  playback->initialize(device_credentials, device_options);
-}
-
 int PlayerController::respondTo(Request* req, Response* res) {
   log->info(std::string("PlayerController is responding to: ") + req->url);
 

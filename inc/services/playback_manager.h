@@ -3,8 +3,6 @@
 
 #include "loftili.h"
 #include "audio/player.h"
-#include "auth/credentials.h"
-#include "util/options.h"
 #include "util/logger.h"
 
 namespace loftili {
@@ -19,8 +17,6 @@ class PlaybackManager {
     PLAYER_STATE stop();
     PLAYER_STATE state();
     PLAYER_STATE next();
-
-    void initialize(Credentials device_credentials, Options device_options);
 
   protected:
     PLAYER_STATE checkLoop();

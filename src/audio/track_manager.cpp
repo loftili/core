@@ -2,7 +2,7 @@
 
 namespace loftili {
 
-TrackManager::TrackManager() : device_options(), device_credentials() {
+TrackManager::TrackManager() {
   log = new Logger("TrackManager");
 }
 
@@ -12,15 +12,10 @@ TrackManager::~TrackManager() {
 
 std::string TrackManager::endpoint() {
   std::stringstream ss;
-  int device_id = device_credentials.deviceId();
-  ss << (device_options.api_host != "" ? device_options.api_host : LOFTILI_API_HOME);
+  int device_id = loftili::config->device_id;
+  ss << (loftili::config->api_host != "" ? loftili::config->api_host : LOFTILI_API_HOME);
   ss << "/queues/" << device_id << "/pop";
   return ss.str();
-}
-
-void TrackManager::initialize(Credentials init_creds, Options init_opts) {
-  device_credentials = init_creds;
-  device_options = init_opts;
 }
 
 Track TrackManager::pop() {
@@ -44,7 +39,8 @@ QUEUE_STATUS TrackManager::fetch() {
   Response* response = new Response("", 0);
 
   stringstream pop_url;
-  pop_url << endpoint() << "?device_token=" << device_credentials.token();
+  pop_url << endpoint() << "?device_token=" << loftili::config->token;
+  log->info("sending pop request to ", pop_url.str());
 
   request->url = pop_url.str();
   request->method = "POST";

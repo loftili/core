@@ -2,9 +2,7 @@
 
 namespace loftili {
 
-void Controller::initialize(Credentials init_credentials, Options init_options) {  
-  device_options = init_options;
-  device_credentials = init_credentials;
+void Controller::initialize() {
   log = new Logger(logName());
 }
 

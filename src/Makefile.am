@@ -6,10 +6,7 @@ loftili_SOURCES = \
   main.cpp \
 	server.cpp \
   util/logger.cpp \
-  util/options.cpp \
   util/cli/parser.cpp \
-  auth/registration.cpp \
-  auth/credentials.cpp \
 	dispatch/auth.cpp \
 	dispatch/dispatch.cpp \
 	dispatch/router.cpp \
@@ -21,6 +18,7 @@ loftili_SOURCES = \
   audio/stream.cpp \
   audio/player.cpp \
   audio/track_manager.cpp \
+  services/registration.cpp \
   services/playback_manager.cpp \
   dispatch/controllers/root.cpp \
   dispatch/controllers/player.cpp

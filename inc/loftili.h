@@ -6,7 +6,8 @@
 #define LOFTILI_EMPTY_RESPONSE "{}"
 #define LOFTILI_EMPTY_RESPONSE_LEN strlen(LOFTILI_EMPTY_RESPONSE)
 #define LOFTILI_API_HOME "http://api.loftili.com"
-#define LOFTILI_REGISTRATION_URL LOFTILI_API_HOME "/registration"
+#define LOFTILI_REGISTRATION_PATH "/registration"
+#define LOFTILI_REGISTRATION_URL LOFTILI_API_HOME LOFTILI_REGISTRATION_PATH
 
 #include <iostream>
 #include <string.h>
@@ -61,5 +62,26 @@ struct Track {
   std::string track_url;
   int track_id;
 };
+
+struct Configuration {
+  int port;
+  bool help;
+  bool use_log;
+  bool standalone;
+  bool daemonize;
+  std::string logfile;
+  std::string username;
+  std::string password;
+  std::string devicename;
+  std::string api_host;
+  std::string token;
+  int device_id;
+};
+
+namespace loftili {
+
+  extern Configuration* config;
+
+}
 
 #endif
