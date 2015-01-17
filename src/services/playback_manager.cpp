@@ -5,11 +5,13 @@ namespace loftili {
 PlaybackManager::PlaybackManager() {
   log = new Logger("PlaybackManager");
   player = new AudioPlayer();
+  relay = new StateRelay();
   last_player_state = PLAYER_STATE_STOPPED;
   canceled = false;
 }
 
 PlaybackManager::~PlaybackManager() {
+  log->info("destroying playback manager");
   canceled = true;
 
   if(player)
@@ -21,6 +23,7 @@ PlaybackManager::~PlaybackManager() {
     pthread_join(monitor_thread, NULL);
 
   delete log;
+  delete relay;
 }
 
 PLAYER_STATE PlaybackManager::start() {
@@ -68,6 +71,8 @@ PLAYER_STATE PlaybackManager::checkLoop() {
   bool was_playing = last_player_state == PLAYER_STATE_PLAYING;
   bool is_stopped = current_state == PLAYER_STATE_STOPPED;
 
+  relay->send("player:state", current_state);
+
   last_player_state = current_state;
 
   if(was_playing && is_stopped) {
@@ -87,12 +92,16 @@ PLAYER_STATE PlaybackManager::next() {
 }
 
 PLAYER_STATE PlaybackManager::stop() {
-  PLAYER_STATE pstate = player->stop();
+  canceled = true;
 
   if(monitor_thread)
     pthread_join(monitor_thread, NULL);
 
+  PLAYER_STATE pstate = player->stop();
+
   monitor_thread = NULL;
+
+  relay->send("player:state", pstate);
 
   return pstate;
 }

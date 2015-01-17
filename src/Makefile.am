@@ -18,6 +18,7 @@ loftili_SOURCES = \
   audio/stream.cpp \
   audio/player.cpp \
   audio/track_manager.cpp \
+  services/state_relay.cpp \
   services/registration.cpp \
   services/playback_manager.cpp \
   dispatch/controllers/root.cpp \
