@@ -12,8 +12,8 @@ StateRelay::~StateRelay() {
 
 void StateRelay::send(string key, int state) {
   stringstream update_log;
-  update_log << "sending updated state for key:" << key;
-  update_log << "changing value to: " << state;
+  update_log << "sending updated state for key[" << key;
+  update_log << "] changing value to[ " << state << "]";
   log->info(update_log.str());
 
   Request req;

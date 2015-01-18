@@ -50,16 +50,17 @@ PLAYER_STATE AudioPlayer::next() {
   QUEUE_STATUS queue_status = track_queue.fetch();
 
   if(queue_status != QUEUE_STATUS_FULL) {
-    log->info("unable to load the track queue");
-
     switch(queue_status) {
       case QUEUE_STATUS_ERRORED:
+        log->info("ERROR - unable to load queue, queue was QUEUE_STATUS_ERRORED");
         last_error = PLAYER_ERROR_QUEUE_LOAD;
         break;
       case QUEUE_STATUS_EMPTY:
+        log->info("ERROR - unable to load queue queue was QUEUE_STATUS_EMPTY");
         last_error = PLAYER_ERROR_QUEUE_EMPTY;
         break;
       default:
+        log->info("queue was unknown");
         last_error = PLAYER_ERROR_UNKNOWN;
         break;
     }
@@ -81,8 +82,16 @@ PLAYER_STATE AudioPlayer::next() {
 PLAYER_STATE AudioPlayer::state() {
   PLAYER_STATE calculated_state = PLAYER_STATE_STOPPED;
 
-  if(last_error != PLAYER_ERROR_NONE)
+  if(last_error != PLAYER_ERROR_NONE) {
+    log->info("the last error was not NONE, returning PLAYER_STATE_ERRORED");
+
+    if(last_error == PLAYER_ERROR_QUEUE_EMPTY) {
+      log->info("the last error PLAYER_ERROR_QUEUE_EMPTY, returning PLAYER_STATE_EMPTY_QUEUE");
+      return PLAYER_STATE_EMPTY_QUEUE;
+    }
+
     return PLAYER_STATE_ERRORED;
+  }
 
   if(!current_stream)
     return calculated_state;

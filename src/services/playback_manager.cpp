@@ -33,6 +33,10 @@ PLAYER_STATE PlaybackManager::start() {
     canceled = false;
     log->info("playback manager opening up monitor thread!");
     pthread_create(&monitor_thread, NULL, PlaybackManager::monitor, (void*) this);
+  } else {
+    log->info("the attempt to start the player failed, reporting error");
+    PLAYER_STATE current = player->state();
+    relay->send("player:state", current);
   }
 
   return received;
