@@ -105,6 +105,9 @@ PLAYER_STATE AudioPlayer::state() {
     case STREAM_STATE_PLAYING:
       calculated_state = PLAYER_STATE_PLAYING;
       break;
+    case STREAM_STATE_ERRORED:
+      calculated_state = PLAYER_STATE_STREAM_ERROR;
+      break;
     default:
       calculated_state = PLAYER_STATE_STOPPED;
       break;
