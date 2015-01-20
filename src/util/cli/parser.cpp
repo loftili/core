@@ -1,6 +1,7 @@
 #include "util/cli/parser.h"
 
 namespace loftili {
+
 namespace cli {
 
 Configuration Parser::parse(int argc, char* argv[]) {
@@ -55,15 +56,12 @@ Configuration Parser::parse(int argc, char* argv[]) {
       case 'd':
         opts.daemonize = true;
         break;
-      case 's':
-        opts.standalone = true;
-        break;
       default:
         break;
     }
   }
 
-  if((opts.devicename == "" || opts.username == "") && !opts.standalone) {
+  if(opts.devicename == "" || opts.username == "") {
     help();
     return opts;
   }
@@ -71,8 +69,7 @@ Configuration Parser::parse(int argc, char* argv[]) {
   if(opts.port == 0)
     opts.port = LOFTILI_DEFAULT_PORT;
   
-  if(!opts.standalone)
-    fillPassword(&opts);
+  fillPassword(&opts);
 
   opts.help = false;
 
@@ -121,4 +118,5 @@ void Parser::help() {
 }
 
 }
+
 }

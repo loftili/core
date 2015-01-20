@@ -69,7 +69,6 @@ struct Configuration {
   int port;
   bool help;
   bool use_log;
-  bool standalone;
   bool daemonize;
   std::string logfile;
   std::string username;
