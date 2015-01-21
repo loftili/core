@@ -29,58 +29,53 @@ PlaybackManager::~PlaybackManager() {
 PLAYER_STATE PlaybackManager::start() {
   PLAYER_STATE received = player->start();
 
-  if(received == PLAYER_STATE_PLAYING || received == PLAYER_STATE_BUFFERING)
+  if(received == PLAYER_STATE_PLAYING || received == PLAYER_STATE_BUFFERING) {
+    canceled = false;
+    log->info("playback manager opening up monitor thread!");
     pthread_create(&monitor_thread, NULL, PlaybackManager::monitor, (void*) this);
+  } else {
+    log->info("the attempt to start the player failed, reporting error");
+    PLAYER_STATE current = player->state();
+    relay->send("player:state", current);
+  }
 
   return received;
 }
 
 void* PlaybackManager::monitor(void* playback_instance) {
   PlaybackManager* manager = (PlaybackManager*) playback_instance;
+  Logger* log = new Logger("::PlaybackManager");
+  StateRelay* relay = new StateRelay();
 
-  PLAYER_STATE manager_state;
+  PLAYER_STATE manager_state = manager->state();
+  relay->send("player:state", manager_state);
 
   while(true) {
     if(manager->canceled)
-      return NULL;
+      break;
 
-    manager_state = manager->checkLoop();
+    PLAYER_STATE new_state = manager->state();
 
-    bool is_buffering = manager_state == PLAYER_STATE_BUFFERING;
-    bool is_playing = manager_state == PLAYER_STATE_PLAYING;
+    if(new_state != manager_state) {
+      log->info("detected state change, sending to api");
+      relay->send("player:state", new_state);
 
-    if(!is_buffering && !is_playing)
-      return NULL;
+      bool is_stopped = new_state == PLAYER_STATE_STOPPED;
+      bool was_playing = manager_state == PLAYER_STATE_PLAYING;
+
+      if(is_stopped && was_playing)
+        manager->next();
+    }
+
+    manager_state = new_state;
 
     usleep(100000);
   }
   
+  delete relay;
+  delete log;
+
   return NULL;
-}
-
-PLAYER_STATE PlaybackManager::checkLoop() {
-  PLAYER_STATE current_state = player->state();
-
-  if(current_state == last_player_state)
-    return last_player_state;
-
-  stringstream ss;
-  ss << "detected state change, new state[" << current_state << "] last state[" << last_player_state << "]";
-  log->info(ss.str());
-
-  bool was_playing = last_player_state == PLAYER_STATE_PLAYING;
-  bool is_stopped = current_state == PLAYER_STATE_STOPPED;
-
-  relay->send("player:state", current_state);
-
-  last_player_state = current_state;
-
-  if(was_playing && is_stopped) {
-    log->info("was playing, now stopped, moving on");
-    return player->next();
-  }
-
-  return current_state;
 }
 
 PLAYER_STATE PlaybackManager::state() {
@@ -102,6 +97,7 @@ PLAYER_STATE PlaybackManager::stop() {
   monitor_thread = NULL;
 
   relay->send("player:state", pstate);
+  last_player_state = pstate;
 
   return pstate;
 }

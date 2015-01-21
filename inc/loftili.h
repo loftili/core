@@ -48,7 +48,9 @@ enum PLAYER_STATE {
   PLAYER_STATE_STOPPED,
   PLAYER_STATE_BUFFERING,
   PLAYER_STATE_PLAYING,
-  PLAYER_STATE_ERRORED
+  PLAYER_STATE_ERRORED,
+  PLAYER_STATE_EMPTY_QUEUE,
+  PLAYER_STATE_STREAM_ERROR
 };
 
 enum PLAYER_ERROR {
@@ -67,7 +69,6 @@ struct Configuration {
   int port;
   bool help;
   bool use_log;
-  bool standalone;
   bool daemonize;
   std::string logfile;
   std::string username;

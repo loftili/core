@@ -50,23 +50,7 @@ int PlayerController::status(Request* req, Response* res) {
 
   PLAYER_STATE player_state = playback->state();
 
-  switch(player_state) {
-    case PLAYER_STATE_PLAYING:
-      doc->insert("status", "playing");
-      break;
-    case PLAYER_STATE_STOPPED:
-      doc->insert("status", "stopped");
-      break;
-    case PLAYER_STATE_ERRORED:
-      doc->insert("status", "errored");
-      break;
-    case PLAYER_STATE_BUFFERING:
-      doc->insert("status", "buffering");
-      break;
-    default:
-      doc->insert("status", "unknown");
-      break;
-  }
+  doc->insert("player:state", player_state);
 
   res->json(doc);
 
