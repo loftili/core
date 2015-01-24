@@ -44,6 +44,13 @@ int Server::process(struct ahc_info info) {
 int Server::run(Configuration config) {
   Logger log("Server");
 
+  if(config.use_log && config.daemonize) {
+    LOG_STATE log_state = Logger::use(config.logfile);
+
+    if(log_state != LOG_STATE_READY)
+      return 0;
+  }
+
   RegistrationService registrar;
   bool registered = registrar.authenticate(&config);
 

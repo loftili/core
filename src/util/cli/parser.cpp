@@ -6,6 +6,15 @@ namespace cli {
 
 Configuration Parser::parse(int argc, char* argv[]) {
   Configuration opts;
+  opts.port = 8888;
+  opts.use_log = true;
+  opts.daemonize = false;
+  opts.logfile = "out.log";
+  opts.api_host = LOFTILI_API_HOME;
+  opts.username = "";
+  opts.password = "";
+  opts.devicename = "";
+  opts.help = false;
 
   int arg_index = 1;
   for(arg_index; arg_index < argc; arg_index++) {
@@ -113,7 +122,7 @@ void Parser::help() {
   printf("   -%s %-*s %s", "n", 15, "DEVICENAME", "[required] the name this device should be communicating under\n");
   printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
   printf("   -%s %-*s %s", "d", 15, "DAEMONIZE", "run loftili in daemon mode (background)\n");
-  printf("   -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file \n");
+  printf("   -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file. ignored unless daemonize (-d)\n");
   printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
 }
 
