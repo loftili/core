@@ -64,7 +64,8 @@ LOG_STATE Logger::use(string file_name) {
 }
 
 void Logger::close() {
-  log_stream.close();
+  if(log_stream.is_open())
+    log_stream.close();
 }
 
 }
