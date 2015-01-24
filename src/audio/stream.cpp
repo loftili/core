@@ -32,7 +32,12 @@ AudioStream::AudioStream(std::string fname) {
 
 AudioStream::~AudioStream() {
   log->info("audio stream being deleted!");
+
   current_state = STREAM_STATE_ABORTED;
+
+  log->info("starting closing up threads");
+  pthread_join(downloader, NULL);
+  log->info("finished closing threads, deleting logger");
 
   if(m_handle) {
     log->info("audio stream closing mpg123");
@@ -41,10 +46,6 @@ AudioStream::~AudioStream() {
   }
 
   mpg123_exit();
-
-  log->info("starting closing up threads");
-  pthread_join(downloader, NULL);
-  log->info("finished closing threads, deleting logger");
 
   delete log;
 }
@@ -69,6 +70,10 @@ void* AudioStream::stream(void* stream_instance_data) {
     return NULL;
   }
 
+  if(audio_stream->current_state == STREAM_STATE_ABORTED) {
+    return NULL;
+  }
+
   log->info("Successfully downloaded file, sending into mpg stream");
   mpg123_feed(audio_stream->m_handle, audio_stream->download_buffer, audio_stream->download_size);
 
@@ -80,6 +85,7 @@ void* AudioStream::stream(void* stream_instance_data) {
 
   // int err = mpg123_decode_frame(audio_stream->m_handle, &frame_offset, &audio, &done);
   int err = mpg123_getformat(audio_stream->m_handle, &rate, &channels, &encoding);
+
   if(err != MPG123_OK) {
     audio_stream->current_state = STREAM_STATE_ERRORED;
     log->info("file does not appear to be valid mpg format, closing thread.");
@@ -90,6 +96,7 @@ void* AudioStream::stream(void* stream_instance_data) {
   }
 
   audio_stream->current_state = STREAM_STATE_PLAYING;
+
   log->info("File is a valid mpg format, continuing thread.");
 
   mpg123_getformat(audio_stream->m_handle, &rate, &channels, &encoding);
