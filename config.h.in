@@ -1,7 +1,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if you have the <ao/ao.h> header file. */
-#undef HAVE_AO_AO_H
+/* support for audio on this defice */
+#undef HAVE_AUDIO
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
@@ -9,20 +9,20 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `ao' library (-lao). */
+/* libao is used for audio playback */
 #undef HAVE_LIBAO
 
 /* Define to 1 if you have the `curl' library (-lcurl). */
 #undef HAVE_LIBCURL
-
-/* Define to 1 if you have the `mpg123' library (-lmpg123). */
-#undef HAVE_LIBMPG123
 
 /* Define to 1 if you have the `ssl' library (-lssl). */
 #undef HAVE_LIBSSL
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* mpg123 */
+#undef HAVE_MPG123
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

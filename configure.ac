@@ -29,18 +29,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   auto a = [] () { };
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
-AC_CHECK_HEADERS([ao/ao.h],[],[AC_MSG_ERROR([
-unable to find libao header files
-])])
-
-AC_CHECK_LIB([ao], [ao_initialize], [], [AC_MSG_ERROR([
-libao is not installed
-])])
-
-AC_CHECK_LIB([mpg123], [mpg123_init], [], [AC_MSG_ERROR([
-libmpg123 is not installed
-source: http://ftp.sizethreestudios.com/artifacts/lofti.li/libs/mpg123-1.20.1.tar.bz2
-])])
+dnl
 
 AC_CHECK_LIB([ssl], [SSL_library_init], [], [AC_MSG_ERROR([
 openssl is not installed
@@ -51,7 +40,20 @@ libcurl is not installed
 source: http://curl.askapache.com/download/curl-7.37.1.tar.gz
 ])])
 
-AC_MSG_CHECKING([for an available audio device through libao])
+AC_CHECK_LIB([ao], [ao_initialize], [
+  HAVE_LIBAO=1
+  LIBS="-lao $LIBS"
+  AC_DEFINE([HAVE_LIBAO], [1], [libao is used for audio playback])], [
+  AC_DEFINE([HAVE_LIBAO], [0], [libao is used for audio playback])])
+
+AC_CHECK_LIB([mpg123], [mpg123_init], [
+  HAVE_MPG123=1
+  LIBS="-lmpg123 $LIBS"
+  AC_DEFINE([HAVE_MPG123], [1], [mpg123])], [
+  HAVE_MPG123=0
+  AC_DEFINE([HAVE_MPG123], [0], [mpg123])])
+
+AC_MSG_CHECKING([checking full audio capability])
 AC_TRY_RUN([
 #include <ao/ao.h>
 #include <iostream>
@@ -59,13 +61,36 @@ int main() {
   ao_initialize();
   int driver_id = ao_default_driver_id();
   ao_shutdown();
-  return driver_id >= 0 ? 0 : 1;
-}], [AC_MSG_RESULT([ok])], [AC_MSG_ERROR([
-Libao was not able to find a default audio driver. Please read the
-documentation for libao online at http://www.xiph.org/ao/. A copy
-of the library can be downloaded from our ftp server.
-source: http://ftp.sizethreestudios.com/artifacts/loftili/libs/libao-1.2.0.tar.gz
-])])
+  return driver_id >= 0 && HAVE_MPG123 ? 0 : 1;
+}], [
+  HAVE_AUDIO=1
+  AC_DEFINE([HAVE_AUDIO], [1], [support for audio on this defice])
+  AC_MSG_RESULT([ok])], [
+  HAVE_AUDIO=0
+  AC_DEFINE([HAVE_AUDIO], [0], [support for audio on this defice])
+  AC_MSG_RESULT([not found.])])
+
+if test "x$HAVE_AUDIO" == "x1"
+then
+  audio_str="yes"
+else
+  audio_str="no"
+fi
+
+AC_MSG_RESULT([
+xxx   xxx   xxx
+xxx   xxx   xxx
+xxx         xxx
+xxx   xxx   xxx
+xxx   xxx   xxx
+xxx   xxxxxxxxx
+xxx   xxxxxxxxx
+
+- system check result:
+audio support: $audio_str
+video support: no
+
+])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
