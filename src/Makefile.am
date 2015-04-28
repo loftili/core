@@ -3,4 +3,8 @@ loftili_CPPFLAGS = \
 	-I../inc \
 	-I../vendor/rapidjson/include
 loftili_SOURCES = \
-  main.cpp
+  main.cpp \
+  lib/stream.cpp \
+  net/socket.cpp \
+	net/command.cpp \
+  net/command_stream.cpp
