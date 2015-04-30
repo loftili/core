@@ -13,10 +13,10 @@ template <class TT_DataType>
 class T_Stream {
   public:
     virtual T_Stream& operator <<(const char *data) { 
-      printf("%s", data); return *this;
+      return *this;
     }
 
-  private:
+  protected:
     typedef TT_DataType Data;
     Data m_data;
 };

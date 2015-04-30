@@ -5,14 +5,14 @@ namespace loftili {
 namespace net {
 
 CommandStream& CommandStream::operator <<(const char *data) {
-  printf("-----\n");
-  printf("%s", data);
-  printf("\n-----\n");
+  m_data << data;
   return *this;
 }
 
-Command* CommandStream::LastCommand() {
-  return 0;
+Command CommandStream::Transform() {
+  Command cmd = m_data.str().c_str();
+  m_data.str("");
+  return cmd;
 }
 
 }

@@ -25,6 +25,7 @@ class Socket {
 
     int Connect(const char*, int, bool);
     int Write(const char*, const int);
+    int Reconnect();
     Socket& operator>>(loftili::lib::Stream&);
     bool Ok();
 
@@ -36,8 +37,11 @@ class Socket {
         ~SocketRef();
         int Connect(const char*, int);
         int Write(const char*, int);
+        int Reconnect();
         SocketRef& operator>>(loftili::lib::Stream&);
       private:
+        std::string m_hostname;
+        int m_port;
         int m_count;
         int m_socket;
         bool m_ok;
