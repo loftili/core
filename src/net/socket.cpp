@@ -22,6 +22,10 @@ Socket& Socket::operator=(const Socket& other) {
   return *this;
 };
 
+int Socket::Reconnect() {
+  return m_ref->Reconnect();
+}
+
 bool Socket::Ok() {
   return m_ref->m_ok;
 };
@@ -48,15 +52,19 @@ Socket::~Socket() {
 /* 
  * SocketRef body class
  */
-Socket::SocketRef::SocketRef() : m_count(0), m_ok(false) {
+Socket::SocketRef::SocketRef() : m_count(0), m_ok(false), m_port(0), m_hostname("") {
   m_socket = socket(AF_INET, SOCK_STREAM, 0);
 };
 
 Socket::SocketRef::~SocketRef() {
-  if(m_socket) {
-    printf("closing socket\n");
+  if(m_socket)
     close(m_socket);
-  }
+}
+
+int Socket::SocketRef::Reconnect() {
+  if(m_socket) close(m_socket);
+  m_socket = socket(AF_INET, SOCK_STREAM, 0);
+  return Connect(m_hostname.c_str(), m_port);
 }
 
 int Socket::SocketRef::Connect(const char *hostname, int port) {
@@ -81,6 +89,8 @@ int Socket::SocketRef::Connect(const char *hostname, int port) {
   }
 
   m_ok = true;
+  m_hostname = hostname;
+  m_port = port;
 
   return 1;
 };
@@ -91,9 +101,9 @@ Socket::SocketRef& Socket::SocketRef::operator >>(loftili::lib::Stream& stream) 
 
   received = recv(m_socket, &buffer[0], size - 1, 0);
 
-  if(received < 0) {
+  if(received <= 0) {
     m_ok = false;
-    printf("%s", strerror(errno));
+    return *this;
   }
 
   stream << buffer.c_str();
