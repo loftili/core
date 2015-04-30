@@ -33,8 +33,7 @@ int Engine::Run() {
   while(retries < 100) {
 
     while(socket_ok) {
-      (*m_socket) >> (*cs);
-      socket_ok = m_socket->Ok();
+      socket_ok = ((*m_socket) >> (*cs)).Ok();
 
       printf("received: %d\n", socket_ok);
 
@@ -50,8 +49,7 @@ int Engine::Run() {
     printf("retrying!\n");
     retries++;
     ok = m_socket->Reconnect();
-    ok = Subscribe();
-    socket_ok = ok >= 0;
+    socket_ok = Subscribe() >= 0;
   }
 
   return 0;
