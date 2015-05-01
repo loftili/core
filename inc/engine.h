@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <unistd.h>
+#include "loftili.h"
 #include "net/socket.h"
 #include "net/command_stream.h"
+#include "net/generic_command.h"
 
 namespace loftili {
 
@@ -13,9 +15,14 @@ class Engine {
     Engine();
     ~Engine();
     int Run();
+    template <class T>
+    T* Get() {
+      return m_components.Field<T>();
+    };
 
   private:
     int Subscribe();
+    loftili::ComponentHierarchy m_components;
     loftili::net::Socket* m_socket;
 };
 

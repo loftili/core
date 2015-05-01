@@ -27,9 +27,9 @@ int Engine::Run() {
   }
 
   loftili::lib::Stream *cs = new loftili::net::CommandStream();
-  loftili::net::Command cc;
 
   bool socket_ok = m_socket->Ok();
+
   while(retries < 100) {
 
     while(socket_ok) {
@@ -37,12 +37,15 @@ int Engine::Run() {
 
       printf("received: %d\n", socket_ok);
 
-      if(socket_ok)
-        cc = ((loftili::net::CommandStream*)cs)->Transform();
+      if(!socket_ok) break;
+
+      loftili::net::GenericCommand cc = ((loftili::net::CommandStream*)cs)->Transform();
 
       if(!cc) continue;
 
-      cc.Execute();
+      cc(this);
+
+      retries = 0;
     }
 
     sleep(2);

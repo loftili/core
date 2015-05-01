@@ -1,11 +1,20 @@
 #include "commands/audio/start.h"
+#include "engine.h"
 
 namespace loftili {
+
 namespace commands {
+
 namespace audio {
 
-void Start::Execute() {
-  printf("EXECUTING AN AUDIO COMMAND\n");
+void Start::Execute(loftili::Engine *engine) {
+  loftili::audio::Playback *playback = engine->Get<loftili::audio::Playback>();
+
+  if(playback) playback->Start();
+}
+
+void Start::operator()(loftili::Engine *engine) {
+  return Execute(engine);
 }
 
 }

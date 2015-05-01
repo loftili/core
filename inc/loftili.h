@@ -9,8 +9,35 @@
 #endif
 
 #include "config.h"
+#include "lib/typelist.h"
+
+#ifdef HAVE_AUDIO
+#include "audio/playback.h"
+#endif
 
 namespace loftili {
+
+/*
+ *
+ *
+ */
+typedef loftili::lib::generic::T_Seq<
+#ifdef HAVE_AUDIO
+  loftili::audio::Playback
+#endif
+>::T_Result ComponentList;
+
+typedef loftili::lib::generic::T_ScatterHierarchy<ComponentList> T_ComponentHierarchy;
+
+class ComponentHierarchy : public T_ComponentHierarchy {
+  public:
+    template <class T>
+    T* Field() {
+      typename T_ComponentHierarchy::template T_Rebind<T>::T_Result& r = *this;
+      return &r.m_item;
+    };
+};
+
 }
 
 #endif

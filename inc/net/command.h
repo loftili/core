@@ -1,28 +1,24 @@
 #ifndef _LOFTILI_NET_COMMAND_H
 #define _LOFTILI_NET_COMMAND_H
 
-#include <iostream>
-#include "commands/audio/start.h"
 #include "lib/command.h"
 
 namespace loftili {
 
+class Engine;
+
 namespace net {
 
-class Command {
+class Command : public loftili::lib::Command {
   public:
-    Command();
-    Command(const char*);
-    ~Command();
-    void Execute();
-    operator bool();
-  private:
-    loftili::lib::Command* m_cmd;
+    virtual ~Command() { };
+    void Execute() { };
+    virtual void Execute(Engine*) = 0;
+    virtual void operator ()(Engine*) = 0;
 };
 
 }
 
 }
-
 
 #endif

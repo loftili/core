@@ -9,8 +9,8 @@ CommandStream& CommandStream::operator <<(const char *data) {
   return *this;
 }
 
-Command CommandStream::Transform() {
-  Command cmd = m_data.str().c_str();
+GenericCommand CommandStream::Transform() {
+  GenericCommand cmd = m_data.str().c_str();
   m_data.str("");
   return cmd;
 }

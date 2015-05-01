@@ -10,5 +10,7 @@ loftili_SOURCES = \
   net/socket.cpp \
 	net/command.cpp \
 	net/request.cpp \
+  net/generic_command.cpp \
   net/command_stream.cpp \
-	commands/audio/start.cpp 
+	commands/audio/start.cpp \
+  audio/playback.cpp

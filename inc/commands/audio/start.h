@@ -3,17 +3,21 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "lib/command.h"
+#include "net/command.h"
+#include "audio/playback.h"
 
 namespace loftili {
+
+class Engine;
 
 namespace commands {
 
 namespace audio {
 
-class Start : public loftili::lib::Command {
+class Start : public loftili::net::Command {
   public:
-    void Execute();
+    void Execute(loftili::Engine*);
+    void operator ()(loftili::Engine*);
 };
 
 }
