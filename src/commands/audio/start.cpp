@@ -10,7 +10,9 @@ namespace audio {
 void Start::Execute(loftili::Engine *engine) {
   loftili::audio::Playback *playback = engine->Get<loftili::audio::Playback>();
 
-  if(playback) playback->Start();
+  if(!playback) return;
+    
+  playback->Start();
 }
 
 void Start::operator()(loftili::Engine *engine) {
