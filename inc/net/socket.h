@@ -31,7 +31,7 @@ class Socket {
 
   private:
     class SocketRef {
-      friend Socket;
+      friend class Socket;
       public:
         SocketRef();
         ~SocketRef();

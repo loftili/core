@@ -9,11 +9,15 @@ namespace net {
 
 class ResponseStream : public loftili::lib::Stream {
   public:
+    ResponseStream() : m_content_length(-1), m_has_headers(false) { };
+    ~ResponseStream() = default;
+    ResponseStream(const ResponseStream&) = default;
+    ResponseStream& operator=(const ResponseStream&) = default;
     ResponseStream& operator <<(const char*);
     bool Finished();
   private:
     bool m_has_headers;
-    int m_content_length = -1;
+    int m_content_length;
 };
 
 }
