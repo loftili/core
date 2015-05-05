@@ -4,20 +4,21 @@ namespace loftili {
 
 namespace audio {
 
-Queue::Queue(const loftili::api::DeviceCredentials& credentials) : m_credentials(credentials) {
-};
-
-Queue::~Queue() {
-};
-
-Queue::Queue(const Queue& other) {
-};
-
-Queue& Queue::operator=(const Queue& other) {
-  return *this;
+void Queue::Initialize(const loftili::api::DeviceCredentials& credentials){
+  m_credentials = credentials;
 };
 
 void Queue::Pop() {
+  std::string method = "POST";
+  std::stringstream ss;
+  ss << "/queues/" << m_credentials.device_id << "/pop";
+
+  loftili::net::Request req(method, loftili::api::configuration.hostname, loftili::api::configuration.port, ss.str());
+  req.Header(LOFTILI_API_TOKEN_HEADER, m_credentials.token);
+  req.Header(LOFTILI_API_SERIAL_HEADER, loftili::api::configuration.serial);
+
+  loftili::net::ResponseStream response_stream;
+  int s = req.Send(&response_stream);
 };
 
 bool Queue::operator>>(loftili::audio::Player& player) {

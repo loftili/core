@@ -4,15 +4,15 @@ namespace loftili {
 
 namespace net {
 
-Request::Request() : m_method("GET"), m_path(""), m_host("") {
+Request::Request() : m_method("GET"), m_path(""), m_host(""), m_socket(0) {
 }
 
-Request::Request(string url) : m_method("GET") { ParseUrl(url); }
+Request::Request(string url) : m_method("GET"), m_socket(0) { ParseUrl(url); }
 
-Request::Request(string method, string url) : m_method(method) { ParseUrl(url); }
+Request::Request(string method, string url) : m_method(method), m_socket(0) { ParseUrl(url); }
 
 Request::Request(string method, string hostname, int port, string path) : 
-  m_port(port), m_method(method), m_path(path), m_host(hostname) { };
+  m_port(port), m_method(method), m_path(path), m_host(hostname), m_socket(0) { };
 
 int Request::Connect() {
   int ok;
@@ -102,14 +102,20 @@ void Request::ParseUrl(std::string url) {
   // needed
 };
 
-Request::Request(const Request& other) {
-}
+Request::Request(const Request& other) 
+  : m_socket(0), m_method(other.m_method), m_path(other.m_path),
+  m_headers(other.m_headers), m_port(other.m_port) { };
 
 Request::~Request() {
-  if(m_socket) delete m_socket;
+  Close();
 }
 
 Request& Request::operator=(const Request& other) {
+  m_port = other.m_port;
+  m_host = other.m_host;
+  m_method = other.m_method;
+  m_headers = other.m_headers;
+  m_path = other.m_path;
   return *this;
 }
 

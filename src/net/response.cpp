@@ -14,10 +14,8 @@ Response::Response(std::string head, std::string body) : m_head(head), m_body(bo
 Response::~Response() {
 };
 
-Response::Response(const Response& other) {
-  m_head = other.m_head;
-  m_body = other.m_body;
-  m_code = other.m_code;
+Response::Response(const Response& other) :
+  m_head(other.m_head), m_body(other.m_body), m_code(other.m_code) {
   ParseHead();
 };
 

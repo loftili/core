@@ -4,12 +4,6 @@ namespace loftili {
 
 namespace api {
 
-Registration::Registration() : m_credentials{"", -1} {
-};
-
-Registration::~Registration() {
-};
-
 loftili::api::DeviceCredentials Registration::Credentials() {
   return m_credentials;
 };

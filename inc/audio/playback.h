@@ -16,25 +16,26 @@ namespace audio {
 
 class Playback {
   public:
-    Playback();
-    ~Playback();
-    Playback(const Playback&);
-    Playback& operator=(const Playback&);
+    Playback() = default;
+    ~Playback() = default;
+    Playback(const Playback&) = default;
+    Playback& operator=(const Playback&) = default;
+
     void Start();
     void Stop();
     void Initialize(loftili::api::Registration*);
 
     enum PLAYBACK_STATE {
-      PLAYBACK_STATE_PLAYING, 
       PLAYBACK_STATE_STOPPED,
-      PLAYBACK_STATE_ERRORED
+      PLAYBACK_STATE_ERRORED,
+      PLAYBACK_STATE_PLAYING
     };
 
   private:
     void Run();
-    std::thread *m_thread;
-    loftili::audio::Queue *m_queue;
-    loftili::audio::Player *m_player;
+    std::unique_ptr<std::thread> m_thread;
+    loftili::audio::Queue m_queue;
+    loftili::audio::Player m_player;
     PLAYBACK_STATE m_state;
 
 };

@@ -17,6 +17,7 @@ class Response {
     Response(const Response&);
     Response& operator=(const Response&);
     ~Response();
+
     std::string Body() { return m_body; };
     int Code() { return m_code; };
 

@@ -15,8 +15,11 @@ namespace api {
 class Registration {
   friend class Parser;
   public:
-    Registration();
-    ~Registration();
+    Registration() = default;
+    Registration(const Registration&) = default;
+    Registration& operator=(const Registration&) = default;
+    ~Registration() = default;
+
     int Register();
     loftili::api::DeviceCredentials Credentials();
 

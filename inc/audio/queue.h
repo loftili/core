@@ -18,12 +18,14 @@ namespace audio {
 class Queue {
   public:
     friend class Parser;
-    Queue(const loftili::api::DeviceCredentials&);
-    Queue(const Queue&);
-    Queue& operator=(const Queue&);
+    Queue() = default;
+    Queue(const Queue&) = default;
+    Queue& operator=(const Queue&) = default;
+    ~Queue() = default;
+    void Initialize(const loftili::api::DeviceCredentials&);
+
     bool operator>>(loftili::audio::Player&);
     void Pop();
-    ~Queue();
   private:
     std::queue<std::string> m_queue;
     loftili::api::DeviceCredentials m_credentials;
