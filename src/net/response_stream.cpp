@@ -6,51 +6,53 @@ namespace net {
 
 ResponseStream& ResponseStream::operator <<(const char* data) {
   m_data << data;
-  return *this;
-};
-
-bool ResponseStream::Finished() {
   std::string so_far = m_data.str();
   int body_start = so_far.find("\r\n\r\n");
 
-  if(!m_has_headers && body_start > 0)
-    m_has_headers = true;
+  if(body_start < 0) return *this;
 
-  if(m_has_headers) {
-    std::string point = so_far.substr(0, body_start);
-    std::string status, content_length;
+  m_has_headers = true;
 
-    int indx,
-        line_no = 0;
+  if(m_content_length < 0) {
+    std::string header_line;
+    std::istringstream stream(so_far.substr(0, body_start));
 
-    while((indx = point.find('\n')) >= 0 && point.size() > 0) {
-      std::string line = point.substr(0, indx);
+    while(std::getline(stream, header_line) && header_line != "\r") {
+      int split = header_line.find(':', 0);
+      std::string key = header_line.substr(0, split),
+                  val = header_line.substr(split + 2);
 
-      if(line_no == 0) status = line.substr(line.find(' ')+1, 3);
-
-
-      point = point.substr(indx+1, std::string::npos);
-
-      if(line.find("Content-Length:") == 0)
-        content_length = line.substr(line.find(':')+1, std::string::npos);
-
-      line_no++;
+      if(key.find("Content-Length") == 0 && key.size() == 14)
+        m_content_length = std::stoi(val);
     }
 
-    if(content_length.size() > 0) m_content_length = std::stoi(content_length);
+    if(m_content_length < 0) {
+      m_ok = false;
+      Reset();
+    }
   }
 
-  if(m_has_headers && m_content_length < 0) {
-    printf("headers received and no content length \n");
-    return true;
+  std::string body = so_far.substr(body_start + 4, std::string::npos);
+
+  if(m_content_length >= 0 && body.size() == m_content_length) {
+    m_responses.push_back(loftili::net::Response(so_far.substr(0, body_start), body));
+    Reset();
   }
 
-  if(m_content_length >= 0 && body_start > 0) {
-    std::string perceived_body = m_data.str().substr(body_start+4, std::string::npos);
-    return perceived_body.size() == m_content_length;
-  }
+  return *this;
+};
 
-  return false;
+bool ResponseStream::operator >>(Response& response) {
+  if(m_responses.size() < 1) return false;
+  response = m_responses.back();
+  m_responses.pop_back();
+  return true;
+}
+
+void ResponseStream::Reset() {
+  m_data.str("");
+  m_content_length = -1;
+  m_has_headers = false;
 }
 
 }

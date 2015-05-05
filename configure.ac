@@ -24,7 +24,7 @@ AC_PROG_LIBTOOL
 AC_LANG([C++])
 
 AC_MSG_CHECKING([if able to compile lambda expressions with c++ 11])
-CPPFLAGS="$CPPFLAGS -std=c++0x"
+CPPFLAGS="$CPPFLAGS -std=c++11"
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   auto a = [] () { };
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])

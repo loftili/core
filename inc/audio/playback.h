@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <thread>
+#include "api/registration.h"
 #include "audio/queue.h"
 #include "audio/player.h"
 
@@ -21,6 +22,7 @@ class Playback {
     Playback& operator=(const Playback&);
     void Start();
     void Stop();
+    void Initialize(loftili::api::Registration*);
 
     enum PLAYBACK_STATE {
       PLAYBACK_STATE_PLAYING, 
@@ -31,8 +33,8 @@ class Playback {
   private:
     void Run();
     std::thread *m_thread;
-    loftili::audio::Queue m_queue;
-    loftili::audio::Player m_player;
+    loftili::audio::Queue *m_queue;
+    loftili::audio::Player *m_player;
     PLAYBACK_STATE m_state;
 
 };

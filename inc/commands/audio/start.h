@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "net/command.h"
+#include "api/registration.h"
 #include "audio/playback.h"
 
 namespace loftili {

@@ -24,13 +24,21 @@ class Request {
     ~Request();
     Request(const Request&);
     Request& operator=(const Request&);
-    int Send();
+    int Send(loftili::net::ResponseStream*);
+    int Send(loftili::net::ResponseStream*, string);
+    int Header(string, string);
 
   private:
     void ParseUrl(std::string);
+    int Connect();
+    int WriteOut(string);
+    void Close();
+
     string m_method;
     string m_host;
     string m_path;
+    vector<string> m_headers;
+
     int m_port;
     loftili::net::Socket *m_socket;
 };

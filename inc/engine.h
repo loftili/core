@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include "loftili.h"
 #include "net/socket.h"
+#include "net/request.h"
+#include "net/response_stream.h"
 #include "net/command_stream.h"
 #include "net/generic_command.h"
 
@@ -12,9 +14,10 @@ namespace loftili {
 
 class Engine {
   public:
-    Engine();
+    Engine(int, char* []);
     ~Engine();
     int Run();
+    int Register();
     template <class T>
     T* Get() {
       return m_components.Field<T>();

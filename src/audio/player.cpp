@@ -13,6 +13,11 @@ Player::Player(const Player& other) {
 Player::~Player() {
 }
 
+bool Player::Play(std::string url) {
+  std::cout << "playing: " << url << std::endl;
+  return false;
+}
+
 Player& Player::operator=(const Player& other) {
   return *this;
 }

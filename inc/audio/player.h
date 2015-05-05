@@ -1,6 +1,8 @@
 #ifndef _LOFTILI_AUDIO_PLAYER_H
 #define _LOFTILI_AUDIO_PLAYER_H
 
+#include <iostream>
+
 namespace loftili {
 
 namespace audio {
@@ -10,6 +12,7 @@ class Player {
     Player();
     Player(const Player&);
     Player& operator=(const Player&);
+    bool Play(std::string);
     operator bool();
     ~Player();
     enum PLAYER_STATE {

@@ -9,9 +9,10 @@ namespace audio {
 
 void Start::Execute(loftili::Engine *engine) {
   loftili::audio::Playback *playback = engine->Get<loftili::audio::Playback>();
+  loftili::api::Registration *registration = engine->Get<loftili::api::Registration>();
 
   if(!playback) return;
-    
+
   playback->Start();
 }
 
