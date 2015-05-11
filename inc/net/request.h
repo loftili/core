@@ -8,6 +8,7 @@
 #include <sstream>
 #include "net/response_stream.h"
 #include "net/socket.h"
+#include "net/url.h"
 
 namespace loftili {
 
@@ -22,9 +23,10 @@ class Request {
     Request(const Request&);
     Request& operator=(const Request&);
 
-    Request(string url);
-    Request(string method, string path);
-    Request(string method, string hostname, int port, string path);
+    Request(string);
+    Request(Url);
+    Request(string, string);
+    Request(string, string, int, string);
 
     int Send(loftili::net::ResponseStream*);
     int Send(loftili::net::ResponseStream*, string);

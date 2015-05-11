@@ -11,6 +11,10 @@ Request::Request(string url) : m_method("GET"), m_socket(0) { ParseUrl(url); }
 
 Request::Request(string method, string url) : m_method(method), m_socket(0) { ParseUrl(url); }
 
+Request::Request(loftili::net::Url url) : m_method("GET"), m_path(url.Path()), m_host(url.Host()) {
+  m_port = url.Protocol() == std::string("HTTPS") ? 443 : 80;
+};
+
 Request::Request(string method, string hostname, int port, string path) : 
   m_port(port), m_method(method), m_path(path), m_host(hostname), m_socket(0) { };
 

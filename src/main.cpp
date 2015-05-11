@@ -4,6 +4,9 @@
 #include "loftili.h"
 #include "engine.h"
 
+#include "net/url.h"
+#include "net/request.h"
+
 loftili::api::ApiConfiguration loftili::api::configuration = { };
 
 int main(int argc, char* argv[]) {

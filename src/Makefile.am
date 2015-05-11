@@ -7,6 +7,7 @@ loftili_SOURCES = \
   engine.cpp \
   lib/stream.cpp \
   lib/command.cpp \
+  net/url.cpp \
   net/socket.cpp \
 	net/command.cpp \
 	net/request.cpp \
