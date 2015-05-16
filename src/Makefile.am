@@ -8,13 +8,14 @@ loftili_SOURCES = \
   lib/stream.cpp \
   lib/command.cpp \
   net/url.cpp \
-  net/socket.cpp \
+  net/tcp_socket.cpp \
+	net/http_request.cpp \
+	net/http_response.cpp \
+	net/http_client.cpp \
+	net/http_parser.cpp \
 	net/command.cpp \
-	net/request.cpp \
-	net/response.cpp \
   net/generic_command.cpp \
   net/command_stream.cpp \
-  net/response_stream.cpp \
   api/registration.cpp \
 	commands/audio/start.cpp \
 	audio/queue.cpp \

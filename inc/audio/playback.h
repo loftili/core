@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <thread>
+#include <mpg123.h>
 #include "api/registration.h"
 #include "audio/queue.h"
 #include "audio/player.h"

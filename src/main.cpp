@@ -4,12 +4,9 @@
 #include "loftili.h"
 #include "engine.h"
 
-#include "net/url.h"
-#include "net/request.h"
-
 loftili::api::ApiConfiguration loftili::api::configuration = { };
 
 int main(int argc, char* argv[]) {
-  std::unique_ptr<loftili::Engine> p1 = std::unique_ptr<loftili::Engine>(new loftili::Engine(argc, argv));
+  std::unique_ptr<loftili::Engine> p1 = std::make_unique<loftili::Engine>(argc, argv);
   return p1->Register() && p1->Run();
 }

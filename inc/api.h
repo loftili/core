@@ -2,7 +2,7 @@
 #define _LOFTILI_API_H
 
 #include <iostream>
-#include "net/response.h"
+#include "rapidjson/document.h"
 
 #define LOFTILI_API_TOKEN_HEADER "x-loftili-device-token"
 #define LOFTILI_API_SERIAL_HEADER "x-loftili-device-serial"
