@@ -7,9 +7,8 @@
 #include "rapidjson/document.h"
 #include "api/registration.h"
 #include "audio/player.h"
-#include "net/request.h"
-#include "net/response_stream.h"
-#include "net/response.h"
+#include "net/http_client.h"
+#include "net/http_request.h"
 
 namespace loftili {
 
@@ -26,7 +25,10 @@ class Queue {
 
     bool operator>>(loftili::audio::Player&);
     void Pop();
+
   private:
+    const std::string QueueUrl();
+
     std::queue<std::string> m_queue;
     loftili::api::DeviceCredentials m_credentials;
 };

@@ -31,27 +31,24 @@ bool Registration::Parser::Key(const char* value, size_t, bool) {
   return true;
 };
 
+std::string Registration::RegistrationUrl() {
+  std::stringstream url;
+  url << "http://" << loftili::api::configuration.hostname << ":1337/registration";
+  return url.str();
+}
+
 int Registration::Register() {
-  std::string hostname = loftili::api::configuration.hostname;
-  int port = loftili::api::configuration.port;
-
-  loftili::net::ResponseStream stream;
-  loftili::net::Request req("POST", hostname, port, "/registration");
-  req.Header("Content-Type", "application/json");
-
+  loftili::net::HttpClient client;
   std::stringstream body;
   body << "{";
   body << "\"serial_number\": \"" << loftili::api::configuration.serial << "\"";
   body << "}";
+  loftili::net::HttpRequest req(loftili::net::Url(RegistrationUrl().c_str()), "POST", body.str());
 
-  req.Send(&stream, body.str());
-
-  if(stream.Count() != 1) return -1;
-
-  loftili::net::Response res;
-
-  if(stream >> res && res.Code() >= 200 && res.Code() < 300) {
-    loftili::api::JsonStream ss(res.Body().c_str());
+  if(client.Send(req)) {
+    std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
+    if(res->Status() < 200 || res->Status() > 299) return 0;
+    loftili::api::JsonStream ss(res->Body());
     rapidjson::Reader reader;
     loftili::api::Registration::Parser p(this);
     reader.Parse<0, loftili::api::JsonStream, loftili::api::Registration::Parser>(ss, p);

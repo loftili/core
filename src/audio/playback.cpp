@@ -21,8 +21,8 @@ void Playback::Stop() {
 }
 
 void Playback::Run() {
-  while(m_queue >> m_player) { }
-  printf("queue empty - stopping\n");
+  while(m_queue >> m_player) { 
+  }
   m_state = PLAYBACK_STATE_STOPPED;
 }
 

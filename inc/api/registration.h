@@ -4,9 +4,9 @@
 #include "api.h"
 #include "rapidjson/reader.h"
 #include "lib/json_parser.h"
-#include "net/request.h"
-#include "net/response.h"
-#include "net/response_stream.h"
+#include "net/http_request.h"
+#include "net/http_response.h"
+#include "net/http_client.h"
 
 namespace loftili {
 
@@ -24,6 +24,7 @@ class Registration {
     loftili::api::DeviceCredentials Credentials();
 
   private:
+    std::string RegistrationUrl();
     bool m_ok;
     loftili::api::DeviceCredentials m_credentials;
 

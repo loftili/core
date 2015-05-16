@@ -2,63 +2,38 @@
 
 namespace loftili {
 
-Engine::Engine(int argc, char *argv[]) : m_socket(new loftili::net::Socket) {
-}
-
-Engine::~Engine() {
-  delete m_socket;
+Engine::Engine(int argc, char *argv[]) {
 }
 
 int Engine::Run() {
-  int ok = 0, retries = 0;
+  m_socket = std::make_unique<loftili::net::TcpSocket>();
 
-  ok = m_socket->Connect(loftili::api::configuration.hostname.c_str(), loftili::api::configuration.port, false);
+  int ok = m_socket->Connect(loftili::api::configuration.hostname.c_str(), 1337),
+      retries = 0;
 
-  if(ok < 0) {
-    printf("failed connecting\n");
-    return -1;
-  }
+  if(ok < 0) return ok;
 
-  ok = Subscribe();
+  if(Subscribe() < 0) return -1;
 
-  if(ok < 0) {
-    printf("failed writing\n");
-    return -1;
-  }
-
-  loftili::lib::Stream *cs = new loftili::net::CommandStream();
-
-  bool socket_ok = m_socket->Ok();
+  loftili::net::CommandStream cs;
 
   while(retries < 100) {
-
-    while(socket_ok) {
-      socket_ok = ((*m_socket) >> (*cs)).Ok();
-
-      if(!socket_ok) break;
-
-      loftili::net::GenericCommand cc = ((loftili::net::CommandStream*)cs)->Transform();
-
-      if(!cc) continue;
-
-      cc(this);
-
-      retries = 0;
+    while(cs << m_socket) {
+      std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();
+      (*gc.get())(this);
     }
-
-    sleep(2);
-    printf("retrying!\n");
     retries++;
-    ok = m_socket->Reconnect();
-    socket_ok = Subscribe() >= 0;
   }
 
-  return 0;
+  return ok;
 };
 
 int Engine::Register() {
+  int result = 1;
+
   loftili::api::Registration *registration = Get<loftili::api::Registration>();
-  int result = registration->Register();
+
+  result = registration->Register();
 
 #ifdef HAVE_AUDIO
   if(result) Get<loftili::audio::Playback>()->Initialize(registration);

@@ -4,9 +4,9 @@
 #include <iostream>
 #include <unistd.h>
 #include "loftili.h"
-#include "net/socket.h"
-#include "net/request.h"
-#include "net/response_stream.h"
+#include "net/tcp_socket.h"
+#include "net/http_request.h"
+#include "net/http_client.h"
 #include "net/command_stream.h"
 #include "net/generic_command.h"
 
@@ -15,7 +15,7 @@ namespace loftili {
 class Engine {
   public:
     Engine(int, char* []);
-    ~Engine();
+    ~Engine() = default;
     int Run();
     int Register();
     template <class T>
@@ -26,7 +26,7 @@ class Engine {
   private:
     int Subscribe();
     loftili::ComponentHierarchy m_components;
-    loftili::net::Socket* m_socket;
+    std::unique_ptr<loftili::net::TcpSocket> m_socket;
 };
 
 }
