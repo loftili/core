@@ -42,7 +42,7 @@ void HttpParser::Impl::Read(loftili::net::TcpSocket& socket) {
 }
 
 void HttpParser::Impl::UpdateState() {
-  char *header_break = strstr(m_data, "\r\n\r\n");
+  const char *header_break = strstr(m_data, "\r\n\r\n");
 
   if(header_break == nullptr)
     return;
@@ -66,7 +66,7 @@ void HttpParser::Impl::UpdateState() {
 }
 
 void HttpParser::Impl::FindContentLength() {
-  char *header_break = strstr(m_data, "\r\n\r\n");
+  const char *header_break = strstr(m_data, "\r\n\r\n");
 
   if(header_break == nullptr)
     return;

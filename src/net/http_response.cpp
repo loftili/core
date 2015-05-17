@@ -5,7 +5,7 @@ namespace loftili {
 namespace net {
 
 HttpResponse::HttpResponse(const char* data) {
-  char *header_break = strstr(data, "\r\n\r\n");
+  const char *header_break = strstr(data, "\r\n\r\n");
   int head_size = header_break - data,
       content_length = -1,
       line_number = 0;
@@ -15,8 +15,8 @@ HttpResponse::HttpResponse(const char* data) {
 
   while(std::getline(header_reader, line) && line != "\r") {
     if(line_number++ == 0) {
-      char *code_break = strchr(line.c_str(), ' '),
-           *end;
+      const char *code_break = strchr(line.c_str(), ' ');
+      char *end;
 
       std::string code = line.substr(code_break - line.c_str() + 1, 3);
       m_status = std::strtol(code.c_str(), &end, 10);

@@ -12,9 +12,6 @@
 /* libao is used for audio playback */
 #undef HAVE_LIBAO
 
-/* Define to 1 if you have the `ssl' library (-lssl). */
-#undef HAVE_LIBSSL
-
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
