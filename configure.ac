@@ -35,11 +35,6 @@ AC_CHECK_LIB([ssl], [SSL_library_init], [], [AC_MSG_ERROR([
 openssl is not installed
 ])])
 
-AC_CHECK_LIB([curl], [curl_global_init], [], [AC_MSG_ERROR([
-libcurl is not installed
-source: http://curl.askapache.com/download/curl-7.37.1.tar.gz
-])])
-
 AC_CHECK_LIB([ao], [ao_initialize], [
   HAVE_LIBAO=1
   LIBS="-lao $LIBS"
