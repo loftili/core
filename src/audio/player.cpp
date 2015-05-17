@@ -4,6 +4,10 @@ namespace loftili {
 
 namespace audio {
 
+void Player::Stop() {
+  m_state = PLAYER_STATE_STOPPED;
+}
+
 bool Player::Play(std::string url) {
   Startup();
   loftili::net::HttpClient client;
@@ -49,8 +53,8 @@ bool Player::Play(std::string url) {
     format.byte_format = AO_FMT_NATIVE;
     format.matrix = 0;
 
-
     ao_device* dev = ao_open_live(ao_default_driver_id(), &format, NULL);
+    m_state = PLAYER_STATE_PLAYING;
 
     do {
       err = mpg123_decode_frame(m_handle, &frame_offset, &audio, &done);
@@ -61,7 +65,7 @@ bool Player::Play(std::string url) {
         default:
           break;
       }
-    } while(done > 0);
+    } while(done > 0 && m_state == PLAYER_STATE_PLAYING);
 
     ao_close(dev);
   }

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "commands/audio/start.h"
+#include "commands/audio/stop.h"
 #include "net/command.h"
 
 namespace loftili {

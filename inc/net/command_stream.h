@@ -14,6 +14,7 @@ class CommandStream {
   public:
     bool operator<<(std::unique_ptr<loftili::net::TcpSocket>&);
     const std::shared_ptr<loftili::net::GenericCommand> Latest();
+    void Pop();
   private:
     std::vector<std::shared_ptr<loftili::net::GenericCommand>> m_commands;
 };

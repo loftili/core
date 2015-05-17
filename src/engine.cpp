@@ -21,6 +21,7 @@ int Engine::Run() {
     while(cs << m_socket) {
       std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();
       (*gc.get())(this);
+      cs.Pop();
     }
     retries++;
   }

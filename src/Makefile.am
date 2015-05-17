@@ -18,6 +18,7 @@ loftili_SOURCES = \
   net/command_stream.cpp \
   api/registration.cpp \
 	commands/audio/start.cpp \
+	commands/audio/stop.cpp \
 	audio/queue.cpp \
 	audio/player.cpp \
   audio/playback.cpp

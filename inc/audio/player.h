@@ -23,6 +23,8 @@ class Player {
     ~Player() = default;
 
     bool Play(std::string);
+    int State() { return m_state; };
+    void Stop();
     operator bool();
 
     enum PLAYER_STATE {

@@ -12,16 +12,18 @@ void Playback::Initialize(loftili::api::Registration *api_registration) {
 void Playback::Start() {
   if(m_state == PLAYBACK_STATE_PLAYING) return;
   m_state = PLAYBACK_STATE_PLAYING;
-  m_thread = std::unique_ptr<std::thread>(new std::thread(std::bind(&Playback::Run, this)));
+  m_thread = std::make_unique<std::thread>(std::bind(&Playback::Run, this));
 }
 
 void Playback::Stop() {
-  printf("I am stopping!\n");
   m_state = PLAYBACK_STATE_STOPPED;
+  m_player.Stop();
+  m_thread->join();
 }
 
 void Playback::Run() {
-  while(m_queue >> m_player) { 
+  m_state = PLAYBACK_STATE_PLAYING;
+  while(m_queue >> m_player && m_state == PLAYBACK_STATE_PLAYING) { 
   }
   m_state = PLAYBACK_STATE_STOPPED;
 }
