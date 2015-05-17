@@ -1,4 +1,4 @@
-#include <memory>
+#include <memory.h>
 #include <iostream>
 #include "api.h"
 #include "loftili.h"
