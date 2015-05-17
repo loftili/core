@@ -30,6 +30,12 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   auto a = [] () { };
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
+AC_CHECK_LIB([ssl], [SSL_library_init], [
+  HAVE_SSL=1
+  LIBS="-lssl $LIBS"
+  AC_DEFINE([HAVE_SSL], [1], [ssl comment])], [
+  AC_DEFINE([HAVE_SSL], [0], [ssl comment])])
+
 AC_CHECK_LIB([ao], [ao_initialize], [
   HAVE_LIBAO=1
   LIBS="-lao $LIBS"
