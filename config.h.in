@@ -42,6 +42,12 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* the log path used during runtime */
+#undef LOFTILI_LOG_PATH
+
+/* the id used during runtime */
+#undef LOFTILI_SPDLOG_ID
+
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #undef LT_OBJDIR

@@ -2,6 +2,8 @@
 #define _LOFTILI_NET_COMMAND_STREAM_H
 
 #include <vector>
+#include "config.h"
+#include "spdlog/spdlog.h"
 #include "net/tcp_socket.h"
 #include "net/generic_command.h"
 #include "commands/audio/start.h"

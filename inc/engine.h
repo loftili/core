@@ -4,6 +4,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "loftili.h"
+#include "spdlog/spdlog.h"
 #include "net/tcp_socket.h"
 #include "net/http_request.h"
 #include "net/http_client.h"

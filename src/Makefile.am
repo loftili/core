@@ -1,7 +1,8 @@
 bin_PROGRAMS = loftili
 loftili_CPPFLAGS = \
 	-I../inc \
-	-I../vendor/rapidjson/include
+	-I../vendor/rapidjson/include \
+	-I../vendor/spdlog/include
 loftili_SOURCES = \
   main.cpp \
   engine.cpp \

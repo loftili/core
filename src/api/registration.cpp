@@ -44,6 +44,7 @@ int Registration::Register() {
   body << "\"serial_number\": \"" << loftili::api::configuration.serial << "\"";
   body << "}";
   loftili::net::HttpRequest req(loftili::net::Url(RegistrationUrl().c_str()), "POST", body.str());
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("registering serial number {0}", loftili::api::configuration.serial);
 
   if(client.Send(req)) {
     std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
@@ -52,7 +53,12 @@ int Registration::Register() {
     rapidjson::Reader reader;
     loftili::api::Registration::Parser p(this);
     reader.Parse<0, loftili::api::JsonStream, loftili::api::Registration::Parser>(ss, p);
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("registration attempt complete");
   }
+
+  if(m_credentials.token.size() < 1)
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("registration attempt failed, unable to retrieve a valid api token");
+
 
   return m_credentials.token.size() > 0 && m_credentials.device_id > 0 ? 1 : 0;
 };

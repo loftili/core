@@ -11,16 +11,23 @@ GenericCommand::GenericCommand(const char* data) {
   std::string cmd_str = std::string(data);
   bool is_command = cmd_str.find("CMD", 0, 3) != std::string::npos;
 
-  if(!is_command)
+  if(!is_command) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("generic command unable to parse message");
     return;
+  }
 
   std::string cmd = cmd_str.substr(4);
   const char *type_break = strchr(cmd.c_str(), ':');
   int type_length = type_break - cmd.c_str();
 
   if(cmd.substr(0, type_length) == "audio") {
-    if(cmd.substr(type_length + 1) == "stop") m_cmd = new loftili::commands::audio::Stop();
-    else m_cmd = new loftili::commands::audio::Start();
+    if(cmd.substr(type_length + 1) == "stop") {
+      spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio START command");
+      m_cmd = new loftili::commands::audio::Stop();
+    } else {
+      spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio STOP command");
+      m_cmd = new loftili::commands::audio::Start();
+    }
     return;
   }
 

@@ -1,7 +1,9 @@
 #ifndef _LOFTILI_API_REGISTRATION_H
 #define _LOFTILI_API_REGISTRATION_H
 
+#include "config.h"
 #include "api.h"
+#include "spdlog/spdlog.h"
 #include "rapidjson/reader.h"
 #include "lib/json_parser.h"
 #include "net/http_request.h"

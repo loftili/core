@@ -2,6 +2,8 @@
 #define _LOFTILI_NET_GENERIC_COMMAND_H
 
 #include <iostream>
+#include "config.h"
+#include "spdlog/spdlog.h"
 #include "commands/audio/start.h"
 #include "commands/audio/stop.h"
 #include "net/command.h"

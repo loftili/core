@@ -9,6 +9,7 @@ bool CommandStream::operator <<(std::unique_ptr<loftili::net::TcpSocket>& socket
   int received = socket->Read(buffer, 2048);
 
   if(received <= 0) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream\'s socket connection failed reading");
     free(buffer);
     return false;
   }
@@ -16,6 +17,7 @@ bool CommandStream::operator <<(std::unique_ptr<loftili::net::TcpSocket>& socket
   char *cmd_break = strstr(buffer, "CMD");
 
   if(cmd_break == nullptr || cmd_break - buffer > 0) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream received a strange message from server");
     free(buffer);
     return false;
   }

@@ -11,6 +11,7 @@
 #include "config.h"
 #include "lib/typelist.h"
 #include "api/registration.h"
+#include "spdlog/spdlog.h"
 
 #ifdef HAVE_AUDIO
 #include "audio/playback.h"
@@ -18,10 +19,6 @@
 
 namespace loftili {
 
-/*
- *
- *
- */
 typedef loftili::lib::generic::T_Seq<
   loftili::api::Registration,
 #ifdef HAVE_AUDIO

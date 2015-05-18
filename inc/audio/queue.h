@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <queue> 
+#include "config.h"
+#include "spdlog/spdlog.h"
 #include "api.h"
 #include "rapidjson/document.h"
 #include "api/registration.h"

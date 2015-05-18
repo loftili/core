@@ -24,6 +24,18 @@ AC_PROG_CXX(clang++ g++)
 AC_PROG_LIBTOOL
 AC_LANG([C++])
 
+AC_ARG_WITH(logfile,
+  [  --with-logfile      Specify the log file path to use],
+  AC_DEFINE_UNQUOTED([LOFTILI_LOG_PATH], ["$withval"], [the log path used during runtime]),
+  AC_DEFINE([LOFTILI_LOG_PATH], ["/var/log/loftili"], [the log path used during runtime])
+  )
+
+AC_ARG_WITH(logid,
+  [  --with-logid      Specify the spdlog id to use],
+  AC_DEFINE_UNQUOTED([LOFTILI_SPDLOG_ID], ["$withval"], [the id used during runtime]),
+  AC_DEFINE([LOFTILI_SPDLOG_ID], ["loftili"], [the id used during runtime])
+  )
+
 AC_MSG_CHECKING([if able to compile lambda expressions with c++ 11])
 CPPFLAGS="$CPPFLAGS -std=c++14 -stdlib=libc++ -Wall"
 LDFLAGS="$LDFLAGS -lm -lz -ldl -lpthread -lc++"
@@ -84,9 +96,8 @@ xxx   xxxxxxxxx
 xxx   xxxxxxxxx
 
 - system check result:
-audio support: $audio_str
-video support: no
-
+audio support ... : $audio_str
+video support ... : no
 ])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
