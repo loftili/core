@@ -13,7 +13,7 @@ void Playback::Start() {
   if(m_state == PLAYBACK_STATE_PLAYING) return;
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback starting, opening playback thread");
   m_state = PLAYBACK_STATE_PLAYING;
-  m_thread = std::make_unique<std::thread>(std::bind(&Playback::Run, this));
+  m_thread = std::unique_ptr<std::thread>(new std::thread(std::bind(&Playback::Run, this)));
 }
 
 void Playback::Stop() {

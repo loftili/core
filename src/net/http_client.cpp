@@ -12,7 +12,7 @@ bool HttpClient::Send(HttpRequest& req) {
   socket.Write(request_string.c_str(), request_string.size());
 
   if(m_parser << socket)
-    m_responses.push_back(std::make_shared<loftili::net::HttpResponse>(m_parser.Data()));
+    m_responses.push_back(std::shared_ptr<loftili::net::HttpResponse>(new loftili::net::HttpResponse(m_parser.Data())));
 
   return m_responses.size() == 1;
 };

@@ -6,13 +6,27 @@ namespace net {
 
 Url::Url(const char* url_string) {
   const char *protocol_break = strstr(url_string, "://");
-  if(protocol_break == nullptr) return;
-  int protocol_size = protocol_break - url_string;
-  m_protocol = std::string(url_string, protocol_size);
-  const char *host_break = strstr(protocol_break + 3, "/");
-  int host_size = host_break - (protocol_break + 3);
-  if(host_break == nullptr) return;
-  m_host = std::string(protocol_break + 3, host_size);
+
+  if(protocol_break == nullptr) {
+    protocol_break = url_string;
+  } else {
+    int protocol_size = protocol_break - url_string;
+    m_protocol = std::string(url_string, protocol_size);
+    protocol_break += 3;
+  }
+
+  const char *host_break = strstr(protocol_break, "/");
+  int host_size;
+
+  if(host_break == nullptr) {
+    host_size = strlen(protocol_break);
+    m_host = std::string(protocol_break, host_size);
+    return;
+  } else  {
+    host_size = host_break - protocol_break;
+  }
+
+  m_host = std::string(protocol_break, host_size);
   const char *port_break;
   char *end;
   if((port_break = strchr(m_host.c_str(), ':')) != nullptr) {

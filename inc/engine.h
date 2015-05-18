@@ -15,8 +15,11 @@ namespace loftili {
 
 class Engine {
   public:
-    Engine(int, char* []);
+    Engine() = default;
+    Engine(const Engine&) = default;
+    Engine& operator=(const Engine&) = default;
     ~Engine() = default;
+    int Initialize(int, char*[]);
     int Run();
     int Register();
     template <class T>
@@ -26,6 +29,7 @@ class Engine {
 
   private:
     int Subscribe();
+    int DisplayHelp();
     loftili::ComponentHierarchy m_components;
     std::unique_ptr<loftili::net::TcpSocket> m_socket;
 };

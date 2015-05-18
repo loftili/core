@@ -24,7 +24,7 @@ bool CommandStream::operator <<(std::unique_ptr<loftili::net::TcpSocket>& socket
 
   buffer = (char*) realloc(buffer, sizeof(char) * (received + 1));
   buffer[received] = '\0';
-  m_commands.push_back(std::make_shared<loftili::net::GenericCommand>(buffer));
+  m_commands.push_back(std::shared_ptr<loftili::net::GenericCommand>(new loftili::net::GenericCommand(buffer)));
   free(buffer);
   return true;
 }

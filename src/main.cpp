@@ -7,6 +7,6 @@
 loftili::api::ApiConfiguration loftili::api::configuration = { };
 
 int main(int argc, char* argv[]) {
-  std::unique_ptr<loftili::Engine> p1 = std::make_unique<loftili::Engine>(argc, argv);
-  return p1->Register() && p1->Run();
+  std::unique_ptr<loftili::Engine> p1 = std::unique_ptr<loftili::Engine>(new loftili::Engine());
+  return p1->Initialize(argc, argv) && p1->Register() && p1->Run();
 }
