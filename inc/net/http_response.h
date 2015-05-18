@@ -1,6 +1,8 @@
 #ifndef _LFTNET_HTTP_RESPONSE_H
 #define _LFTNET_HTTP_RESPONSE_H
 
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <vector>
 #include <sstream>

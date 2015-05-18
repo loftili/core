@@ -1,6 +1,8 @@
 #ifndef _LFTNET_HTTP_PARSER_H
 #define _LFTNET_HTTP_PARSER_H
 
+#include <stdio.h>
+#include <string.h>
 #include <vector>
 #include <iostream>
 #include <sstream>

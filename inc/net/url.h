@@ -1,6 +1,8 @@
 #ifndef _LFTNET_URL_H
 #define _LFTNET_URL_H
 
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 
 namespace loftili {

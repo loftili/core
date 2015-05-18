@@ -1,6 +1,8 @@
 #ifndef _LOFTILI_NET_COMMAND_STREAM_H
 #define _LOFTILI_NET_COMMAND_STREAM_H
 
+#include <stdio.h>
+#include <string.h>
 #include <vector>
 #include "config.h"
 #include "spdlog/spdlog.h"
