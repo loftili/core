@@ -25,7 +25,7 @@ HttpRequest::operator std::string() {
   typedef std::pair<std::string, std::string> header_pairs;
   std::vector<header_pairs>::iterator it = m_headers.begin();
   for(; it != m_headers.end(); ++it) {
-    req_str << std::get<0>(*it) << ": " << std::get<1>(*it) << "\n";
+    req_str << std::get<0, std::string, std::string>(*it) << ": " << std::get<1, std::string, std::string>(*it) << "\n";
   }
 
   req_str << "X-Powered-By: loftili core";
