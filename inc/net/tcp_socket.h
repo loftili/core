@@ -2,7 +2,7 @@
 #define _LFTNET_TCP_SOCKET_H
 
 #include <iostream>
-#include <memory.h>
+#include <memory>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

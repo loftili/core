@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include <memory.h>
+#include <memory>
 #include <fstream>
 #include "net/tcp_socket.h"
 

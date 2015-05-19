@@ -1,7 +1,7 @@
 #ifndef _LFTNET_HTTP_CLIENT_H
 #define _LFTNET_HTTP_CLIENT_H
 
-#include <memory.h>
+#include <memory>
 #include <vector>
 #include "net/tcp_socket.h"
 #include "net/http_request.h"

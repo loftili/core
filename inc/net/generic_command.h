@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <memory>
 #include "config.h"
 #include "spdlog/spdlog.h"
 #include "commands/audio/start.h"
