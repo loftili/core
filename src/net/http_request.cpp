@@ -22,8 +22,10 @@ HttpRequest::operator std::string() {
   req_str << "Host: " << m_url.Host() << "\n";
   req_str << "Content-Length: " << m_body.size() << "\n";
 
-  for(auto it : m_headers) {
-    req_str << std::get<0>(it) << ": " << std::get<1>(it) << "\n";
+  typedef std::pair<std::string, std::string> header_pairs;
+  std::vector<header_pairs>::iterator it = m_headers.begin();
+  for(; it != m_headers.end(); ++it) {
+    req_str << std::get<0>(*it) << ": " << std::get<1>(*it) << "\n";
   }
 
   req_str << "X-Powered-By: loftili core";
