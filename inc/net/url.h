@@ -20,6 +20,7 @@ class Url {
     std::string Host() const { return m_host; }
     std::string Protocol() const { return m_protocol; }
   private:
+    void ParseHost();
     std::string m_host;
     std::string m_path;
     int m_port;

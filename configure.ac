@@ -27,7 +27,7 @@ AC_LANG([C++])
 AC_ARG_WITH(logfile,
   [  --with-logfile      Specify the log file path to use],
   AC_DEFINE_UNQUOTED([LOFTILI_LOG_PATH], ["$withval"], [the log path used during runtime]),
-  AC_DEFINE([LOFTILI_LOG_PATH], ["/var/log/loftili"], [the log path used during runtime])
+  AC_DEFINE([LOFTILI_LOG_PATH], ["loftili.log"], [the log path used during runtime])
   )
 
 AC_ARG_WITH(logid,

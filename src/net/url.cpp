@@ -4,7 +4,7 @@ namespace loftili {
 
 namespace net {
 
-Url::Url(const char* url_string) {
+Url::Url(const char* url_string) : m_port(-1) {
   const char *protocol_break = strstr(url_string, "://");
 
   if(protocol_break == nullptr) {
@@ -21,23 +21,31 @@ Url::Url(const char* url_string) {
   if(host_break == nullptr) {
     host_size = strlen(protocol_break);
     m_host = std::string(protocol_break, host_size);
+    ParseHost();
     return;
   } else  {
     host_size = host_break - protocol_break;
   }
 
   m_host = std::string(protocol_break, host_size);
-  const char *port_break;
-  char *end;
-  if((port_break = strchr(m_host.c_str(), ':')) != nullptr) {
-    m_port = std::strtol(m_host.substr((port_break + 1) - m_host.c_str(), std::string::npos).c_str(), &end, 10);
-    m_host = m_host.substr(0, port_break - m_host.c_str());
-  } else
-    m_port = 80;
+  ParseHost();
+
   const char *path_break = strchr(host_break, '\0');
   if(path_break == nullptr) return;
   int path_size = path_break - host_break;
   m_path = std::string(host_break, path_size);
+}
+
+void Url::ParseHost() {
+  const char *port_break = strchr(m_host.c_str(), ':');
+  if(port_break == nullptr) return;
+  int host_size = port_break - m_host.c_str();
+  std::string new_host = m_host.substr(0, host_size),
+              port = m_host.substr(host_size + 1);
+  char *end;
+  int port_value = strtol(port.c_str(), &end, 10);
+  m_host = new_host;
+  if(port_value > 0 && port_value < 10000) m_port = port_value;
 }
 
 }

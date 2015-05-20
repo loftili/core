@@ -47,6 +47,7 @@ int Registration::Register() {
   spdlog::get(LOFTILI_SPDLOG_ID)->info("registering serial number {0}", loftili::api::configuration.serial);
 
   if(client.Send(req)) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("request finished, checking result...");
     std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
     if(res->Status() < 200 || res->Status() > 299) return 0;
     loftili::api::JsonStream ss(res->Body());

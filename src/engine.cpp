@@ -7,6 +7,7 @@ int Engine::Initialize(int argc, char* argv[]) {
   char *p;
 
   std::string serial_no, logfile = LOFTILI_LOG_PATH;
+  loftili::net::Url api_url;
   bool verbose = false;
 
   for(; i < argc; i++) {
@@ -18,7 +19,6 @@ int Engine::Initialize(int argc, char* argv[]) {
     }
 
     bool f = false;
-    loftili::net::Url api_url;
 
     while(*p && f == false) {
       switch(*p++) {
@@ -69,9 +69,20 @@ int Engine::Initialize(int argc, char* argv[]) {
   auto lof = verbose ? spdlog::stdout_logger_mt(LOFTILI_SPDLOG_ID) 
     : spdlog::rotating_logger_mt(LOFTILI_SPDLOG_ID, logfile.c_str(), 1048576 * 5, 3);
 
+  if(serial_no.size() != 40) {
+    printf("invalid serial number\n\n");
+    return DisplayHelp();
+  }
+
+  loftili::api::configuration.serial = serial_no;
   spdlog::set_level(spdlog::level::info);
-  lof->info("configuring engine");
-  loftili::api::configuration.hostname = "0.0.0.0";
+
+  if(api_url.Host().size() > 5)
+    loftili::api::configuration.hostname = api_url.Host();
+
+  loftili::api::configuration.port = api_url.Port() < 0 ? 443 : api_url.Port();
+
+  lof->info("configuring engine - api[{0}:{1}]", loftili::api::configuration.hostname, loftili::api::configuration.port);
   return 1;
 }
 
@@ -90,11 +101,8 @@ int Engine::DisplayHelp() {
 }
 
 int Engine::Run() {
-
   spdlog::get(LOFTILI_SPDLOG_ID)->info("opening command stream to api server");
-  m_socket = std::unique_ptr<loftili::net::TcpSocket>(new loftili::net::TcpSocket());
-
-  int ok = m_socket->Connect(loftili::api::configuration.hostname.c_str(), 1337),
+  int ok = m_socket.Connect(loftili::api::configuration.hostname.c_str(), 1337),
       retries = 0;
 
   if(ok < 0) {
@@ -148,7 +156,7 @@ int Engine::Subscribe() {
   r += LOFTILI_API_SERIAL_HEADER;
   r += ": " + loftili::api::configuration.serial + "\n";
   r += "\n";
-  return m_socket->Write(r.c_str(), r.length());
+  return m_socket.Write(r.c_str(), r.length());
 }
 
 }
