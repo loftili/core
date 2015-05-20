@@ -4,9 +4,9 @@ namespace loftili {
 
 namespace net {
 
-bool CommandStream::operator <<(std::unique_ptr<loftili::net::TcpSocket>& socket) {
+bool CommandStream::operator <<(loftili::net::TcpSocket& socket) {
   char *buffer = (char*) malloc(sizeof(char) * 2048);
-  int received = socket->Read(buffer, 2048);
+  int received = socket.Read(buffer, 2048);
 
   if(received <= 0) {
     spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream\'s socket connection failed reading");

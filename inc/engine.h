@@ -31,7 +31,7 @@ class Engine {
     int Subscribe();
     int DisplayHelp();
     loftili::ComponentHierarchy m_components;
-    std::unique_ptr<loftili::net::TcpSocket> m_socket;
+    loftili::net::TcpSocket m_socket;
 };
 
 }

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <mpg123.h>
 #include <ao/ao.h>
+#include "config.h"
+#include "spdlog/spdlog.h"
 #include "net/url.h"
 #include "net/http_client.h"
 #include "net/http_request.h"

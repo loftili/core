@@ -16,9 +16,15 @@ bool Player::Play(std::string url) {
   mpg123_handle* m_handle;
   m_handle = mpg123_new(NULL, NULL);
 
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("attempting to download track...");
   if(client.Send(req)) {
     std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
-    if(res->Status() != 200) return false;
+    if(res->Status() != 200) {
+      spdlog::get(LOFTILI_SPDLOG_ID)->critical("download {0} failed", url.c_str());
+      return false;
+    }
+
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("download complete, temporarily saving to file system");
     remove("current.mp3");
     std::ofstream download;
     download.open("current.mp3", std::ios::binary | std::ios::out);
