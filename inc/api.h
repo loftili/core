@@ -15,6 +15,7 @@ typedef rapidjson::UTF8<> JsonUtf8;
 typedef rapidjson::GenericStringStream<JsonUtf8> JsonStream;
 
 struct ApiConfiguration {
+  std::string protocol = "https";
   std::string serial = "1111111111111111111111111111111111111111";
   std::string hostname = "127.0.0.1";
   int port = 1337;

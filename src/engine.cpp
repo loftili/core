@@ -80,6 +80,9 @@ int Engine::Initialize(int argc, char* argv[]) {
   if(api_url.Host().size() > 5)
     loftili::api::configuration.hostname = api_url.Host();
 
+  if(api_url.Protocol() == "http")
+    loftili::api::configuration.protocol = "http";
+
   loftili::api::configuration.port = api_url.Port() < 0 ? 443 : api_url.Port();
 
   lof->info("configuring engine - api[{0}:{1}]", loftili::api::configuration.hostname, loftili::api::configuration.port);
@@ -102,21 +105,16 @@ int Engine::DisplayHelp() {
 
 int Engine::Run() {
   spdlog::get(LOFTILI_SPDLOG_ID)->info("opening command stream to api server");
-  int ok = m_socket.Connect(loftili::api::configuration.hostname.c_str(), 1337),
-      retries = 0;
-
-  if(ok < 0) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->critical("unable to connect to server");
-    return ok;
-  }
 
   if(Subscribe() < 0) {
     spdlog::get(LOFTILI_SPDLOG_ID)->critical("received invalid response from server during subscription request");
     return -1;
   }
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("socket subscription request complete");
 
+  int retries = 0;
   loftili::net::CommandStream cs;
-
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("connection finished, starting feeback look");
   while(retries < 100) {
     while(cs << m_socket) {
       std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();
@@ -126,9 +124,14 @@ int Engine::Run() {
     }
     spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, retrying");
     retries++;
+
+    if(Subscribe() < 0) {
+      retries = 100;
+      spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine unable to subscribe to api stream, shutting down");
+    }
   }
 
-  return ok;
+  return 0;
 };
 
 int Engine::Register() {
@@ -147,16 +150,20 @@ int Engine::Register() {
 };
 
 int Engine::Subscribe() {
-  std::string r = "GET ";
-  r += "/devicestream/open";
-  r += " HTTP/1.1\n";
-  r += "Connection: Keep-alive\n";
-  r += LOFTILI_API_TOKEN_HEADER;
-  r += ": " + Get<loftili::api::Registration>()->Credentials().token + "\n";
-  r += LOFTILI_API_SERIAL_HEADER;
-  r += ": " + loftili::api::configuration.serial + "\n";
-  r += "\n";
-  return m_socket.Write(r.c_str(), r.length());
+  m_socket = loftili::net::TcpSocket(loftili::api::configuration.protocol == "https");
+  int ok = m_socket.Connect(loftili::api::configuration.hostname.c_str(), loftili::api::configuration.port);
+  if(ok < 0) return -1;
+
+  std::stringstream r;
+  r << "GET /devicestream/open HTTP/1.1\n";
+  r << "Connection: Keep-alive\n";
+  r << "Host: " << loftili::api::configuration.hostname << "\n";
+  r << "Content-Length: 0\n";
+  r << LOFTILI_API_TOKEN_HEADER << ": " << Get<loftili::api::Registration>()->Credentials().token << "\n";
+  r << LOFTILI_API_SERIAL_HEADER << ": " << loftili::api::configuration.serial;
+  r << "\r\n\r\n";
+  std::string subscription_req = r.str();
+  return m_socket.Write(subscription_req.c_str(), subscription_req.length());
 }
 
 }

@@ -33,7 +33,8 @@ bool Registration::Parser::Key(const char* value, size_t, bool) {
 
 std::string Registration::RegistrationUrl() {
   std::stringstream url;
-  url << "http://" << loftili::api::configuration.hostname << ":1337/registration";
+  url << loftili::api::configuration.protocol << "://";
+  url << loftili::api::configuration.hostname << ":" << loftili::api::configuration.port << "/registration";
   return url.str();
 }
 
@@ -59,6 +60,8 @@ int Registration::Register() {
 
   if(m_credentials.token.size() < 1)
     spdlog::get(LOFTILI_SPDLOG_ID)->critical("registration attempt failed, unable to retrieve a valid api token");
+  else
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("received token from server: {0}", m_credentials.token.c_str());
 
 
   return m_credentials.token.size() > 0 && m_credentials.device_id > 0 ? 1 : 0;

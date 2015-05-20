@@ -15,7 +15,7 @@ namespace loftili {
 
 class Engine {
   public:
-    Engine() = default;
+    Engine() : m_socket(loftili::net::TcpSocket(false)) { }
     Engine(const Engine&) = default;
     Engine& operator=(const Engine&) = default;
     ~Engine() = default;

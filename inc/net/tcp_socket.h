@@ -30,6 +30,7 @@ namespace impl { struct Derived{}; }
 class TcpSocket {
   public:
     TcpSocket();
+    TcpSocket(bool);
     TcpSocket(impl::Derived);
     TcpSocket& operator=(const TcpSocket&);
     TcpSocket(const TcpSocket&);
@@ -43,6 +44,19 @@ class TcpSocket {
 };
 
 namespace impl {
+
+class SslImpl : public TcpSocket {
+  public:
+    SslImpl();
+    ~SslImpl();
+    int Connect(const char *, int);
+    int Write(const char *, int);
+    int Read(char *, int);
+  private:
+    int m_handle;
+    SSL *m_ssl;
+    SSL_CTX *m_context;
+};
 
 class Impl : public TcpSocket {
   public:

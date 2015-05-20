@@ -8,6 +8,15 @@ TcpSocket::TcpSocket() : m_impl(new impl::Impl()) {
   m_impl->m_refcount++;
 }
 
+TcpSocket::TcpSocket(bool is_ssl) {
+  if(is_ssl)
+    m_impl = new impl::SslImpl();
+  else
+    m_impl = new impl::Impl();
+
+  m_impl->m_refcount++;
+}
+
 TcpSocket::TcpSocket(impl::Derived) : m_refcount(0), m_impl(0) {
 };
 
@@ -41,6 +50,55 @@ int TcpSocket::Read(char *data, int size) {
 };
 
 namespace impl {
+
+SslImpl::SslImpl() : TcpSocket(Derived()), m_handle(socket(AF_INET, SOCK_STREAM, 0)), m_context(0) {
+  SSL_load_error_strings();
+  SSL_library_init();
+  m_context = SSL_CTX_new(SSLv23_client_method());
+  m_ssl = SSL_new(m_context);
+}
+
+SslImpl::~SslImpl() {
+  close(m_handle);
+  SSL_shutdown(m_ssl);
+  SSL_free(m_ssl);
+  SSL_CTX_free(m_context);
+}
+
+int SslImpl::Connect(const char *hostname, int port) {
+  hostent *he = gethostbyname(hostname);
+  sockaddr_in sa;
+
+  if(he == NULL) return -1;
+
+  memset(&sa, 0, sizeof(sa));
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons(port);
+  sa.sin_addr.s_addr = *(long *)he->h_addr;
+
+  int result = connect(m_handle, (sockaddr*)&sa, sizeof(sa));
+  if(result < 0) return result;
+
+  if(!SSL_set_fd(m_ssl, m_handle)) {
+    printf("failed converting to ssl\n");
+    return -1;
+  }
+
+  if(SSL_connect(m_ssl) != 1) {
+    printf("failed connecting\n");
+    return -1;
+  }
+
+  return result;
+}
+
+int SslImpl::Read(char *buffer, int size) {
+  return SSL_read(m_ssl, buffer, size);
+}
+
+int SslImpl::Write(const char *data, int size) {
+  return SSL_write(m_ssl, std::string(data, size).c_str(), size);
+}
 
 Impl::Impl() : TcpSocket(Derived()), m_handle(socket(AF_INET, SOCK_STREAM, 0)) {
 }

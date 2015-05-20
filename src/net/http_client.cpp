@@ -5,12 +5,12 @@ namespace loftili {
 namespace net {
 
 bool HttpClient::Send(HttpRequest& req) {
-  TcpSocket socket;
   bool is_ssl = req.Url().Protocol() == "https";
+  TcpSocket socket(is_ssl);
 
-  int port = req.Url().Port() > 0 ? req.Url().Port() : (is_ssl ? 443 : 80),
-      result = socket.Connect(req.Url().Host().c_str(), port);
 
+  int port = req.Url().Port() > 0 ? req.Url().Port() : (is_ssl ? 443 : 80);
+  int result = socket.Connect(req.Url().Host().c_str(), port);
   if(result < 0) return result;
 
   std::string request_string(req);
