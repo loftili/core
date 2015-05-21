@@ -60,6 +60,14 @@ bool Player::Play(std::string url) {
     format.matrix = 0;
 
     ao_device* dev = ao_open_live(ao_default_driver_id(), &format, NULL);
+    if(dev == NULL) {
+      spdlog::get(LOFTILI_SPDLOG_ID)->critical("failed opening libao device, unable to play audio");
+      mpg123_close(m_handle);
+      mpg123_delete(m_handle);
+      Shutdown();
+      return false;
+    }
+
     m_state = PLAYER_STATE_PLAYING;
 
     do {
