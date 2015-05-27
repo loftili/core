@@ -122,8 +122,10 @@ int Engine::Run() {
       (*gc.get())(this);
       cs.Pop();
     }
-    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, retrying");
+
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, sleeping for 5 seconds and then retrying");
     retries++;
+    sleep(5);
 
     if(Subscribe() < 0) {
       retries = 100;

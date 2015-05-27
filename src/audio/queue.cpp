@@ -78,7 +78,6 @@ const std::string Queue::QueueUrl() {
   ss << loftili::api::configuration.protocol << "://";
   ss << loftili::api::configuration.hostname << ":" << loftili::api::configuration.port << "/queues/";
   ss << m_credentials.device_id;
-  std::cout << "loading queue from " << ss.str() << std::endl;
   return ss.str();
 }
 
