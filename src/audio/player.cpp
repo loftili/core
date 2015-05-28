@@ -87,7 +87,8 @@ bool Player::Play(std::string url) {
   mpg123_close(m_handle);
   mpg123_delete(m_handle);
   Shutdown();
-  return true;
+
+  return m_state == PLAYER_STATE_PLAYING;
 }
 
 Player::operator bool() {

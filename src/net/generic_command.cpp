@@ -21,17 +21,31 @@ GenericCommand::GenericCommand(const char* data) {
   int type_length = type_break - cmd.c_str();
 
   if(cmd.substr(0, type_length) == "audio") {
-    if(cmd.substr(type_length + 1) == "stop") {
-      spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio START command");
-      m_cmd = new loftili::commands::audio::Stop();
-    } else {
-      spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio STOP command");
-      m_cmd = new loftili::commands::audio::Start();
-    }
+    AudioCommand(cmd);
     return;
   }
 
   return;
+}
+
+void GenericCommand::AudioCommand(std::string cmd) {
+  const int type_length = 5;
+  std::string command_value = cmd.substr(type_length + 1);
+
+  if(command_value == "stop") {
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio STOP command");
+    m_cmd = new loftili::commands::audio::Stop();
+    return;
+  } 
+  
+  if(command_value == "skip") {
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio SKIP command");
+    m_cmd = new loftili::commands::audio::Skip();
+    return;
+  }
+
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("received an audio START command");
+  m_cmd = new loftili::commands::audio::Start();
 }
 
 void GenericCommand::Execute(Engine* eng) {

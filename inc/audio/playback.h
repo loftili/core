@@ -25,6 +25,7 @@ class Playback {
     Playback(const Playback&) = default;
     Playback& operator=(const Playback&) = default;
 
+    void Skip();
     void Start();
     void Stop();
 

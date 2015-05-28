@@ -9,6 +9,7 @@
 #include "net/tcp_socket.h"
 #include "net/generic_command.h"
 #include "commands/audio/start.h"
+#include "commands/audio/skip.h"
 
 namespace loftili {
 

@@ -12,19 +12,26 @@ void Playback::Start() {
   m_thread = std::unique_ptr<std::thread>(new std::thread(std::bind(&Playback::Run, this)));
 }
 
+void Playback::Skip() {
+  Stop();
+  m_queue.Pop();
+  Start();
+}
+
 void Playback::Stop() {
   spdlog::get(LOFTILI_SPDLOG_ID)->info("stopping player and playback run thread");
   m_state = PLAYBACK_STATE_STOPPED;
   m_player.Stop();
   m_thread->join();
-  m_stateclient.Update("playback", 0);
 }
 
 void Playback::Run() {
   m_state = PLAYBACK_STATE_PLAYING;
+
   while(m_queue >> m_player && m_state == PLAYBACK_STATE_PLAYING) { 
     spdlog::get(LOFTILI_SPDLOG_ID)->info("player finished, getting next track from queue");
   }
+
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback run thread finishing");
   m_state = PLAYBACK_STATE_STOPPED;
   m_stateclient.Update("playback", 0);

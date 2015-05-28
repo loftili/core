@@ -9,6 +9,7 @@
 #include "spdlog/spdlog.h"
 #include "commands/audio/start.h"
 #include "commands/audio/stop.h"
+#include "commands/audio/skip.h"
 #include "net/command.h"
 
 namespace loftili {
@@ -26,6 +27,7 @@ class GenericCommand : public loftili::net::Command {
     void operator()(loftili::Engine*);
     operator bool();
   private:
+    void AudioCommand(std::string);
     loftili::net::Command* m_cmd;
 };
 

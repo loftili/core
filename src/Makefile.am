@@ -21,6 +21,7 @@ loftili_SOURCES = \
   api/state_client.cpp \
 	commands/audio/start.cpp \
 	commands/audio/stop.cpp \
+	commands/audio/skip.cpp \
 	audio/queue.cpp \
 	audio/player.cpp \
   audio/playback.cpp
