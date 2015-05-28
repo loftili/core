@@ -4,16 +4,12 @@ namespace loftili {
 
 namespace audio {
 
-void Queue::Initialize(const loftili::api::DeviceCredentials& credentials){
-  m_credentials = credentials;
-};
-
 void Queue::Pop() {
   loftili::net::HttpClient client;
   std::string popurl = QueueUrl();
   popurl.append("/pop");
   loftili::net::HttpRequest req(loftili::net::Url(popurl.c_str()), "POST");
-  req.Header(LOFTILI_API_TOKEN_HEADER, m_credentials.token);
+  req.Header(LOFTILI_API_TOKEN_HEADER, loftili::api::credentials.token);
   req.Header(LOFTILI_API_SERIAL_HEADER, loftili::api::configuration.serial);
   client.Send(req);
   return;
@@ -22,7 +18,7 @@ void Queue::Pop() {
 bool Queue::operator>>(loftili::audio::Player& player) {
   loftili::net::HttpClient client;
   loftili::net::HttpRequest req(loftili::net::Url(QueueUrl().c_str()));
-  req.Header(LOFTILI_API_TOKEN_HEADER, m_credentials.token);
+  req.Header(LOFTILI_API_TOKEN_HEADER, loftili::api::credentials.token);
   req.Header(LOFTILI_API_SERIAL_HEADER, loftili::api::configuration.serial);
   spdlog::get(LOFTILI_SPDLOG_ID)->info("retreiving track queue from {0}", QueueUrl().c_str());
 
@@ -77,7 +73,7 @@ const std::string Queue::QueueUrl() {
   std::stringstream ss;
   ss << loftili::api::configuration.protocol << "://";
   ss << loftili::api::configuration.hostname << ":" << loftili::api::configuration.port << "/queues/";
-  ss << m_credentials.device_id;
+  ss << loftili::api::credentials.device_id;
   return ss.str();
 }
 

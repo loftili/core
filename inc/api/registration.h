@@ -21,18 +21,15 @@ class Registration {
     Registration(const Registration&) = default;
     Registration& operator=(const Registration&) = default;
     ~Registration() = default;
-
     int Register();
-    loftili::api::DeviceCredentials Credentials();
 
   private:
     std::string RegistrationUrl();
     bool m_ok;
-    loftili::api::DeviceCredentials m_credentials;
 
     class Parser : public loftili::lib::JsonParser {
       public: 
-        Parser(Registration*);
+        Parser() = default;
         bool String(const char*, size_t, bool);
         bool Key(const char*, size_t, bool);
         bool Uint(unsigned int);

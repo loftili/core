@@ -8,6 +8,7 @@
 #include "config.h"
 #include "spdlog/spdlog.h"
 #include "api/registration.h"
+#include "api/state_client.h"
 #include "audio/queue.h"
 #include "audio/player.h"
 
@@ -26,7 +27,6 @@ class Playback {
 
     void Start();
     void Stop();
-    void Initialize(loftili::api::Registration*);
 
     enum PLAYBACK_STATE {
       PLAYBACK_STATE_STOPPED,
@@ -39,6 +39,7 @@ class Playback {
     std::unique_ptr<std::thread> m_thread;
     loftili::audio::Queue m_queue;
     loftili::audio::Player m_player;
+    loftili::api::StateClient m_stateclient;
     PLAYBACK_STATE m_state;
 
 };

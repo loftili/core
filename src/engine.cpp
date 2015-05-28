@@ -137,18 +137,9 @@ int Engine::Run() {
 };
 
 int Engine::Register() {
-  int result = 1;
   spdlog::get(LOFTILI_SPDLOG_ID)->info("beginning registration process...");
-
   loftili::api::Registration *registration = Get<loftili::api::Registration>();
-
-  result = registration->Register();
-
-#ifdef HAVE_AUDIO
-  if(result) Get<loftili::audio::Playback>()->Initialize(registration);
-#endif
-
-  return result;
+  return registration->Register();
 };
 
 int Engine::Subscribe() {
@@ -161,7 +152,7 @@ int Engine::Subscribe() {
   r << "Connection: Keep-alive\n";
   r << "Host: " << loftili::api::configuration.hostname << "\n";
   r << "Content-Length: 0\n";
-  r << LOFTILI_API_TOKEN_HEADER << ": " << Get<loftili::api::Registration>()->Credentials().token << "\n";
+  r << LOFTILI_API_TOKEN_HEADER << ": " << loftili::api::credentials.token << "\n";
   r << LOFTILI_API_SERIAL_HEADER << ": " << loftili::api::configuration.serial;
   r << "\r\n\r\n";
   std::string subscription_req = r.str();

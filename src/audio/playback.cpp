@@ -4,15 +4,11 @@ namespace loftili {
 
 namespace audio {
 
-void Playback::Initialize(loftili::api::Registration *api_registration) {
-  loftili::api::DeviceCredentials creds = api_registration->Credentials();
-  m_queue.Initialize(creds);
-}
-
 void Playback::Start() {
   if(m_state == PLAYBACK_STATE_PLAYING) return;
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback starting, opening playback thread");
   m_state = PLAYBACK_STATE_PLAYING;
+  m_stateclient.Update("playback", 1);
   m_thread = std::unique_ptr<std::thread>(new std::thread(std::bind(&Playback::Run, this)));
 }
 
@@ -21,6 +17,7 @@ void Playback::Stop() {
   m_state = PLAYBACK_STATE_STOPPED;
   m_player.Stop();
   m_thread->join();
+  m_stateclient.Update("playback", 0);
 }
 
 void Playback::Run() {
@@ -30,6 +27,7 @@ void Playback::Run() {
   }
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback run thread finishing");
   m_state = PLAYBACK_STATE_STOPPED;
+  m_stateclient.Update("playback", 0);
 }
 
 }

@@ -27,6 +27,7 @@ struct DeviceCredentials {
 };
 
 extern loftili::api::ApiConfiguration configuration;
+extern loftili::api::DeviceCredentials credentials;
 
 }
 

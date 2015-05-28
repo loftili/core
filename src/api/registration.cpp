@@ -4,24 +4,16 @@ namespace loftili {
 
 namespace api {
 
-loftili::api::DeviceCredentials Registration::Credentials() {
-  return m_credentials;
-};
-
-Registration::Parser::Parser(Registration* ptr) {
-  m_registration = ptr;
-};
-
 bool Registration::Parser::Uint(unsigned int value) {
   if(m_current_key == "device")
-    m_registration->m_credentials.device_id = value;
+    loftili::api::credentials.device_id = value;
 
   return true;
 };
 
 bool Registration::Parser::String(const char* value, size_t, bool) {
   if(m_current_key == "token")
-    m_registration->m_credentials.token = std::string(value);
+    loftili::api::credentials.token = std::string(value);
 
   return true;
 };
@@ -47,24 +39,26 @@ int Registration::Register() {
   loftili::net::HttpRequest req(loftili::net::Url(RegistrationUrl().c_str()), "POST", body.str());
   spdlog::get(LOFTILI_SPDLOG_ID)->info("registering serial number {0}", loftili::api::configuration.serial);
 
-  if(client.Send(req)) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("request finished, checking result...");
-    std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
-    if(res->Status() < 200 || res->Status() > 299) return 0;
-    loftili::api::JsonStream ss(res->Body());
-    rapidjson::Reader reader;
-    loftili::api::Registration::Parser p(this);
-    reader.Parse<0, loftili::api::JsonStream, loftili::api::Registration::Parser>(ss, p);
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("registration attempt complete");
+  std::shared_ptr<loftili::net::HttpResponse> res;
+
+  if(!client.Send(req) || (res = client.Latest())->Status() != 200) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("unable to register with api.");
+    return 0;
   }
 
-  if(m_credentials.token.size() < 1)
+  loftili::api::JsonStream ss(res->Body());
+  rapidjson::Reader reader;
+  loftili::api::Registration::Parser p;
+  reader.Parse<0, loftili::api::JsonStream, loftili::api::Registration::Parser>(ss, p);
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("registration attempt complete");
+
+  if(loftili::api::credentials.token.size() < 1)
     spdlog::get(LOFTILI_SPDLOG_ID)->critical("registration attempt failed, unable to retrieve a valid api token");
   else
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("received token from server: {0}", m_credentials.token.c_str());
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("received token from server: {0}", loftili::api::credentials.token.c_str());
 
 
-  return m_credentials.token.size() > 0 && m_credentials.device_id > 0 ? 1 : 0;
+  return loftili::api::credentials.token.size() > 0 && loftili::api::credentials.device_id > 0 ? 1 : 0;
 };
 
 }
