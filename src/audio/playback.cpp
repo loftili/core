@@ -13,7 +13,7 @@ void Playback::Start() {
 }
 
 void Playback::Skip() {
-  Stop();
+  if(m_state == PLAYBACK_STATE_PLAYING) Stop();
   m_queue.Pop();
   Start();
 }
