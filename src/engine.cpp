@@ -121,6 +121,7 @@ int Engine::Run() {
       spdlog::get(LOFTILI_SPDLOG_ID)->info("received command, executing command");
       (*gc.get())(this);
       cs.Pop();
+      retries = 0;
     }
 
     spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, sleeping for 5 seconds and then retrying");
