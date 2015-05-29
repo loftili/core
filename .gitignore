@@ -2,6 +2,7 @@ Makefile.in
 Makefile
 COPYING
 INSTALL
+log.txt
 *.tar.gz
 /vendor
 *.log

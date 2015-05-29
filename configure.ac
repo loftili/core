@@ -1,5 +1,5 @@
-m4_define([loftili_MAJOR_VERSION], [0])
-m4_define([loftili_MINOR_VERSION], [5])
+m4_define([loftili_MAJOR_VERSION], [1])
+m4_define([loftili_MINOR_VERSION], [0])
 m4_define([loftili_REVISION], [0])
 m4_define([loftili_PKG_VERSION], [loftili_MAJOR_VERSION.loftili_MINOR_VERSION.loftili_REVISION])
 

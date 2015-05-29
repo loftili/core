@@ -66,12 +66,28 @@ int Engine::Initialize(int argc, char* argv[]) {
     }
   }
 
+  if(serial_no.size() != 40) {
+    printf("\e[0;31minvalid serial number\e[0m\n\n");
+    return DisplayHelp();
+  }
+
+  if(!verbose) {
+    int childpid = 0;
+    pid_t pid = 0;
+    if((childpid = fork ()) < 0) return false;
+    if(childpid > 0) exit(0);
+  }
+
   auto lof = verbose ? spdlog::stdout_logger_mt(LOFTILI_SPDLOG_ID) 
     : spdlog::rotating_logger_mt(LOFTILI_SPDLOG_ID, logfile.c_str(), 1048576 * 5, 3);
 
-  if(serial_no.size() != 40) {
-    printf("invalid serial number\n\n");
-    return DisplayHelp();
+  if(!verbose) {
+    setsid();
+    umask(0);
+
+    close(fileno(stderr));
+    close(fileno(stdout));
+    close(STDIN_FILENO);
   }
 
   loftili::api::configuration.serial = serial_no;
@@ -90,16 +106,15 @@ int Engine::Initialize(int argc, char* argv[]) {
 }
 
 int Engine::DisplayHelp() {
-  printf("loftili core v%s \n", PACKAGE_VERSION);
+  printf("\e[4;32mloftili core v%s \e[0m\n", PACKAGE_VERSION);
   printf("get involved @ %s \n", PACKAGE_URL);
   printf("please send all issues to %s \n\n", PACKAGE_BUGREPORT);
   printf("options: \n");
-  printf("   -%s %-*s %s", "s", 15, "SERIAL", "[required] the serial number this device was given\n");
-  printf("   -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
-  printf("   -%s %-*s %s", "d", 15, "DAEMONIZE", "run loftili in daemon mode (background)\n");
-  printf("   -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file. ignored unless daemonize (-d)\n");
-  printf("   -%s %-*s %s", "v", 15, "VERBOSE", "log messages to stdout (development mode)\n");
-  printf("   -%s %-*s %s", "h", 15, "", "display this help text \n");
+  printf("        -%s %-*s %s", "s", 15, "SERIAL", "\e[0;36m[required]\e[0m the serial number this device was given\n");
+  printf("        -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
+  printf("        -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file. ignored if -v\n");
+  printf("        -%s %-*s %s", "v", 15, "VERBOSE", "runs loftili core in foreground - log messages to stdout (development mode)\n");
+  printf("        -%s %-*s %s", "h", 15, "", "display this help text \n\n");
   return 0;
 }
 

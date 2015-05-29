@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "loftili.h"
 #include "spdlog/spdlog.h"
 #include "net/tcp_socket.h"
