@@ -95,9 +95,13 @@ int Engine::Initialize(int argc, char* argv[]) {
 
   if(api_url.Host().size() > 5)
     loftili::api::configuration.hostname = api_url.Host();
+  else 
+    loftili::api::configuration.hostname = "api.loftili.com";
 
   if(api_url.Protocol() == "http")
     loftili::api::configuration.protocol = "http";
+  else
+    loftili::api::configuration.protocol = "https";
 
   loftili::api::configuration.port = api_url.Port() < 0 ? 443 : api_url.Port();
 
@@ -111,8 +115,8 @@ int Engine::DisplayHelp() {
   printf("please send all issues to %s \n\n", PACKAGE_BUGREPORT);
   printf("options: \n");
   printf("        -%s %-*s %s", "s", 15, "SERIAL", "\e[0;36m[required]\e[0m the serial number this device was given\n");
-  printf("        -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param\n");
-  printf("        -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file. ignored if -v\n");
+  printf("        -%s %-*s %s", "a", 15, "API HOST", "if running the api on your own, use this param (defaults to https://api.loftili.com)\n");
+  printf("        -%s %-*s %s", "l", 15, "LOGFILE", "the file path used for the log file. ignored if -v (defaults to loftili.log)\n");
   printf("        -%s %-*s %s", "v", 15, "VERBOSE", "runs loftili core in foreground - log messages to stdout (development mode)\n");
   printf("        -%s %-*s %s", "h", 15, "", "display this help text \n\n");
   return 0;
