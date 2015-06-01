@@ -82,20 +82,14 @@ bool Player::Play(std::string url) {
   }
 
   m_state = PLAYER_STATE_PLAYING;
+  size_t buffer_size = mpg123_outblock(m_handle);
+  unsigned char *buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
-  do {
-    err = mpg123_decode_frame(m_handle, &frame_offset, &audio, &done);
-    switch(err) {
-      case MPG123_OK:
-        ao_play(dev, (char*)audio, done);
-        break;
-      default:
-        break;
-    }
-  } while(done > 0 && m_state == PLAYER_STATE_PLAYING);
+  while(mpg123_read(m_handle, buffer, buffer_size, &done) == MPG123_OK && m_state == PLAYER_STATE_PLAYING)
+    ao_play(dev, (char*)buffer, done);
 
+  free(buffer);
   ao_close(dev);
-
   mpg123_close(m_handle);
   mpg123_delete(m_handle);
   Shutdown();
