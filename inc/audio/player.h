@@ -38,6 +38,7 @@ class Player {
   private:
     void Startup();
     void Shutdown();
+    bool Exists(std::string);
     PLAYER_STATE m_state;
     std::unique_ptr<std::string> m_stream;
 };
