@@ -44,8 +44,11 @@ bool Queue::operator>>(loftili::audio::Player& player) {
     for(rapidjson::SizeType i = 0; i < a.Size(); i++) {
       const rapidjson::Value& track = a[i];
       if(!track["streaming_url"].IsString()) continue;
+      if(!track["id"].IsInt()) continue;
       std::string url = track["streaming_url"].GetString();
-      m_queue.push(url);
+      int id = track["id"].GetInt();
+      m_queue.push(std::make_pair(id, url));
+      spdlog::get(LOFTILI_SPDLOG_ID)->info("found queue item: {0} [{1}]", url.c_str(), id);
     }
 
     if(m_queue.size() == 0) {
@@ -53,9 +56,11 @@ bool Queue::operator>>(loftili::audio::Player& player) {
       return false;
     }
 
-    std::string first = m_queue.front();
+    std::string first = std::get<1, int, std::string>(m_queue.front());
+    int track_id = std::get<0, int, std::string>(m_queue.front());
     m_queue.pop();
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("sending first track into the audio player {0}", first.c_str());
+    m_stateclient.Update("current_track", track_id);
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("sending first track into the audio player {0} [{1}]", first.c_str(), track_id);
     bool result = player.Play(first);
 
     if(result) {

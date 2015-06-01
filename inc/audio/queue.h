@@ -11,6 +11,7 @@
 #include "audio/player.h"
 #include "net/http_client.h"
 #include "net/http_request.h"
+#include "api/state_client.h"
 
 namespace loftili {
 
@@ -29,7 +30,8 @@ class Queue {
 
   private:
     const std::string QueueUrl();
-    std::queue<std::string> m_queue;
+    std::queue< std::pair<int, std::string> > m_queue;
+    loftili::api::StateClient m_stateclient;
 };
 
 }
