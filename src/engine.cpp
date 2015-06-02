@@ -134,6 +134,7 @@ int Engine::Run() {
   int retries = 0;
   loftili::net::CommandStream cs;
   spdlog::get(LOFTILI_SPDLOG_ID)->info("connection finished, starting feeback look");
+
   while(retries < 100) {
     while(cs << m_socket) {
       std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();

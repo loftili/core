@@ -6,9 +6,10 @@ namespace net {
 
 bool CommandStream::operator <<(loftili::net::TcpSocket& socket) {
   char *buffer = (char*) malloc(sizeof(char) * 2048);
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("command stream opening up read attempt from engine socket");
+
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("[OPENING] command stream opening up read attempt from engine socket");
   int received = socket.Read(buffer, 2048);
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("command stream read received");
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("[RECEIVED] command stream socket read attempt has finished, inspecting content");
 
   if(received <= 0) {
     spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream\'s socket connection failed reading");
