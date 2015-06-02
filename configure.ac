@@ -42,6 +42,13 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   auto a = [] () { };
 ]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([could not use c++ 11])])
 
+CURRENT_DIR=$(pwd)
+AC_CHECK_FILE([$CURRENT_DIR/vendor/rapidjson/include/rapidjson/rapidjson.h], [], [
+  AC_MSG_ERROR([make sure you have rapidjson downloaded])])
+
+AC_CHECK_FILE([$CURRENT_DIR/vendor/spdlog/include/spdlog/spdlog.h], [], [
+  AC_MSG_ERROR([make sure you have spdlog downloaded])])
+
 AC_CHECK_LIB([ssl], [SSL_library_init], [
   HAVE_SSL=1
   LIBS="-lssl $LIBS"
