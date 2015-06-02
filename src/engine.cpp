@@ -79,7 +79,7 @@ int Engine::Initialize(int argc, char* argv[]) {
   }
 
   auto lof = verbose ? spdlog::stdout_logger_mt(LOFTILI_SPDLOG_ID) 
-    : spdlog::rotating_logger_mt(LOFTILI_SPDLOG_ID, logfile.c_str(), 1048576 * 5, 3);
+    : spdlog::rotating_logger_mt(LOFTILI_SPDLOG_ID, logfile.c_str(), 1048576 * 5, 3, true);
 
   if(!verbose) {
     setsid();
