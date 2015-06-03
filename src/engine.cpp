@@ -135,7 +135,7 @@ int Engine::Run() {
   loftili::net::CommandStream cs;
   spdlog::get(LOFTILI_SPDLOG_ID)->info("connection finished, starting feeback look");
 
-  while(retries < 100) {
+  while(retries < MAX_ENGINE_RETRIES) {
     while(cs << m_socket) {
       std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();
       spdlog::get(LOFTILI_SPDLOG_ID)->info("received command, executing command");
@@ -144,15 +144,14 @@ int Engine::Run() {
       retries = 0;
     }
 
-    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, sleeping for 2 seconds and then retrying");
-    retries++;
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("engine stream reached bad state, retrying in 2 seconds. attempt [{0}]", ++retries);
     sleep(2);
-
-    if(Subscribe() < 0) {
-      retries = 100;
-      spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine unable to subscribe to api stream, shutting down");
-    }
+    if(Subscribe() > 0) continue;
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine unable to subscribe to api stream, shutting down");
+    break;
   }
+
+  spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine stream exited after [{0}] retries", retries);
 
   return 0;
 };
@@ -169,7 +168,7 @@ int Engine::Subscribe() {
   if(ok < 0) return -1;
 
   std::stringstream r;
-  r << "GET /devicestream/open HTTP/1.1\n";
+  r << "SUBSCRIBE /devicestreams HTTP/1.1\n";
   r << "Connection: Keep-alive\n";
   r << "Host: " << loftili::api::configuration.hostname << "\n";
   r << "Content-Length: 0\n";

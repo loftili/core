@@ -1,6 +1,8 @@
 #ifndef _LOFTILI_ENGINE_H
 #define _LOFTILI_ENGINE_H
 
+#define MAX_ENGINE_RETRIES 10000
+
 #include <iostream>
 #include <unistd.h>
 #include <sys/types.h>
