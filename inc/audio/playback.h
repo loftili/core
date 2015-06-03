@@ -42,6 +42,7 @@ class Playback {
     loftili::audio::Player m_player;
     loftili::api::StateClient m_stateclient;
     PLAYBACK_STATE m_state;
+    std::mutex m_mutex;
 
 };
 

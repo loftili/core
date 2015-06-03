@@ -144,9 +144,9 @@ int Engine::Run() {
       retries = 0;
     }
 
-    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, sleeping for 5 seconds and then retrying");
+    spdlog::get(LOFTILI_SPDLOG_ID)->warn("command stream reached an invalid state, sleeping for 2 seconds and then retrying");
     retries++;
-    sleep(5);
+    sleep(2);
 
     if(Subscribe() < 0) {
       retries = 100;

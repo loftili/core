@@ -14,6 +14,7 @@ bool Player::Exists(std::string filename) {
 }
 
 bool Player::Play(std::string url) {
+  m_state = PLAYER_STATE_PLAYING;
   Startup();
   loftili::net::HttpClient client;
   loftili::net::HttpRequest req(loftili::net::Url(url.c_str()));
@@ -38,6 +39,12 @@ bool Player::Play(std::string url) {
     remove(filename.c_str());
   }
 
+  if(m_state != PLAYER_STATE_PLAYING) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("playback stopped before track finished downloading, exiting");
+    Shutdown();
+    return false;
+  }
+
   spdlog::get(LOFTILI_SPDLOG_ID)->info("download complete, temporarily saving to file system [{0}]", filename.c_str());
   std::ofstream download;
   download.open(filename.c_str(), std::ios::binary | std::ios::out);
@@ -46,9 +53,11 @@ bool Player::Play(std::string url) {
   int err = mpg123_open(m_handle, filename.c_str());
 
   if(err != MPG123_OK) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("unable to open mpg123 handle on downloaded track");
     mpg123_close(m_handle);
     mpg123_delete(m_handle);
     Shutdown();
+    m_state = PLAYER_STATE_STOPPED;
     return false;
   }
 
@@ -59,7 +68,10 @@ bool Player::Play(std::string url) {
   long rate;
 
   err = mpg123_getformat(m_handle, &rate, &channels, &encoding);
+
   if(err != MPG123_OK) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("invalid mpg123 format detected [{0}]", filename.c_str());
+    m_state = PLAYER_STATE_STOPPED;
     mpg123_close(m_handle);
     mpg123_delete(m_handle);
     Shutdown();
@@ -73,6 +85,7 @@ bool Player::Play(std::string url) {
   format.matrix = 0;
 
   ao_device* dev = ao_open_live(ao_default_driver_id(), &format, NULL);
+
   if(dev == NULL) {
     spdlog::get(LOFTILI_SPDLOG_ID)->critical("failed opening libao device, unable to play audio");
     mpg123_close(m_handle);
@@ -81,7 +94,6 @@ bool Player::Play(std::string url) {
     return false;
   }
 
-  m_state = PLAYER_STATE_PLAYING;
   size_t buffer_size = mpg123_outblock(m_handle);
   unsigned char *buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
