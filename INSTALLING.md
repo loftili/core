@@ -20,11 +20,49 @@ After getting the operating system installed on your device, you will need to in
 3. [ao](https://www.xiph.org/ao/)
 4. [mpg123](http://www.mpg123.de/)
 
+### Installing from source
+
+When compiling our application ourselves, we prefer using our own package versions and compiling them ourselves. We've uploaded these libraries to our ftp server as a mirror [here](http://artifacts.sizethreestudios.com/loftili/libs/). 
+*note: alsa-utils-1.0.28 is not required*
+
+compiling these packages is straightforward:
+
+```
+$ wget <artifact url>/alsa-lib-1.0.28.tar.bz2
+$ tar xjf alsa-lib-1.0.28.tar.bz2
+$ cd alsa-lib-1.0.28
+$ ./configure
+$ make
+$ make install
+
+$ wget <artifact url>/libao-1.2.0.tar.gz
+$ tar xzf libao-1.2.0.tar.gz
+$ cd libao-1.2.0
+$ ./configure
+$ make
+$ make install
+
+$ wget <artifact url>/mpg123-1.20.1.tar.bz2
+$ tar xjf mpg123-1.20.1.tar.bz2
+$ cd mpg123-1.20.1
+$ ./configure
+$ make
+$ make install
+```
+
+**important: after installing these from source, you will need to update your system's `LD_LIBRARY_PATH`**
+```
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
+```
+
+### Installing from packages
+
 On ubuntu snappy, installing these could be done by running:
 
 ```
 $ sudo apt-get install -y libao-dev libmpg123-dev libssl-dev build-essential autoconf automake libtool
 ```
+
 
 ## Downloading the source
 
