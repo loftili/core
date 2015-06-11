@@ -77,6 +77,8 @@ bool Player::Play(std::string url) {
     Shutdown();
   }
 
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("mpg123 format checks out rate[{0}] channels[{1}] encoding[{2}]", rate, channels, encoding);
+
   ao_sample_format format;
   format.bits = mpg123_encsize(encoding) * 8;
   format.rate = rate;
@@ -84,7 +86,8 @@ bool Player::Play(std::string url) {
   format.byte_format = AO_FMT_NATIVE;
   format.matrix = 0;
 
-  ao_device* dev = ao_open_live(ao_default_driver_id(), &format, NULL);
+  int driver_id = ao_default_driver_id();
+  ao_device* dev = ao_open_live(driver_id, &format, NULL);
 
   if(dev == NULL) {
     spdlog::get(LOFTILI_SPDLOG_ID)->critical("failed opening libao device, unable to play audio");
@@ -97,8 +100,11 @@ bool Player::Play(std::string url) {
   size_t buffer_size = mpg123_outblock(m_handle);
   unsigned char *buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("opened audio driver[{0}], entering \e[0;32mplayback loop \e[0m", driver_id); 
   while(mpg123_read(m_handle, buffer, buffer_size, &done) == MPG123_OK && m_state == PLAYER_STATE_PLAYING)
     ao_play(dev, (char*)buffer, done);
+
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("playback loop finished, cleaning up");
 
   free(buffer);
   ao_close(dev);
