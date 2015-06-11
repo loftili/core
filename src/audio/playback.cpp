@@ -69,6 +69,7 @@ void Playback::Run() {
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback run thread finishing");
   m_state = PLAYBACK_STATE_STOPPED;
   m_stateclient.Update("playback", 0);
+  m_stateclient.Update("current_track", 0);
 }
 
 }
