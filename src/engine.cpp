@@ -168,7 +168,7 @@ int Engine::Subscribe() {
   if(ok < 0) return -1;
 
   std::stringstream r;
-  r << "SUBSCRIBE /devicestreams HTTP/1.1\n";
+  r << "SUBSCRIBE /sockets/devices HTTP/1.1\n";
   r << "Connection: Keep-alive\n";
   r << "Host: " << loftili::api::configuration.hostname << "\n";
   r << "Content-Length: 0\n";
