@@ -37,7 +37,7 @@ class Playback {
 
   private:
     void Run();
-    std::unique_ptr<std::thread> m_thread;
+    std::thread m_thread;
     loftili::audio::Queue m_queue;
     loftili::audio::Player m_player;
     loftili::api::StateClient m_stateclient;

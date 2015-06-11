@@ -123,6 +123,10 @@ int Engine::DisplayHelp() {
 }
 
 int Engine::Run() {
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("telling playback to skip in case we were shut down");
+  loftili::audio::Playback *p;
+  if((p = Get<loftili::audio::Playback>())) p->Skip();
+
   spdlog::get(LOFTILI_SPDLOG_ID)->info("opening command stream to api server");
 
   if(Subscribe() < 0) {
@@ -133,7 +137,7 @@ int Engine::Run() {
 
   int retries = 0;
   loftili::net::CommandStream cs;
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("connection finished, starting feeback look");
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("subscription finished, attempting to read into command stream");
 
   while(retries < MAX_ENGINE_RETRIES) {
     while(cs << m_socket) {

@@ -5,6 +5,7 @@ namespace loftili {
 namespace audio {
 
 void Queue::Pop() {
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("queue is sending pop request");
   loftili::net::HttpClient client;
   std::string popurl = QueueUrl();
   popurl.append("/pop");
@@ -12,6 +13,7 @@ void Queue::Pop() {
   req.Header(LOFTILI_API_TOKEN_HEADER, loftili::api::credentials.token);
   req.Header(LOFTILI_API_SERIAL_HEADER, loftili::api::configuration.serial);
   client.Send(req);
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("pop request finished");
   return;
 };
 
