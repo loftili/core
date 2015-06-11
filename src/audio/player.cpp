@@ -100,11 +100,12 @@ bool Player::Play(std::string url) {
   size_t buffer_size = mpg123_outblock(m_handle);
   unsigned char *buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("opened audio driver[{0}], entering \e[0;32mplayback loop \e[0m", driver_id); 
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("[AUDIO PLAYBACK STARTING] opened audio driver[{0}], opening loop", driver_id); 
+
   while(mpg123_read(m_handle, buffer, buffer_size, &done) == MPG123_OK && m_state == PLAYER_STATE_PLAYING)
     ao_play(dev, (char*)buffer, done);
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("playback loop finished, cleaning up");
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("[AUDIO PLAYBACK STOPPED] audio player loop finished with state [{0}]", m_state);
 
   free(buffer);
   ao_close(dev);
