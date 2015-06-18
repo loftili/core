@@ -37,9 +37,6 @@ void Playback::Skip() {
     Stop();
   }
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("skip request attempting to pop queue");
-  m_queue.Pop();
-
   Start();
 }
 
