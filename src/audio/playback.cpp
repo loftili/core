@@ -13,17 +13,16 @@ void Playback::Start() {
     return;
   }
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("playback starting, opening playback thread");
-  m_state = PLAYBACK_STATE_PLAYING;
-  m_stateclient.Update("playback", 1);
-
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback about to open thread, joining if existing");
 
   if(m_thread.joinable()) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("playback joinable!");
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("playback joinable, finish first");
     m_thread.join();
   }
 
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("playback starting, updating state on api and opening playback thread");
+  m_state = PLAYBACK_STATE_PLAYING;
+  m_stateclient.Update("playback", 1);
   m_thread = std::thread(&Playback::Run, this);
   spdlog::get(LOFTILI_SPDLOG_ID)->info("playback thread opened successfully.");
   mutex_lock.unlock();

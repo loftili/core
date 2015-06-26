@@ -103,9 +103,9 @@ int Engine::Initialize(int argc, char* argv[]) {
   else
     loftili::api::configuration.protocol = "https";
 
-  loftili::api::configuration.port = api_url.Port() < 0 ? 443 : api_url.Port();
+  loftili::api::configuration.port = api_url.Port() <= 0 ? 443 : api_url.Port();
 
-  lof->info("configuring engine - api[{0}:{1}]", loftili::api::configuration.hostname, loftili::api::configuration.port);
+  lof->info("configuring engine - api[{0}:{1}]", loftili::api::configuration.hostname, loftili::api::configuration.port, api_url.Port());
   return 1;
 }
 
