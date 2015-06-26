@@ -42,7 +42,7 @@ int Registration::Register() {
   std::shared_ptr<loftili::net::HttpResponse> res;
 
   if(!client.Send(req) || (res = client.Latest())->Status() != 200) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->critical("unable to register with api.");
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("unable to send registration request to api.");
     return 0;
   }
 
