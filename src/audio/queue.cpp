@@ -41,36 +41,33 @@ bool Queue::operator>>(loftili::audio::Player& player) {
       return false;
     }
 
-    while(!m_queue.empty()) m_queue.pop();
+    int queue_length = 0;
+    int current_id = -1;
 
     for(rapidjson::SizeType i = 0; i < a.Size(); i++) {
+      queue_length++;
       const rapidjson::Value& track = a[i];
-      if(!track["streaming_url"].IsString()) continue;
-      if(!track["id"].IsInt()) continue;
-      std::string url = track["streaming_url"].GetString();
-      int id = track["id"].GetInt();
-      m_queue.push(std::make_pair(id, url));
-      spdlog::get(LOFTILI_SPDLOG_ID)->info("found queue item: {0} [{1}]", url.c_str(), id);
+
+      if(!track["id"].IsInt())
+        continue;
+
+      if(current_id < 0)
+        current_id = track["id"].GetInt();
     }
 
-    if(m_queue.size() == 0) {
+    if(queue_length == 0 || current_id < 0) {
       spdlog::get(LOFTILI_SPDLOG_ID)->warn("queue appears to be empty, even after loading in new version");
       return false;
     }
 
-    std::string first = std::get<1, int, std::string>(m_queue.front());
-    int track_id = std::get<0, int, std::string>(m_queue.front());
-    m_queue.pop();
-    m_stateclient.Update("current_track", track_id);
-    spdlog::get(LOFTILI_SPDLOG_ID)->info("sending first track into the audio player {0} [{1}]", first.c_str(), track_id);
-    bool result = player.Play(first);
+    m_stateclient.Update("current_track", current_id);
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("updated current_track device state to id[{0}]", current_id);
 
-    if(result) {
-      spdlog::get(LOFTILI_SPDLOG_ID)->info("player appeared to finish the track, popping from api");
-      Pop();
-    }
+    if(!player.Play()) return false;
 
-    return result;
+    spdlog::get(LOFTILI_SPDLOG_ID)->info("player appeared to finish the track, popping from api");
+    Pop();
+    return true;
   }
 
   return false;

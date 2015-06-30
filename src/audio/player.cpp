@@ -13,23 +13,32 @@ bool Player::Exists(std::string filename) {
   return infile.good();
 }
 
-bool Player::Play(std::string url) {
+bool Player::Play() {
+  std::string url = StreamUrl();
   m_state = PLAYER_STATE_PLAYING;
   Startup();
   loftili::net::HttpClient client;
   loftili::net::HttpRequest req(loftili::net::Url(url.c_str()));
-
+  req.Header(LOFTILI_API_TOKEN_HEADER, loftili::api::credentials.token);
+  req.Header(LOFTILI_API_SERIAL_HEADER, loftili::api::configuration.serial);
   mpg123_handle* m_handle;
   m_handle = mpg123_new(NULL, NULL);
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("attempting to download track...");
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("opening http request to streaming url [{0}]", url.c_str());
 
-  if(!client.Send(req) || client.Latest()->Status() != 200) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->critical("download {0} failed", url.c_str());
+  if(!client.Send(req)) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("download {0} failed completely", url.c_str());
     return false;
   }
 
   std::shared_ptr<loftili::net::HttpResponse> res = client.Latest();
+  if(res->Status() != 200) {
+    spdlog::get(LOFTILI_SPDLOG_ID)->critical("download {0} failed with status[{0}]", res->Status());
+    return false;
+  }
+
+  spdlog::get(LOFTILI_SPDLOG_ID)->info("request finished with status[{0}]", res->Status());
+
   std::size_t last_slash = url.find_last_of("/");
   std::string filename = url.substr(last_slash + 1);
   filename += ".mp3";
@@ -75,6 +84,7 @@ bool Player::Play(std::string url) {
     mpg123_close(m_handle);
     mpg123_delete(m_handle);
     Shutdown();
+    return false;
   }
 
   spdlog::get(LOFTILI_SPDLOG_ID)->info("mpg123 format checks out rate[{0}] channels[{1}] encoding[{2}]", rate, channels, encoding);
@@ -130,6 +140,14 @@ void Player::Startup() {
 void Player::Shutdown() {
   ao_shutdown();
   mpg123_exit();
+}
+
+std::string Player::StreamUrl() {
+  std::stringstream ss;
+  ss << loftili::api::configuration.protocol << "://";
+  ss << loftili::api::configuration.hostname << ":" << loftili::api::configuration.port << "/queues/";
+  ss << loftili::api::credentials.device_id << "/stream";
+  return ss.str();
 }
 
 }

@@ -30,7 +30,6 @@ class Queue {
 
   private:
     const std::string QueueUrl();
-    std::queue< std::pair<int, std::string> > m_queue;
     loftili::api::StateClient m_stateclient;
 };
 

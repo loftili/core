@@ -7,6 +7,7 @@
 #include <fstream>
 #include <mpg123.h>
 #include <ao/ao.h>
+#include "api.h"
 #include "config.h"
 #include "spdlog/spdlog.h"
 #include "net/url.h"
@@ -24,7 +25,7 @@ class Player {
     Player& operator=(const Player&) = default;
     ~Player() = default;
 
-    bool Play(std::string);
+    bool Play();
     int State() { return m_state; };
     void Stop();
     operator bool();
@@ -36,6 +37,7 @@ class Player {
     };
 
   private:
+    std::string StreamUrl();
     void Startup();
     void Shutdown();
     bool Exists(std::string);

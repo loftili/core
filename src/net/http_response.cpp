@@ -31,7 +31,9 @@ HttpResponse::HttpResponse(const char* data) {
     std::string key = line.substr(0, split),
                 val = line.substr(split + 2);
 
-    if(key == "Content-Length")
+    std::transform(key.begin(), key.end(), key.begin(), ::toupper);
+
+    if(key == "CONTENT-LENGTH")
       content_length = std::stoi(val);
 
     m_headers.push_back(std::make_pair(key, val));

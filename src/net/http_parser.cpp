@@ -74,6 +74,7 @@ void HttpParser::Impl::FindContentLength() {
   int header_end = header_break - m_data;
   std::stringstream header_reader(std::string(m_data, header_end));
   std::string line;
+
   while(std::getline(header_reader, line) && line != "\r") {
     int split = line.find(':', 0);
 
@@ -83,7 +84,8 @@ void HttpParser::Impl::FindContentLength() {
     std::string key = line.substr(0, split),
                 val = line.substr(split + 2);
 
-    if(key.find("Content-Length") == 0 && key.size() == 14) {
+    std::transform(key.begin(), key.end(), key.begin(), ::toupper);
+    if(key.find("CONTENT-LENGTH") == 0 && key.size() == 14) {
       m_content_size = std::stoi(val);
       m_state = RECEIVING_STATE_BODY;
       UpdateState();
