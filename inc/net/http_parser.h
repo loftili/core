@@ -8,6 +8,7 @@
 #include <sstream>
 #include <memory>
 #include <fstream>
+#include <algorithm>
 #include "net/tcp_socket.h"
 
 namespace loftili {
