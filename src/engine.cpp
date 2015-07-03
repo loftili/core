@@ -7,7 +7,7 @@ int Engine::Initialize(int argc, char* argv[]) {
   char *p;
 
   std::string serial_no, logfile = LOFTILI_LOG_PATH;
-  loftili::net::Url api_url;
+  loftili::net::Url api_url = LOFTILI_API_PRODUCTION;
   bool verbose = false;
 
   for(; i < argc; i++) {
@@ -93,17 +93,10 @@ int Engine::Initialize(int argc, char* argv[]) {
   loftili::api::configuration.serial = serial_no;
   spdlog::set_level(spdlog::level::info);
 
-  if(api_url.Host().size() > 5)
-    loftili::api::configuration.hostname = api_url.Host();
-  else 
-    loftili::api::configuration.hostname = "api.loftili.com";
-
-  if(api_url.Protocol() == "http")
-    loftili::api::configuration.protocol = "http";
-  else
-    loftili::api::configuration.protocol = "https";
-
-  loftili::api::configuration.port = api_url.Port() <= 0 ? 443 : api_url.Port();
+  loftili::api::configuration.hostname = api_url.Host();
+  loftili::api::configuration.protocol = api_url.Protocol();
+  loftili::api::configuration.port = api_url.Port() >= 0 ? api_url.Port()
+    : (api_url.Protocol() == "http" ? 80 : 443);
 
   lof->info("configuring engine - api[{0}:{1}]", loftili::api::configuration.hostname, loftili::api::configuration.port, api_url.Port());
   return 1;
