@@ -4,6 +4,7 @@
 #define MAX_ENGINE_RETRIES 10000
 
 #include <iostream>
+#include <thread>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -19,7 +20,7 @@ namespace loftili {
 
 class Engine {
   public:
-    Engine() : m_socket(loftili::net::TcpSocket(false)) { }
+    Engine() : m_socket(loftili::net::TcpSocket(false)) { };
     Engine(const Engine&) = default;
     Engine& operator=(const Engine&) = default;
     ~Engine() = default;
@@ -34,8 +35,19 @@ class Engine {
   private:
     int Subscribe();
     int DisplayHelp();
+    bool KeepAlive();
+
+    enum ENGINE_STATE {
+      ENGINE_STATE_READING,
+      ENGINE_STATE_ERRORED
+    };
+
+    ENGINE_STATE m_state;
+
     loftili::ComponentHierarchy m_components;
     loftili::net::TcpSocket m_socket;
+    std::thread m_thread;
+    std::mutex m_mutex;
 };
 
 }

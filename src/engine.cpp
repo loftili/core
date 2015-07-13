@@ -116,42 +116,83 @@ int Engine::DisplayHelp() {
 }
 
 int Engine::Run() {
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("telling playback to skip in case we were shut down");
+  INFO("telling playback to skip in case we were shut down");
   loftili::audio::Playback *p;
   if((p = Get<loftili::audio::Playback>())) p->Skip();
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("opening command stream to api server");
+  INFO("opening command stream to api server");
 
   if(Subscribe() < 0) {
-    spdlog::get(LOFTILI_SPDLOG_ID)->critical("received invalid response from server during subscription request");
+    CRITICAL("received invalid response from server during subscription request");
     return -1;
   }
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("socket subscription request complete");
 
   int retries = 0;
   loftili::net::CommandStream cs;
-  spdlog::get(LOFTILI_SPDLOG_ID)->info("subscription finished, attempting to read into command stream");
+  INFO("subscription finished, attempting to read into command stream");
 
   while(retries < MAX_ENGINE_RETRIES) {
+    m_state = ENGINE_STATE_READING;
+    m_thread = std::thread(&Engine::KeepAlive, this);
+
     while(cs << m_socket) {
       std::shared_ptr<loftili::net::GenericCommand> gc = cs.Latest();
-      spdlog::get(LOFTILI_SPDLOG_ID)->info("received command, executing command");
+      INFO("received command, executing command");
       (*gc.get())(this);
       cs.Pop();
       retries = 0;
     }
 
-    spdlog::get(LOFTILI_SPDLOG_ID)->warn("engine stream reached bad state, retrying in 2 seconds. attempt [{0}]", ++retries);
-    sleep(2);
-    if(Subscribe() > 0) continue;
-    spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine unable to subscribe to api stream, shutting down");
+    WARN_2("engine stream reached bad state, retrying in 2 seconds. attempt [{0}]", ++retries);
+    m_state = ENGINE_STATE_ERRORED;
+
+    if(m_thread.joinable()) {
+      INFO("joining KeepAlive thread...");
+      m_thread.join();
+    }
+
+    sleep(3);
+
+    INFO("waking up after 3 second sleep, attempting to re-subscribe");
+
+    if(Subscribe() > 0) {
+      INFO("engine recovered from anomoly, continuing with next read");
+      continue;
+    }
+
+    CRITICAL("engine unable to recover from anomoly, shutting down");
+    m_state = ENGINE_STATE_ERRORED;
     break;
   }
 
-  spdlog::get(LOFTILI_SPDLOG_ID)->critical("engine stream exited after [{0}] retries", retries);
+  if(m_thread.joinable()) {
+    m_thread.join();
+  }
+
+  CRITICAL_2("engine stream exited after [{0}] retries", retries);
 
   return 0;
 };
+
+bool Engine::KeepAlive() {
+  INFO("keep alive thread started, sending occasional pings to server");
+
+  while(m_state == ENGINE_STATE_READING) {
+    std::stringstream r;
+    r << "GET /system HTTP/1.1\n";
+    r << "Connection: Keep-alive\n";
+    r << "Host: " << loftili::api::configuration.hostname << "\n";
+    r << "Content-Length: 0\n";
+    r << LOFTILI_API_TOKEN_HEADER << ": " << loftili::api::credentials.token << "\n";
+    r << LOFTILI_API_SERIAL_HEADER << ": " << loftili::api::configuration.serial;
+    r << "\r\n\r\n";
+    std::string ka_req = r.str();
+    m_socket.Write(ka_req.c_str(), ka_req.length());
+    sleep(1);
+  }
+
+  return false;
+}
 
 int Engine::Register() {
   spdlog::get(LOFTILI_SPDLOG_ID)->info("beginning registration process...");

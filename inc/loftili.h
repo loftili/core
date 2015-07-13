@@ -8,6 +8,15 @@
 #define APPLE 0
 #endif
 
+#define WARN(X) spdlog::get(LOFTILI_SPDLOG_ID)->warn(X);
+#define WARN_2(X, Y) spdlog::get(LOFTILI_SPDLOG_ID)->warn(X,Y);
+
+#define INFO(X) spdlog::get(LOFTILI_SPDLOG_ID)->info(X);
+#define INFO_2(X, Y) spdlog::get(LOFTILI_SPDLOG_ID)->info(X, Y);
+
+#define CRITICAL(X) spdlog::get(LOFTILI_SPDLOG_ID)->critical(X);
+#define CRITICAL_2(X, Y) spdlog::get(LOFTILI_SPDLOG_ID)->critical(X, Y);
+
 #include "config.h"
 #include "lib/typelist.h"
 #include "api/registration.h"

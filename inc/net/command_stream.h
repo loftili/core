@@ -6,6 +6,7 @@
 #include <vector>
 #include "config.h"
 #include "spdlog/spdlog.h"
+#include "loftili.h"
 #include "net/tcp_socket.h"
 #include "net/generic_command.h"
 #include "commands/audio/start.h"
@@ -17,11 +18,18 @@ namespace net {
 
 class CommandStream {
   public:
+    CommandStream() = default;
+    ~CommandStream() = default;
+    CommandStream(const CommandStream&) = default;
+    CommandStream& operator=(const CommandStream&) = default;
+
     bool operator<<(loftili::net::TcpSocket&);
     const std::shared_ptr<loftili::net::GenericCommand> Latest();
     void Pop();
+
   private:
     std::vector<std::shared_ptr<loftili::net::GenericCommand>> m_commands;
+
 };
 
 }
