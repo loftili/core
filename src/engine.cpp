@@ -187,7 +187,14 @@ bool Engine::KeepAlive() {
     r << LOFTILI_API_SERIAL_HEADER << ": " << loftili::api::configuration.serial;
     r << "\r\n\r\n";
     std::string ka_req = r.str();
-    m_socket.Write(ka_req.c_str(), ka_req.length());
+    int s = m_socket.Write(ka_req.c_str(), ka_req.length());
+
+    if(s != ka_req.size()) {
+      WARN_2("keep alive ping unable to write... {0} bytes sent", s);
+      m_state = ENGINE_STATE_ERRORED;
+      break;
+    }
+
     sleep(1);
   }
 

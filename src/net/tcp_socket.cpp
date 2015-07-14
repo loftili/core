@@ -77,7 +77,9 @@ int SslImpl::Connect(const char *hostname, int port) {
   sa.sin_addr.s_addr = *(long *)he->h_addr;
 
   int result = connect(m_handle, (sockaddr*)&sa, sizeof(sa));
-  if(result < 0) return result;
+
+  if(result < 0) 
+    return result;
 
   if(!SSL_set_fd(m_ssl, m_handle)) {
     printf("failed converting to ssl\n");
