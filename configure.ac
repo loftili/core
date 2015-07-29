@@ -95,7 +95,7 @@ fi
 AC_MSG_RESULT([
 xxx   xxx   xxx
 xxx   xxx   xxx
-xxx         xxx
+      xxx      
 xxx   xxx   xxx
 xxx   xxx   xxx
 xxx   xxxxxxxxx
