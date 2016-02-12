@@ -68,6 +68,10 @@ AC_CHECK_LIB([mpg123], [mpg123_init], [
   HAVE_MPG123=0
   AC_DEFINE([HAVE_MPG123], [0], [mpg123])])
 
+AC_CHECK_HEADER([openssl/rand.h], [AC_MSG_RESULT([found])], [
+CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openssl/include"
+])
+
 AC_MSG_CHECKING([checking full audio capability])
 AC_TRY_RUN([
 #include <ao/ao.h>
