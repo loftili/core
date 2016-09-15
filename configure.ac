@@ -24,14 +24,19 @@ AC_PROG_CXX(g++)
 AC_PROG_LIBTOOL
 AC_LANG([C++])
 
-AC_ARG_WITH(logfile,
-  [  --with-logfile      Specify the log file path to use],
+AC_ARG_WITH([logfile],
+  [AS_HELP_STRING([--with-logfile], [Specify the log file path to use])],
   AC_DEFINE_UNQUOTED([LOFTILI_LOG_PATH], ["$withval"], [the log path used during runtime]),
   AC_DEFINE([LOFTILI_LOG_PATH], ["loftili.log"], [the log path used during runtime])
-  )
+)
 
-AC_ARG_WITH(logid,
-  [  --with-logid      Specify the spdlog id to use],
+AC_ARG_WITH([openssl],
+  [AS_HELP_STRING([--with-openssl], [specify the installation root of openssl])],
+  [CPPFLAGS="-I$withval/include $CPPFLAGS"]
+)
+
+AC_ARG_WITH([logid],
+  [AS_HELP_STRING([--with-logid], [Specify the spdlog id to use])],
   AC_DEFINE_UNQUOTED([LOFTILI_SPDLOG_ID], ["$withval"], [the id used during runtime]),
   AC_DEFINE([LOFTILI_SPDLOG_ID], ["loftili"], [the id used during runtime])
   )
@@ -68,9 +73,7 @@ AC_CHECK_LIB([mpg123], [mpg123_init], [
   HAVE_MPG123=0
   AC_DEFINE([HAVE_MPG123], [0], [mpg123])])
 
-AC_CHECK_HEADER([openssl/rand.h], [AC_MSG_RESULT([found])], [
-CPPFLAGS="$CPPFLAGS -I/usr/local/opt/openssl/include"
-])
+AC_CHECK_HEADER([openssl/rand.h], [AC_MSG_RESULT([found])], [AC_MSG_ERROR([missing openssl])])
 
 AC_MSG_CHECKING([checking full audio capability])
 AC_TRY_RUN([
